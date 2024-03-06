@@ -30,6 +30,7 @@ android {
 
 dependencies {
 
+    implementation(project(":evaluate"))
     implementation(libs.appcompat)
     implementation(libs.material)
     testImplementation(libs.junit)
