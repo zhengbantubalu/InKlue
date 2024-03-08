@@ -1,42 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorBackground">
 
-    <ImageView
-        android:id="@+id/img1"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" />
+    <RelativeLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="?attr/colorBar">
 
-    <ImageView
-        android:id="@+id/img2"
-        android:layout_width="400dp"
-        android:layout_height="400dp"
-        android:layout_below="@id/img1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/app_name"
+            android:textColor="?attr/colorTitle"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:ignore="RelativeOverlap" />
 
-    <TextView
-        android:id="@+id/score"
-        android:layout_width="wrap_content"
+        <ImageButton
+            android:id="@+id/button_settings"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/settings"
+            android:src="@drawable/ic_settings" />
+
+        <ImageButton
+            android:id="@+id/button_add"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/add"
+            android:src="@drawable/ic_add" />
+    </RelativeLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager_homepage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/bottomBar"
+        android:layout_below="@+id/topBar" />
+
+    <RadioGroup
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/img2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:textSize="30sp" />
+        android:layout_alignParentBottom="true"
+        android:background="?attr/colorBar"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/advice"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
-        android:layout_below="@id/score"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal"
-        android:textSize="20sp" />
+        <RadioButton
+            android:id="@+id/button_search"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:button="@null"
+            android:drawableBottom="@drawable/ic_search"
+            android:drawableTint="@drawable/selector_button_color"
+            android:gravity="center"
+            android:paddingBottom="12dp" />
 
+        <RadioButton
+            android:id="@+id/button_practise"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:button="@null"
+            android:drawableBottom="@drawable/ic_practise"
+            android:drawableTint="@drawable/selector_button_color"
+            android:gravity="center"
+            android:paddingBottom="12dp" />
+
+        <RadioButton
+            android:id="@+id/button_user"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:button="@null"
+            android:drawableBottom="@drawable/ic_user"
+            android:drawableTint="@drawable/selector_button_color"
+            android:gravity="center"
+            android:paddingBottom="12dp" />
+    </RadioGroup>
 </RelativeLayout>
