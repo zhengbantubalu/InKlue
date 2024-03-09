@@ -43,11 +43,10 @@ public class PractiseFragment extends Fragment {
             bean.setImage(bitmap);
             practise_cards_data.add(bean);
         }
-
+        //取得ListView
         ListView listView = root.findViewById(R.id.listview_practise);
-        //以下三行用于实现ListView头尾的分割线
-        View viewStub = inflater.inflate(R.layout.fragment_practise, null, false);
         //将ListView的头尾视图设为ViewStub空视图，即仅保留头尾的分割线
+        View viewStub = inflater.inflate(R.layout.fragment_practise, null, false);
         listView.addHeaderView(viewStub);
         listView.addFooterView(viewStub);
         //调用练习卡片适配器

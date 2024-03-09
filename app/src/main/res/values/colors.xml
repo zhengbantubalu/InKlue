@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
     <color name="gray_deep_dark">#FF111111</color>
     <color name="gray_dark">#FF222222</color>
-    <color name="gray_medium">#FFAAAAAA</color>
-    <color name="gray_light">#FFEEEEEE</color>
+    <color name="gray_medium">#FF888888</color>
+    <color name="gray_light">#FFDDDDDD</color>
+    <color name="gray_deep_light">#FFEEEEEE</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="松花绿">#FF057748</color>
+    <color name="蟹壳青">#FFBBCDC5</color>
+    <color name="素">#FFE0F0E9</color>
+    <color name="荼白">#FFF3F9F1</color>
 </resources>

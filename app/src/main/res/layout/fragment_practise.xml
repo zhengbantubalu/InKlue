@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
 
     <ListView
         android:id="@+id/listview_practise"
@@ -10,12 +12,5 @@
         android:divider="@null"
         android:dividerHeight="5dp"
         android:listSelector="@drawable/selector_listview"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
         android:scrollbars="none" />
-
-    <ViewStub
-        android:id="@+id/view_stub"
-        android:layout_width="0dp"
-        android:layout_height="0dp" />
 </FrameLayout>
