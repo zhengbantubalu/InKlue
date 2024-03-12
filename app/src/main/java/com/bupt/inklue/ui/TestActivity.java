@@ -36,9 +36,10 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         img2.setOnClickListener(this);
         //设置初始图像
         img2.setImageBitmap(BitmapFactory.decodeFile(
-                getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/clickme.jpg"));
+                getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/avatar.jpg"));
         //创建汉字列表
         c = new ArrayList<>(Arrays.asList(
+                "土", "王", "五", "上", "下", "不", "之", "山", "廿", "四", "日", "石", "六", "天",
                 "土", "王", "五", "上", "下", "不", "之", "山", "廿", "四", "日", "石", "六", "天"));
         i = 0;
     }
@@ -52,9 +53,15 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             TextView score = findViewById(R.id.score);
             TextView advice = findViewById(R.id.advice);
             //从外部存储中读取图片
+            String name;
+            if (i < 14) {
+                name = "/" + c.get(i) + ".jpg";
+            } else {
+                name = "/" + c.get(i) + "1.jpg";
+            }
             Bitmap bitmap1 = BitmapFactory.decodeFile(
                     getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
-                            "/" + c.get(i) + "1.jpg");
+                            name);
             Bitmap bitmap2 = BitmapFactory.decodeFile(
                     getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
                             "/" + c.get(i) + ".jpg");

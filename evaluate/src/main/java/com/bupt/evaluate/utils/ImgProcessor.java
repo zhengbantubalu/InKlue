@@ -32,9 +32,16 @@ public class ImgProcessor {
     public static void drawContours(Mat img, Contours contours) {
         Log.d("appTest", contours.toString());
         OpenCVLoader.initDebug();
-        for (PointList contour : contours) {
-            for (PointEx pointEx : contour) {
-                Imgproc.circle(img, pointEx, 7, new Scalar(255, 255, 0), -1);
+        int contourNum = contours.size();
+        int pointNum;
+        for (int i = 0; i < contourNum; i++) {
+            PointList contour = contours.get(i);
+            pointNum = contour.size();
+            for (int j = 0; j < pointNum; j++) {
+                PointEx pointEx = contour.get(j);
+                Imgproc.circle(img, pointEx, 5, new Scalar(255, 255, 0), -1);
+//                Imgproc.putText(img, " (" + i + "," + j + ")", pointEx,
+//                        0, 0.5, new Scalar(255, 255, 0), 1);
             }
         }
     }
@@ -63,7 +70,7 @@ public class ImgProcessor {
                 PointEx pointEx = strokes.get(i).get(j);
                 Imgproc.circle(img, pointEx, 3, new Scalar(0, 255, 0), -1);
                 Imgproc.putText(img, " (" + i + "," + j + ")", pointEx,
-                        0, 0.5, new Scalar(0, 255, 0), 1);
+                        0, 0.7, new Scalar(0, 255, 0), 1);
             }
         }
     }

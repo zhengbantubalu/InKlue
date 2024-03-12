@@ -40,9 +40,7 @@ public class Evaluation {
         ImgProcessor.drawPoints(input, inputPoints);
         ImgProcessor.drawStrokes(input, inputStrokes);
         //设置评价数据
-        score = 100 - (int) Imgproc.matchShapes(
-                inputContours.contours2f.get(0), stdContours.contours2f.get(0),
-                Imgproc.CONTOURS_MATCH_I2, 0);
+        score = 100;
         advice.append("这个\"").append(cnChar).append("\"字写得太棒了");
         Bitmap outputImg = Bitmap.createBitmap(input.cols(), input.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(input, outputImg);

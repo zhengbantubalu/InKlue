@@ -36,7 +36,7 @@ public class PractiseFragment extends Fragment {
                 "土", "王", "五", "上", "下", "不", "之", "山", "廿", "四", "日", "石", "六", "天"));
         for (int i = 1; i <= c.size(); i++) {
             PractiseCardData bean = new PractiseCardData();
-            bean.setName("练习" + i);
+            bean.setName(c.get(i - 1));
             Bitmap bitmap = BitmapFactory.decodeFile(
                     getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
                             "/" + c.get(i - 1) + ".jpg");
