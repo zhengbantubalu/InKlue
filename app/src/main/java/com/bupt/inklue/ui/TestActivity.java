@@ -13,6 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bupt.evaluate.Evaluation;
 import com.bupt.inklue.R;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -48,19 +52,36 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             TextView score = findViewById(R.id.score);
             TextView advice = findViewById(R.id.advice);
             //从外部存储中读取图片
-            Bitmap bitmap = BitmapFactory.decodeFile(
+            Bitmap bitmap1 = BitmapFactory.decodeFile(
+                    getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
+                            "/" + c.get(i) + "1.jpg");
+            Bitmap bitmap2 = BitmapFactory.decodeFile(
                     getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
                             "/" + c.get(i) + ".jpg");
             //显示读取到的原图像
-            img1.setImageBitmap(bitmap);
+            img1.setImageBitmap(bitmap2);
             //调用评价模块
-            Evaluation evaluation = new Evaluation(c.get(i), bitmap);
+            Evaluation evaluation = new Evaluation(c.get(i), bitmap1, bitmap2);
             //显示评价模块返回的信息
-            img2.setImageBitmap(evaluation.outputImg);
+            img2.setImageBitmap(evaluation.outputBmp);
+//            saveBitmap(evaluation.outputImg, c.get(i) + "1.jpg");
             score.setText(String.valueOf(evaluation.score));
             advice.setText(evaluation.advice.toString());
             //循环计数器
             i = (i + 1) % c.size();
+        }
+    }
+
+    //存储Bitmap方法，图片被以jpg格式存储在app的私有外部存储中的图片目录中，不需要申请权限，其他app无法访问
+    public void saveBitmap(Bitmap bitmap, String fileName) {
+        File image = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
+        BufferedOutputStream bos;
+        try {
+            bos = new BufferedOutputStream(Files.newOutputStream(image.toPath()));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+        } catch (IOException ignored) {
         }
     }
 }

@@ -1,6 +1,10 @@
 package com.bupt.evaluate.utils;
 
-import com.bupt.evaluate.Point;
+import android.util.Log;
+
+import com.bupt.evaluate.Contours;
+import com.bupt.evaluate.PointEx;
+import com.bupt.evaluate.PointList;
 import com.bupt.evaluate.Points;
 import com.bupt.evaluate.Strokes;
 
@@ -24,31 +28,41 @@ public class ImgProcessor {
         Ximgproc.thinning(dst, dst, Ximgproc.THINNING_ZHANGSUEN);//细化
     }
 
+    //将Contours类绘制在Mat上
+    public static void drawContours(Mat img, Contours contours) {
+        Log.d("appTest", contours.toString());
+        OpenCVLoader.initDebug();
+        for (PointList contour : contours) {
+            for (PointEx pointEx : contour) {
+                Imgproc.circle(img, pointEx, 7, new Scalar(255, 255, 0), -1);
+            }
+        }
+    }
+
     //将Points类绘制在Mat上
     public static void drawPoints(Mat img, Points points) {
+        Log.d("appTest", points.toString());
         OpenCVLoader.initDebug();
-        for (Point point : points.get(Points.END)) {
-            Imgproc.circle(img, point, 5, new Scalar(0, 255, 0), -1);
+        for (PointEx pointEx : points.get(Points.END)) {
+            Imgproc.circle(img, pointEx, 5, new Scalar(0, 0, 255), -1);
         }
-        for (Point point : points.get(Points.MID)) {
-            Imgproc.circle(img, point, 5, new Scalar(0, 0, 255), -1);
-        }
-        for (Point point : points.get(Points.INTER)) {
-            Imgproc.circle(img, point, 5, new Scalar(255, 0, 0), -1);
+        for (PointEx pointEx : points.get(Points.INTER)) {
+            Imgproc.circle(img, pointEx, 5, new Scalar(255, 0, 0), -1);
         }
     }
 
     //将Strokes类绘制在Mat上
     public static void drawStrokes(Mat img, Strokes strokes) {
+        Log.d("appTest", strokes.toString());
         OpenCVLoader.initDebug();
         int strokeNum = strokes.size();
         int pointNum;
         for (int i = 0; i < strokeNum; i++) {
             pointNum = strokes.get(i).size();
             for (int j = 0; j < pointNum; j++) {
-                Point point = strokes.get(i).get(j);
-                Imgproc.circle(img, point, 5, new Scalar(255, 140, 0), -1);
-                Imgproc.putText(img, i + " " + j, point,
+                PointEx pointEx = strokes.get(i).get(j);
+                Imgproc.circle(img, pointEx, 3, new Scalar(0, 255, 0), -1);
+                Imgproc.putText(img, " (" + i + "," + j + ")", pointEx,
                         0, 0.5, new Scalar(0, 255, 0), 1);
             }
         }

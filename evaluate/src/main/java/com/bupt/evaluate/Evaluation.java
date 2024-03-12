@@ -1,7 +1,6 @@
 package com.bupt.evaluate;
 
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.bupt.evaluate.utils.ImgProcessor;
 
@@ -14,28 +13,39 @@ import org.opencv.imgproc.Imgproc;
 public class Evaluation {
     public int score;//分数
     public StringBuilder advice;//建议
-    public Bitmap outputImg;//输出图片
+    public Bitmap outputBmp;//输出图片
 
-    //根据汉字名称和汉字图像取得评价
-    public Evaluation(String cnChar, Bitmap inputImg) {
-        this.score = 0;
-        this.advice = new StringBuilder();
-        this.outputImg = null;
+    //根据汉字名称、输入图像和标准图像取得评价
+    public Evaluation(String cnChar, Bitmap inputBmp, Bitmap stdBmp) {
+        //初始化评价数据
+        score = 0;
+        advice = new StringBuilder();
+        outputBmp = null;
+        //OpenCV预处理图像，细化为骨架
         OpenCVLoader.initDebug();
-        Mat img = new Mat();
-        Utils.bitmapToMat(inputImg, img, true);
-        ImgProcessor.thinning(img, img);//图像预处理细化为骨架
-        Points points = new Points(img);//从图像中提取点集
-        Log.d("appTest", points.toString());
-        Strokes strokes = new Strokes(cnChar, points);//从点集中提取笔画
-        Log.d("appTest", strokes.toString());
-        Imgproc.cvtColor(img, img, Imgproc.COLOR_GRAY2RGB);
-        ImgProcessor.drawPoints(img, points);
-        ImgProcessor.drawStrokes(img, strokes);
-        this.score = 100;
-        this.advice.append("这个\"" + cnChar + "\"字写得太棒了");
-        Bitmap outputImg = Bitmap.createBitmap(img.cols(), img.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(img, outputImg);
-        this.outputImg = outputImg;
+        Mat input = new Mat();
+        Utils.bitmapToMat(inputBmp, input, true);
+        Mat std = new Mat();
+        Utils.bitmapToMat(stdBmp, std, true);
+        ImgProcessor.thinning(input, input);
+        ImgProcessor.thinning(std, std);
+        //从骨架图像中提取信息
+        Contours inputContours = new Contours(input);//从输入图像中提取轮廓
+        Points inputPoints = new Points(input);//从输入图像中提取点集
+        Strokes inputStrokes = new Strokes(cnChar, inputContours, inputPoints);//从轮廓和点集中提取笔画
+        Contours stdContours = new Contours(std);//从标准图像中提取轮廓
+        //绘制提取结果
+        Imgproc.cvtColor(input, input, Imgproc.COLOR_GRAY2RGB);
+        ImgProcessor.drawContours(input, inputContours);
+        ImgProcessor.drawPoints(input, inputPoints);
+        ImgProcessor.drawStrokes(input, inputStrokes);
+        //设置评价数据
+        score = 100 - (int) Imgproc.matchShapes(
+                inputContours.contours2f.get(0), stdContours.contours2f.get(0),
+                Imgproc.CONTOURS_MATCH_I2, 0);
+        advice.append("这个\"").append(cnChar).append("\"字写得太棒了");
+        Bitmap outputImg = Bitmap.createBitmap(input.cols(), input.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(input, outputImg);
+        this.outputBmp = outputImg;
     }
 }

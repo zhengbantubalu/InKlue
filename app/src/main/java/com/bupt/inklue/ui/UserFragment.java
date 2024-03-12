@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
@@ -39,7 +40,7 @@ public class UserFragment extends Fragment {
             bean.setName("练习" + i);
             Bitmap bitmap = BitmapFactory.decodeFile(
                     getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
-                            "/" + c.get(i - 1) + ".jpg");
+                            "/" + c.get(i - 1) + "1.jpg");
             bean.setImage(bitmap);
             practise_cards_data.add(bean);
         }
@@ -49,6 +50,12 @@ public class UserFragment extends Fragment {
         View viewStub = inflater.inflate(R.layout.viewstub, null);
         listView.addFooterView(viewStub);
         View userCard = inflater.inflate(R.layout.card_user, null);
+        //设置用户头像
+        ImageView user_avatar = userCard.findViewById(R.id.user_avatar);
+        Bitmap bitmap = BitmapFactory.decodeFile(
+                getContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
+                        "/avatar.jpg");
+        user_avatar.setImageBitmap(bitmap);
         listView.addHeaderView(userCard);
         //调用练习卡片适配器
         listView.setAdapter(new PractiseCardAdapter(practise_cards_data, getActivity()));

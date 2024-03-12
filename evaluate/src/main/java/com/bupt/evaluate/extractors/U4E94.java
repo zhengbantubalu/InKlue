@@ -1,5 +1,6 @@
 package com.bupt.evaluate.extractors;
 
+import com.bupt.evaluate.Contours;
 import com.bupt.evaluate.Extractor;
 import com.bupt.evaluate.PointList;
 import com.bupt.evaluate.Strokes;
@@ -9,7 +10,7 @@ import com.bupt.evaluate.Points;
 public class U4E94 implements Extractor {
     public static int strokeNum = 4;
 
-    public void extract(Strokes strokes, Points points) {
+    public void extract(Strokes strokes, Contours contours, Points points) {
         points.get(Points.END).sort(1, true);
         points.get(Points.INTER).sort(1, true);
         for (int i = 0; i < strokeNum; i++) {

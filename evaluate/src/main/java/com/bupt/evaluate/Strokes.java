@@ -4,15 +4,15 @@ import com.bupt.evaluate.utils.Transcoder;
 
 import java.util.ArrayList;
 
-//一个汉字的所有笔画信息，每个元素是类型为PointList的一个笔画，每个笔画的元素是Point类
+//一个汉字的所有笔画信息，每个元素是类型为PointList的一个笔画，每个笔画的元素是PointEx类
 public class Strokes extends ArrayList<PointList> {
 
-    //从点集中提取笔画
-    public Strokes(String cnChar, Points points) {
+    //从轮廓和点集中提取笔画
+    public Strokes(String cnChar, Contours contours, Points points) {
         String unicode = Transcoder.UTF2CodePoint(cnChar);//取得汉字的Unicode码点字符串
         Extractor extractor = createInstance(unicode);//根据码点创建特定提取器实例
         if (extractor != null) {
-            extractor.extract(this, points);//调用特定提取器的提取方法
+            extractor.extract(this, contours, points);//调用特定提取器的提取方法
         }
     }
 

@@ -12,7 +12,9 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
+        ndk {
+            abiFilters.add("arm64-v8a") //只生成arm64-v8a架构的apk
+        }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -29,11 +31,6 @@ android {
 }
 
 dependencies {
-
     implementation(project(":evaluate"))
-    implementation(libs.appcompat)
     implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
 }
