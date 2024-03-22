@@ -10,7 +10,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.bupt.evaluate.Evaluation;
+import com.bupt.evaluate.core.Evaluation;
+import com.bupt.evaluate.core.Evaluator;
 import com.bupt.inklue.R;
 
 import java.io.BufferedOutputStream;
@@ -68,7 +69,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             //显示读取到的原图像
             img1.setImageBitmap(bitmap2);
             //调用评价模块
-            Evaluation evaluation = new Evaluation(c.get(i), bitmap1, bitmap2);
+            Evaluation evaluation = Evaluator.evaluate(c.get(i), bitmap1, bitmap2);
             //显示评价模块返回的信息
             img2.setImageBitmap(evaluation.outputBmp);
 //            saveBitmap(evaluation.outputImg, c.get(i) + "1.jpg");

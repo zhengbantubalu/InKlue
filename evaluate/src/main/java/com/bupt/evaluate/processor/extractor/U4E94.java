@@ -1,10 +1,9 @@
-package com.bupt.evaluate.extractors;
+package com.bupt.evaluate.processor.extractor;
 
-import com.bupt.evaluate.Contours;
-import com.bupt.evaluate.Extractor;
-import com.bupt.evaluate.PointList;
-import com.bupt.evaluate.Strokes;
-import com.bupt.evaluate.Points;
+import com.bupt.evaluate.data.Contours;
+import com.bupt.evaluate.data.PointList;
+import com.bupt.evaluate.data.Strokes;
+import com.bupt.evaluate.data.Points;
 
 //五
 public class U4E94 implements Extractor {

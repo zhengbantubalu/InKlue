@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.adapters.HomepageAdapter;
+import com.bupt.inklue.adapter.HomepageAdapter;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.bupt.inklue.adapters;
+package com.bupt.inklue.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -14,7 +14,7 @@ import android.widget.ListView;
 import androidx.fragment.app.Fragment;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.adapters.PractiseCardAdapter;
+import com.bupt.inklue.adapter.PractiseCardAdapter;
 import com.bupt.inklue.data.PractiseCardData;
 
 import java.util.ArrayList;

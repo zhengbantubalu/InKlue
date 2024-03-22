@@ -1,4 +1,4 @@
-package com.bupt.evaluate;
+package com.bupt.evaluate.data;
 
 import org.opencv.core.Point;
 
@@ -9,6 +9,7 @@ import java.util.List;
 //点列表，每个元素是一个PointEx类
 public class PointList extends ArrayList<PointEx> {
 
+    //空构造方法，用于创建空列表
     public PointList() {
     }
 
@@ -95,12 +96,14 @@ public class PointList extends ArrayList<PointEx> {
     }
 
     //取得指定点的角度
-    //作者 苏崇博
     public int getAngle(int index) {
-        double delta_x1 = this.get(index - 1).x - this.get(index).x;
-        double delta_x2 = this.get(index + 1).x - this.get(index).x;
-        double delta_y1 = this.get(index - 1).y - this.get(index).y;
-        double delta_y2 = this.get(index + 1).y - this.get(index).y;
+        Point p1 = this.get(index - 1);
+        Point p2 = this.get(index);
+        Point p3 = this.get(index + 1);
+        double delta_x1 = p1.x - p2.x;
+        double delta_x2 = p3.x - p2.x;
+        double delta_y1 = p1.y - p2.y;
+        double delta_y2 = p3.y - p2.y;
         double arrayValue = delta_x1 * delta_x2 + delta_y1 * delta_y2;
         double len1 = Math.sqrt(delta_x1 * delta_x1 + delta_y1 * delta_y1);
         double len2 = Math.sqrt(delta_x2 * delta_x2 + delta_y2 * delta_y2);

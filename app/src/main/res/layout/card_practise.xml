@@ -20,6 +20,5 @@
         android:gravity="start"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:text="@string/practise_name"
         android:textSize="18sp" />
 </LinearLayout>

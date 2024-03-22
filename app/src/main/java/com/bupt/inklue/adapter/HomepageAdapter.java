@@ -1,4 +1,4 @@
-package com.bupt.inklue.adapters;
+package com.bupt.inklue.adapter;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

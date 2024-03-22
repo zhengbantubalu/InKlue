@@ -1,4 +1,4 @@
-package com.bupt.evaluate;
+package com.bupt.evaluate.data;
 
 import org.opencv.core.Point;
 
@@ -27,7 +27,6 @@ public class PointEx extends Point {
     }
 
     //判断该点与另一点的横纵坐标差值是否均小于等于maxDistance
-    //如需判断是否完全相等，建议使用父类的equals方法
     public boolean equals(PointEx pointEx, int maxDistance) {
         return (Math.abs(x - pointEx.x) <= maxDistance &&
                 Math.abs(y - pointEx.y) <= maxDistance);
