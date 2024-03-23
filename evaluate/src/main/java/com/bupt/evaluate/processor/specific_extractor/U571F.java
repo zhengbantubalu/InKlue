@@ -1,15 +1,18 @@
-package com.bupt.evaluate.processor.extractor;
+package com.bupt.evaluate.processor.specific_extractor;
 
 import com.bupt.evaluate.data.Contours;
 import com.bupt.evaluate.data.PointList;
-import com.bupt.evaluate.data.Strokes;
 import com.bupt.evaluate.data.Points;
+import com.bupt.evaluate.data.Strokes;
+import com.bupt.evaluate.processor.SpecificExtractor;
 
 //土
-public class U571F implements Extractor {
-    public static int strokeNum = 3;
+public class U571F implements SpecificExtractor {
 
-    public void extract(Strokes strokes, Contours contours, Points points) {
+    public static final int strokeNum = 3;
+
+    public Strokes extractStrokes(Contours contours, Points points) {
+        Strokes strokes = new Strokes();
         for (int i = 0; i < strokeNum; i++) {
             strokes.add(new PointList());
         }
@@ -18,16 +21,17 @@ public class U571F implements Extractor {
             strokes.get(0).add(points.get(Points.END).get(1));
             strokes.get(0).add(points.get(Points.END).get(2));
             strokes.get(0).add(points.get(Points.INTER).get(0));
-            strokes.get(0).sort(0, true);
+            strokes.get(0).sort();
             //第二横
             strokes.get(1).add(points.get(Points.END).get(3));
             strokes.get(1).add(points.get(Points.END).get(4));
             strokes.get(1).add(points.get(Points.INTER).get(1));
-            strokes.get(1).sort(0, true);
+            strokes.get(1).sort();
             //竖
             strokes.get(2).add(points.get(Points.END).get(0));
             strokes.get(2).addAll(points.get(Points.INTER));
         } catch (NullPointerException ignored) {
         }
+        return strokes;
     }
 }

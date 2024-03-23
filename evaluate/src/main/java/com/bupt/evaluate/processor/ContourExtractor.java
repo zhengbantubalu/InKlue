@@ -17,7 +17,6 @@ public class ContourExtractor {
 
     //从图像中提取轮廓
     public static Contours mat2Contours(Mat img) {
-        Contours contours = new Contours();
         OpenCVLoader.initDebug();
         //提取轮廓
         List<MatOfPoint> originalData = new ArrayList<>();
@@ -25,6 +24,7 @@ public class ContourExtractor {
         //轮廓近似
         List<MatOfPoint> cnts = approximate(originalData);
         //转换数据类型
+        Contours contours = new Contours();
         for (MatOfPoint cnt : cnts) {
             PointList pointList = new PointList(cnt.toList());
             contours.add(pointList);
@@ -37,7 +37,7 @@ public class ContourExtractor {
         List<MatOfPoint> contours = new ArrayList<>();
         for (MatOfPoint contour : originalData) {
             MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
-            Imgproc.approxPolyDP(contour2f, contour2f, 10, false);
+            Imgproc.approxPolyDP(contour2f, contour2f, 3, false);
             MatOfPoint matOfPoint = new MatOfPoint(contour2f.toArray());
             contours.add(matOfPoint);
         }

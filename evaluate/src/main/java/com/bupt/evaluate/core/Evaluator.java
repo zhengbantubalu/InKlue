@@ -24,19 +24,20 @@ public class Evaluator {
         OpenCVLoader.initDebug();
         Mat input = new Mat();
         Utils.bitmapToMat(inputBmp, input, true);
-//        Mat std = new Mat();
-//        Utils.bitmapToMat(stdBmp, std, true);
+        Mat std = new Mat();
+        Utils.bitmapToMat(stdBmp, std, true);
         ImageProcessor.thinning(input, input);
-//        ImageProcessor.thinning(std, std);
+        ImageProcessor.thinning(std, std);
         //从骨架图像中提取信息
-        Contours inputContours = ContourExtractor.mat2Contours(input);//从输入图像中提取轮廓
-        Points inputPoints = PointExtractor.mat2Points(input);//从输入图像中提取点集
-        inputContours.split();//分割轮廓(旧方法)
-        Strokes inputStrokes = new Strokes(cnChar, inputContours, inputPoints);//从轮廓和点集中提取笔画(旧方法)
-//        Contours stdContours = ContourExtractor.mat2Contours(std);//从标准图像中提取轮廓
+        //从输入图像中提取轮廓
+        Contours inputContours = ContourExtractor.mat2Contours(input);
+        //从输入图像中提取点集
+        Points inputPoints = PointExtractor.mat2Points(input);
+        //根据轮廓和特征点提取汉字笔画
+        Strokes inputStrokes = StrokeExtractor.extractStrokes(cnChar, inputContours, inputPoints);
         //绘制提取结果
         Imgproc.cvtColor(input, input, Imgproc.COLOR_GRAY2RGB);
-        ImageProcessor.drawContours(input, inputContours);
+//        ImageProcessor.drawContours(input, inputContours);
         ImageProcessor.drawPoints(input, inputPoints);
         ImageProcessor.drawStrokes(input, inputStrokes);
         //设置评价数据

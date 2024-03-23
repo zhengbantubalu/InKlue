@@ -1,5 +1,7 @@
 package com.bupt.evaluate.data;
 
+import com.bupt.evaluate.util.Constants;
+
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -8,8 +10,8 @@ import java.util.Set;
 public class Points extends HashMap<Integer, PointList> {
 
     //点列表类型对应的索引
-    public static int END = 0;
-    public static int INTER = 1;
+    public static final int END = 0;
+    public static final int INTER = 1;
 
     //初始化点列表
     public Points() {
@@ -25,6 +27,10 @@ public class Points extends HashMap<Integer, PointList> {
                 thisList.dropDuplicates(maxDistance);
             }
         }
+    }
+
+    public void dropDuplicates() {
+        dropDuplicates(Constants.MAX_DISTANCE);
     }
 
     //搜索指定的列表是否已经含有某个点，传入-1则搜索全部点
@@ -46,5 +52,9 @@ public class Points extends HashMap<Integer, PointList> {
             }
         }
         return false;
+    }
+
+    public boolean has(int key, PointEx pointEx) {
+        return this.has(key, pointEx, Constants.MAX_DISTANCE);
     }
 }

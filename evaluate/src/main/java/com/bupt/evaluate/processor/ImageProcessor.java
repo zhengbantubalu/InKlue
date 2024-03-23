@@ -69,7 +69,7 @@ public class ImageProcessor {
                 PointEx pointEx = strokes.get(i).get(j);
                 Imgproc.circle(img, pointEx, 3, new Scalar(0, 255, 0), -1);
                 Imgproc.putText(img, " (" + i + "," + j + ")", pointEx,
-                        0, 0.7, new Scalar(0, 255, 0), 1);
+                        0, 0.5, new Scalar(0, 255, 0), 1);
             }
         }
     }

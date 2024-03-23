@@ -7,7 +7,7 @@ import org.opencv.core.Mat;
 
 import java.util.Objects;
 
-//点提取器，用于提取一个汉字的特征点列表
+//特征点提取器，用于提取一个汉字的特征点列表
 public class PointExtractor {
 
     //从细化图像中提取笔画的端点和交点
@@ -27,7 +27,8 @@ public class PointExtractor {
                 }
             }
         }
-        points.dropDuplicates(10);
+        //去除重复点
+        points.dropDuplicates();
         return points;
     }
 
@@ -42,13 +43,13 @@ public class PointExtractor {
             }
         }
         if (branchNum != 2) {
-            branchNum = getBranchNumPro(img, i, j);
+            branchNum = getBranchNumPlus(img, i, j);
         }
         return branchNum;
     }
 
     //取得端点或交点的准确分支数，即8邻域外一周白色像素出现的次数
-    private static int getBranchNumPro(Mat img, int i, int j) {
+    private static int getBranchNumPlus(Mat img, int i, int j) {
         int branchNumPro = 0;
         int[] coord = new int[]{i - 3, j - 2};
         boolean[] values = new boolean[]{false, false};
