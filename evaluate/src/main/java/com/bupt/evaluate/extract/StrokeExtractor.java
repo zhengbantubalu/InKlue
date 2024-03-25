@@ -1,4 +1,4 @@
-package com.bupt.evaluate.processor;
+package com.bupt.evaluate.extract;
 
 import com.bupt.evaluate.data.Contours;
 import com.bupt.evaluate.data.Points;
@@ -11,8 +11,10 @@ public class StrokeExtractor {
         //根据汉字名创建指定的笔画提取器实例
         SpecificExtractor specificExtractor = ExtractorFactory.createInstance(cnChar);
         if (specificExtractor != null) {
-            return specificExtractor.extractStrokes(contours, points);//调用笔画提取器的提取方法
+            //创建实例成功，则调用笔画提取器的提取方法，并返回
+            return specificExtractor.extractStrokes(contours, points);
         }
+        //创建实例失败，返回空的笔画类
         return new Strokes();
     }
 }

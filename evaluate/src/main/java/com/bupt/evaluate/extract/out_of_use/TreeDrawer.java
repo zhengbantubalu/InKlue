@@ -1,31 +1,31 @@
-package com.bupt.evaluate.processor.out_of_use;
+package com.bupt.evaluate.extract.out_of_use;
 
 import com.bupt.evaluate.data.Contours;
 import com.bupt.evaluate.data.PointEx;
 import com.bupt.evaluate.data.PointList;
-import com.bupt.evaluate.data.PointTree;
-import com.bupt.evaluate.data.TreeNode;
+import com.bupt.evaluate.data.out_of_use.PointTree;
+import com.bupt.evaluate.data.out_of_use.TreeNode;
 
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 //树状结构绘制器，实现节点操作器(被搁置的方法)
-public class TreePainter implements NodeOperator {
+public class TreeDrawer implements NodeOperator {
 
     public Mat img;
     public PointList contour;
 
-    public TreePainter(Mat img, PointList contour) {
+    public TreeDrawer(Mat img, PointList contour) {
         this.img = img;
         this.contour = contour;
     }
 
-    //绘制树状结构，应属于图像处理器ImageProcessor(被搁置的方法)
+    //绘制树状结构，应属于图像绘制器ImageDrawer(被搁置的方法)
     public static void drawPointTree(Mat img, PointTree pointTree, Contours contours) {
         for (int i = 0; i < contours.size(); i++) {
-            TreePainter treePainter = new TreePainter(img, contours.get(i));
-            pointTree.dfs(pointTree.rootNode.children.get(i), 0, 0, treePainter);
+            TreeDrawer treeDrawer = new TreeDrawer(img, contours.get(i));
+            pointTree.dfs(pointTree.rootNode.children.get(i), 0, 0, treeDrawer);
         }
     }
 

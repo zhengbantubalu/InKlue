@@ -36,7 +36,7 @@ public class Contours extends ArrayList<PointList> {
     }
 
     //根据起止点位置获取两个点之间的最短轮廓连线
-    public PointList getMatchContour(PointList contour, ArrayList<Integer> startIndexes, ArrayList<Integer> endIndexes) {
+    private PointList getMatchContour(PointList contour, ArrayList<Integer> startIndexes, ArrayList<Integer> endIndexes) {
         int[] indexArray = getNearestIndexes(startIndexes, endIndexes, contour.size());
         int fromIndex = indexArray[0];
         int toIndex = indexArray[1];

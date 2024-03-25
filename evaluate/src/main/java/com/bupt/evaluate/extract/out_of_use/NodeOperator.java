@@ -1,6 +1,6 @@
-package com.bupt.evaluate.processor.out_of_use;
+package com.bupt.evaluate.extract.out_of_use;
 
-import com.bupt.evaluate.data.TreeNode;
+import com.bupt.evaluate.data.out_of_use.TreeNode;
 
 //节点操作器(被搁置的方法)
 public interface NodeOperator {

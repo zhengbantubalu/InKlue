@@ -1,12 +1,12 @@
-package com.bupt.evaluate.processor;
+package com.bupt.evaluate.extract;
 
 //笔画提取器工厂，用于创建笔画提取器实例
-public class ExtractorFactory {
+class ExtractorFactory {
 
     //创建指定的笔画提取器实例
-    public static SpecificExtractor createInstance(String cnChar) {
+    static SpecificExtractor createInstance(String cnChar) {
         //取得提取器类名
-        String fullClassName = "com.bupt.evaluate.processor.specific_extractor." + UTF2CodePoint(cnChar);
+        String fullClassName = "com.bupt.evaluate.extract.specific_extractor." + UTF2CodePoint(cnChar);
         try {
             Class<?> clazz = Class.forName(fullClassName);
             return (SpecificExtractor) clazz.newInstance();

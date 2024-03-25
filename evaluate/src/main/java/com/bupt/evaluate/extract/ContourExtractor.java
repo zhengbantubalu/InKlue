@@ -1,9 +1,8 @@
-package com.bupt.evaluate.processor;
+package com.bupt.evaluate.extract;
 
 import com.bupt.evaluate.data.Contours;
 import com.bupt.evaluate.data.PointList;
 
-import org.opencv.android.OpenCVLoader;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
@@ -17,7 +16,6 @@ public class ContourExtractor {
 
     //从图像中提取轮廓
     public static Contours mat2Contours(Mat img) {
-        OpenCVLoader.initDebug();
         //提取轮廓
         List<MatOfPoint> originalData = new ArrayList<>();
         Imgproc.findContours(img, originalData, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);

@@ -1,8 +1,8 @@
-package com.bupt.evaluate.processor.out_of_use;
+package com.bupt.evaluate.extract.out_of_use;
 
 import com.bupt.evaluate.data.PointEx;
 import com.bupt.evaluate.data.PointList;
-import com.bupt.evaluate.data.TreeNode;
+import com.bupt.evaluate.data.out_of_use.TreeNode;
 
 import java.util.ArrayList;
 

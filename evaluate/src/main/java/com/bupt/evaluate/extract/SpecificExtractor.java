@@ -1,4 +1,4 @@
-package com.bupt.evaluate.processor;
+package com.bupt.evaluate.extract;
 
 import com.bupt.evaluate.data.Contours;
 import com.bupt.evaluate.data.Points;

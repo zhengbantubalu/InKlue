@@ -1,6 +1,6 @@
-package com.bupt.evaluate.data;
+package com.bupt.evaluate.data.out_of_use;
 
-import com.bupt.evaluate.processor.out_of_use.NodeOperator;
+import com.bupt.evaluate.extract.out_of_use.NodeOperator;
 
 //轮廓关键点组成的树状结构
 public class PointTree {

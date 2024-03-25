@@ -67,7 +67,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
                     getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
                             "/" + c.get(i) + ".jpg");
             //显示读取到的原图像
-            img1.setImageBitmap(bitmap2);
+            img1.setImageBitmap(bitmap1);
             //调用评价模块
             Evaluation evaluation = Evaluator.evaluate(c.get(i), bitmap1, bitmap2);
             //显示评价模块返回的信息

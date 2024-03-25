@@ -1,4 +1,4 @@
-package com.bupt.evaluate.data;
+package com.bupt.evaluate.data.out_of_use;
 
 import java.util.ArrayList;
 

@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity
         HomepageAdapter homepageAdapter = new HomepageAdapter(
                 getSupportFragmentManager(), getLifecycle(), fragments);
         viewpager_homepage.setAdapter(homepageAdapter);
-        viewpager_homepage.setCurrentItem(1, false);//将初始页面设为作业，并取消滚动动画
+        viewpager_homepage.setCurrentItem(1, false);//将初始页面设为中间页面，并取消滚动动画
     }
 
     //RadioGroup选项切换后的回调方法
