@@ -3,14 +3,15 @@ package com.bupt.evaluate.core;
 import android.graphics.Bitmap;
 
 import com.bupt.evaluate.data.Contours;
+import com.bupt.evaluate.data.Line;
 import com.bupt.evaluate.data.Points;
 import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;
+import com.bupt.evaluate.evaluate.StrokeEvaluation;
+import com.bupt.evaluate.evaluate.StrokeEvaluator;
 import com.bupt.evaluate.extract.ContourExtractor;
 import com.bupt.evaluate.extract.PointExtractor;
 import com.bupt.evaluate.extract.StrokeExtractor;
-import com.bupt.evaluate.score.StrokeEvaluation;
-import com.bupt.evaluate.score.StrokeEvaluator;
 import com.bupt.evaluate.util.ImageDrawer;
 
 import org.opencv.android.OpenCVLoader;
@@ -55,10 +56,10 @@ public class Evaluator {
 
     //根据汉字名称和图像取得汉字笔画
     private static Strokes getStrokes(String cnChar, Mat img) {
-        //从输入图像中提取轮廓
-        Contours contours = ContourExtractor.mat2Contours(img);
-        //从输入图像中提取点集
+        //从输入图像中提取特征点
         Points points = PointExtractor.mat2Points(img);
+        //根据输入图像和特征点提取轮廓
+        Contours contours = ContourExtractor.mat2Contours(img, points);
         //根据轮廓和特征点提取汉字笔画
         return StrokeExtractor.extractStrokes(cnChar, contours, points);
     }
@@ -78,23 +79,39 @@ public class Evaluator {
                                             Bitmap inputBmp, Bitmap stdBmp) {
         Evaluation evaluation = new Evaluation();
         int scoreSum = 0;
+        int scoreNum = 0;
+        StringBuilder stringBuilder = new StringBuilder();
         for (StrokeEvaluation strokeEvaluation : strokeEvaluations) {
-            scoreSum += strokeEvaluation.score;
+            if (strokeEvaluation.advice != null) {
+                scoreSum += strokeEvaluation.score;
+                stringBuilder.append(strokeEvaluation.advice);
+                scoreNum += 1;
+            }
         }
-        evaluation.score = scoreSum / strokeEvaluations.size();
-        if (evaluation.score > 80) {
-            evaluation.advice = "这个\"" + cnChar + "\"字写得真直";
-        } else if (evaluation.score > 60) {
-            evaluation.advice = "这个\"" + cnChar + "\"字写得有点弯";
+        if (scoreNum != 0) {
+            evaluation.score = scoreSum / scoreNum;
         } else {
-            evaluation.advice = "这个\"" + cnChar + "\"字写得曲里拐弯的";
+            evaluation.score = 100;
         }
+        if (evaluation.score > 90) {
+            stringBuilder.append("这个\"" + cnChar + "\"字写得真好");
+        } else if (evaluation.score > 70) {
+            stringBuilder.append("这个\"" + cnChar + "\"字写得不错");
+        } else {
+            stringBuilder.append("这个\"" + cnChar + "\"字需要加油");
+        }
+        evaluation.advice = stringBuilder.toString();
         Mat output = preprocess(inputBmp);
+//        Contours contours = ContourExtractor.mat2Contours(output);
         Strokes inputStrokes = getStrokes(cnChar, output);
         Imgproc.cvtColor(output, output, Imgproc.COLOR_GRAY2RGB);
+//        ImageDrawer.drawContours(output, contours);
         ImageDrawer.drawStrokes(output, inputStrokes);
         for (Stroke stroke : inputStrokes) {
-            stroke.drawFitLine(output);
+            if (stroke.isStraight) {
+                Line line = stroke.fitLine();
+                ImageDrawer.drawLine(output, line);
+            }
         }
         Bitmap outputBmp = Bitmap.createBitmap(output.cols(), output.rows(), Bitmap.Config.ARGB_8888);
         Utils.matToBitmap(output, outputBmp);

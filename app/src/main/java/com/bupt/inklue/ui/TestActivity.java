@@ -56,9 +56,9 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
             //从外部存储中读取图片
             String name;
             if (i < 14) {
-                name = "/" + c.get(i) + ".jpg";
-            } else {
                 name = "/" + c.get(i) + "1.jpg";
+            } else {
+                name = "/" + c.get(i) + ".jpg";
             }
             Bitmap bitmap1 = BitmapFactory.decodeFile(
                     getExternalFilesDir(Environment.DIRECTORY_PICTURES) +

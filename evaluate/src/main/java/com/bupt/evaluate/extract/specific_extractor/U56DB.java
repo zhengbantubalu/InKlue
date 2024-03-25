@@ -22,36 +22,36 @@ public class U56DB implements SpecificExtractor {
             //从左向右排序
             points.get(Points.INTER).sort();
             //四个角点
-            PointEx pointEx1 = contours.findNearestPoint(
+            PointEx pointEx1 = contours.getNearestPoint(
                     new PointEx(0, 0));
-            PointEx pointEx2 = contours.findNearestPoint(
+            PointEx pointEx2 = contours.getNearestPoint(
                     new PointEx(Constants.IMAGE_SIZE, 0));
-            PointEx pointEx3 = contours.findNearestPoint(
+            PointEx pointEx3 = contours.getNearestPoint(
                     new PointEx(0, Constants.IMAGE_SIZE));
-            PointEx pointEx4 = contours.findNearestPoint(
+            PointEx pointEx4 = contours.getNearestPoint(
                     new PointEx(Constants.IMAGE_SIZE, Constants.IMAGE_SIZE));
             //顶部横
-            strokes.get(0).addAll(contours.findMatchContour(pointEx1, pointEx2));
+            strokes.get(0).addList(contours.getMatchContour(pointEx1, pointEx2), false);
             //底部横
-            strokes.get(1).addAll(contours.findMatchContour(pointEx3, pointEx4));
+            strokes.get(1).addList(contours.getMatchContour(pointEx3, pointEx4), false);
             //左边竖
-            strokes.get(2).addAll(contours.findMatchContour(pointEx1, pointEx3));
+            strokes.get(2).addList(contours.getMatchContour(pointEx1, pointEx3), false);
             //右边竖
-            strokes.get(3).addAll(contours.findMatchContour(pointEx2, pointEx4));
+            strokes.get(3).addList(contours.getMatchContour(pointEx2, pointEx4), false);
             //左右撇捺的途径点
-            PointEx pointEx5 = contours.findNearestPoint(
+            PointEx pointEx5 = contours.getNearestPoint(
                     new PointEx((int) (Constants.IMAGE_SIZE * 0.4), Constants.IMAGE_SIZE / 2));
-            PointEx pointEx6 = contours.findNearestPoint(
+            PointEx pointEx6 = contours.getNearestPoint(
                     new PointEx((int) (Constants.IMAGE_SIZE * 0.6), Constants.IMAGE_SIZE / 2));
             //中间撇
-            strokes.get(4).addAll(contours.findMatchContour(
-                    points.get(Points.INTER).get(1), pointEx5));
-            strokes.get(4).addAll(contours.findMatchContour(
+            strokes.get(4).addList(contours.getMatchContour(
+                    points.get(Points.INTER).get(1), pointEx5), false);
+            strokes.get(4).addList(contours.getMatchContour(
                     pointEx5, points.get(Points.INTER).get(0)));
             //中间捺
-            strokes.get(5).addAll(contours.findMatchContour(
-                    points.get(Points.INTER).get(2), pointEx6));
-            strokes.get(5).addAll(contours.findMatchContour(
+            strokes.get(5).addList(contours.getMatchContour(
+                    points.get(Points.INTER).get(2), pointEx6), false);
+            strokes.get(5).addList(contours.getMatchContour(
                     pointEx6, points.get(Points.INTER).get(3)));
         } catch (NullPointerException ignored) {
         }

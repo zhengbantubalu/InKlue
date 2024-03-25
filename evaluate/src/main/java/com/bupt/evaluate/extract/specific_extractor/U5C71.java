@@ -21,23 +21,23 @@ public class U5C71 implements SpecificExtractor {
             points.get(Points.END).sort();
             points.get(Points.INTER).sort();
             //中间竖
-            strokes.get(0).add(points.get(Points.END).get(1));
-            strokes.get(0).add(points.get(Points.INTER).get(1));
+            strokes.get(0).addList(contours.getMatchContour(
+                    points.get(Points.END).get(1), points.get(Points.INTER).get(1)), true);
             //底部横
-            strokes.get(1).addAll(contours.findMatchContour(
-                    points.get(Points.INTER).get(0), points.get(Points.INTER).get(2)));
+            strokes.get(1).addList(contours.getMatchContour(
+                    points.get(Points.INTER).get(0), points.get(Points.INTER).get(2)), false);
             //左边竖
-            strokes.get(2).addAll(contours.findMatchContour(
-                    points.get(Points.END).get(0), points.get(Points.INTER).get(0)));
+            strokes.get(2).addList(contours.getMatchContour(
+                    points.get(Points.END).get(0), points.get(Points.INTER).get(0)), false);
             //右边竖
-            strokes.get(3).addAll(contours.findMatchContour(
-                    points.get(Points.END).get(2), points.get(Points.INTER).get(2)));
+            strokes.get(3).addList(contours.getMatchContour(
+                    points.get(Points.END).get(2), points.get(Points.INTER).get(2)), false);
             //左边斜竖
-            strokes.get(4).add(points.get(Points.INTER).get(1));
-            strokes.get(4).add(points.get(Points.INTER).get(0));
+            strokes.get(4).addList(contours.getMatchContour(
+                    points.get(Points.INTER).get(1), points.get(Points.INTER).get(0)), true);
             //右边斜竖
-            strokes.get(5).add(points.get(Points.INTER).get(1));
-            strokes.get(5).add(points.get(Points.INTER).get(2));
+            strokes.get(5).addList(contours.getMatchContour(
+                    points.get(Points.INTER).get(1), points.get(Points.INTER).get(2)), true);
         } catch (NullPointerException ignored) {
         }
         return strokes;

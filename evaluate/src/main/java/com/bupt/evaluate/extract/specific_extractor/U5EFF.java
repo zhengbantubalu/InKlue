@@ -26,25 +26,26 @@ public class U5EFF implements SpecificExtractor {
             strokes.get(0).add(points.get(Points.END).get(0));
             strokes.get(0).add(points.get(Points.INTER).get(0));
             strokes.get(0).add(points.get(Points.INTER).get(1));
-            strokes.get(0).add(points.get(Points.END).get(3));
+            strokes.get(0).add(points.get(Points.END).get(-1));
+            strokes.get(0).isStraight = true;
             //左下右下转折点
-            PointEx pointEx1 = contours.findNearestPoint(
+            PointEx pointEx1 = contours.getNearestPoint(
                     new PointEx(0, Constants.IMAGE_SIZE));
-            PointEx pointEx2 = contours.findNearestPoint(
+            PointEx pointEx2 = contours.getNearestPoint(
                     new PointEx(Constants.IMAGE_SIZE, Constants.IMAGE_SIZE));
             //左边竖
-            strokes.get(1).addAll(contours.findMatchContour(
-                    points.get(Points.END).get(1), points.get(Points.INTER).get(0)));
-            strokes.get(1).addAll(contours.findMatchContour(
+            strokes.get(1).addList(contours.getMatchContour(
+                    points.get(Points.END).get(1), points.get(Points.INTER).get(0)), true);
+            strokes.get(1).addList(contours.getMatchContour(
                     points.get(Points.INTER).get(0), pointEx1));
             //右边竖
-            strokes.get(2).addAll(contours.findMatchContour(
-                    points.get(Points.END).get(2), points.get(Points.INTER).get(1)));
-            strokes.get(2).addAll(contours.findMatchContour(
+            strokes.get(2).addList(contours.getMatchContour(
+                    points.get(Points.END).get(2), points.get(Points.INTER).get(1)), true);
+            strokes.get(2).addList(contours.getMatchContour(
                     points.get(Points.INTER).get(1), pointEx2));
             //底部横
-            strokes.get(3).addAll(contours.findMatchContour(
-                    pointEx1, pointEx2));
+            strokes.get(3).addList(contours.getMatchContour(
+                    pointEx1, pointEx2), false);
         } catch (NullPointerException ignored) {
         }
         return strokes;

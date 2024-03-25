@@ -19,27 +19,28 @@ public class U65E5 implements SpecificExtractor {
             strokes.add(new Stroke());
         }
         try {
+            //从左向右排序
+            points.get(Points.END).sort();
             //四个角点
-            PointEx pointEx1 = contours.findNearestPoint(
+            PointEx pointEx1 = contours.getNearestPoint(
                     new PointEx(0, 0));
-            PointEx pointEx2 = contours.findNearestPoint(
+            PointEx pointEx2 = contours.getNearestPoint(
                     new PointEx(Constants.IMAGE_SIZE, 0));
-            PointEx pointEx3 = contours.findNearestPoint(
+            PointEx pointEx3 = contours.getNearestPoint(
                     new PointEx(0, Constants.IMAGE_SIZE));
-            PointEx pointEx4 = contours.findNearestPoint(
+            PointEx pointEx4 = contours.getNearestPoint(
                     new PointEx(Constants.IMAGE_SIZE, Constants.IMAGE_SIZE));
             //顶部横
-            strokes.get(0).addAll(contours.findMatchContour(pointEx1, pointEx2));
+            strokes.get(0).addList(contours.getMatchContour(pointEx1, pointEx2), false);
             //底部横
-            strokes.get(1).addAll(contours.findMatchContour(pointEx3, pointEx4));
+            strokes.get(1).addList(contours.getMatchContour(pointEx3, pointEx4), false);
             //左边竖
-            strokes.get(2).addAll(contours.findMatchContour(pointEx1, pointEx3));
+            strokes.get(2).addList(contours.getMatchContour(pointEx1, pointEx3), false);
             //右边竖
-            strokes.get(3).addAll(contours.findMatchContour(pointEx2, pointEx4));
+            strokes.get(3).addList(contours.getMatchContour(pointEx2, pointEx4), false);
             //中间横
-            strokes.get(4).add(points.get(Points.END).get(0));
-            strokes.get(4).add(points.get(Points.END).get(1));
-            strokes.get(4).sort();
+            strokes.get(4).addList(contours.getMatchContour(
+                    points.get(Points.END).get(0), points.get(Points.END).get(1)), true);
         } catch (NullPointerException ignored) {
         }
         return strokes;

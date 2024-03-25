@@ -7,10 +7,6 @@ import org.opencv.core.Point;
 //点，继承自OpenCV的Point类
 public class PointEx extends Point {
 
-    //空构造方法，用于创建空点
-    public PointEx() {
-    }
-
     //重载构造方法，允许整数输入
     public PointEx(int x, int y) {
         this.x = x;

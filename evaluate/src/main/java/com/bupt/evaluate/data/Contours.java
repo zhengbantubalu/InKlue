@@ -7,8 +7,8 @@ import java.util.Collections;
 public class Contours extends ArrayList<PointList> {
 
     //寻找轮廓中距离该点最近的一个点
-    public PointEx findNearestPoint(PointEx pointEx) {
-        PointEx retPoint = new PointEx();
+    public PointEx getNearestPoint(PointEx pointEx) {
+        PointEx retPoint = this.get(0).get(0);
         int minDistance = pointEx.getDistance(this.get(0).get(0));
         for (PointList contour : this) {
             for (PointEx p : contour) {
@@ -22,21 +22,21 @@ public class Contours extends ArrayList<PointList> {
         return retPoint;
     }
 
-    //根据起止点查找匹配轮廓，返回匹配的轮廓段，并正序排列，无匹配则返回空
-    public PointList findMatchContour(PointEx start, PointEx end) {
+    //根据起止点查找匹配轮廓，返回匹配的轮廓段，并正序排列，无匹配则返回空列表
+    public PointList getMatchContour(PointEx start, PointEx end) {
         for (int i = 0; i < this.size(); i++) {
             PointList contour = this.get(i);
             ArrayList<Integer> startIndexes = contour.getIndexList(start);
             ArrayList<Integer> endIndexes = contour.getIndexList(end);
             if (!startIndexes.isEmpty() && !endIndexes.isEmpty()) {
-                return getMatchContour(contour, startIndexes, endIndexes);
+                return getShortestContour(contour, startIndexes, endIndexes);
             }
         }
-        return null;
+        return new PointList();
     }
 
     //根据起止点位置获取两个点之间的最短轮廓连线
-    private PointList getMatchContour(PointList contour, ArrayList<Integer> startIndexes, ArrayList<Integer> endIndexes) {
+    private PointList getShortestContour(PointList contour, ArrayList<Integer> startIndexes, ArrayList<Integer> endIndexes) {
         int[] indexArray = getNearestIndexes(startIndexes, endIndexes, contour.size());
         int fromIndex = indexArray[0];
         int toIndex = indexArray[1];

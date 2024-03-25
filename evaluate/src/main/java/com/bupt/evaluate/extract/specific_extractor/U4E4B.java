@@ -19,20 +19,19 @@ public class U4E4B implements SpecificExtractor {
         try {
             //从左向右排序
             points.get(Points.END).sort();
-            //横
-            strokes.get(0).add(points.get(Points.END).get(0));
-            strokes.get(0).add(points.get(Points.INTER).get(1));
-            strokes.get(0).add(points.get(Points.END).get(-1));
+            //底部横
+            strokes.get(0).addList(contours.getMatchContour(
+                    points.get(Points.END).get(0), points.get(Points.END).get(-1)), false);
             //中间竖
-            strokes.get(1).add(points.get(Points.END).get(2));
-            strokes.get(1).add(points.get(Points.INTER).get(0));
+            strokes.get(1).addList(contours.getMatchContour(
+                    points.get(Points.END).get(2), points.get(Points.INTER).get(0)), true);
             strokes.get(1).add(points.get(Points.INTER).get(1));
             //左边竖
-            strokes.get(2).addAll(contours.findMatchContour(
-                    points.get(Points.END).get(1), points.get(Points.INTER).get(0)));
+            strokes.get(2).addList(contours.getMatchContour(
+                    points.get(Points.END).get(1), points.get(Points.INTER).get(0)), false);
             //右边竖
-            strokes.get(3).addAll(contours.findMatchContour(
-                    points.get(Points.END).get(3), points.get(Points.INTER).get(0)));
+            strokes.get(3).addList(contours.getMatchContour(
+                    points.get(Points.END).get(3), points.get(Points.INTER).get(0)), false);
         } catch (NullPointerException ignored) {
         }
         return strokes;

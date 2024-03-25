@@ -2,6 +2,8 @@ package com.bupt.evaluate.extract;
 
 import com.bupt.evaluate.data.Contours;
 import com.bupt.evaluate.data.PointList;
+import com.bupt.evaluate.data.Points;
+import com.bupt.evaluate.util.Constants;
 
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -15,7 +17,7 @@ import java.util.List;
 public class ContourExtractor {
 
     //从图像中提取轮廓
-    public static Contours mat2Contours(Mat img) {
+    public static Contours mat2Contours(Mat img, Points points) {
         //提取轮廓
         List<MatOfPoint> originalData = new ArrayList<>();
         Imgproc.findContours(img, originalData, new Mat(), Imgproc.RETR_TREE, Imgproc.CHAIN_APPROX_SIMPLE);
@@ -27,6 +29,8 @@ public class ContourExtractor {
             PointList pointList = new PointList(cnt.toList());
             contours.add(pointList);
         }
+        //重置笔画端点坐标为Points中的端点坐标，防止轮廓近似导致笔画变短
+        resetEndPoints(contours, points);
         return contours;
     }
 
@@ -40,5 +44,16 @@ public class ContourExtractor {
             contours.add(matOfPoint);
         }
         return contours;
+    }
+
+    private static void resetEndPoints(Contours contours, Points points) {
+        for (PointList contour : contours) {
+            for (int i = 0; i < contour.size(); i++) {
+                int angle = contour.getAngle(i);
+                if (angle < Constants.MAX_ANGLE || angle > 360 - Constants.MAX_ANGLE) {
+                    contour.set(i, points.get(Points.END).getNearestPoint(contour.get(i)));
+                }
+            }
+        }
     }
 }

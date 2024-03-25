@@ -1,6 +1,7 @@
 package com.bupt.evaluate.extract.specific_extractor;
 
 import com.bupt.evaluate.data.Contours;
+import com.bupt.evaluate.data.PointList;
 import com.bupt.evaluate.data.Points;
 import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;
@@ -22,14 +23,19 @@ public class U571F implements SpecificExtractor {
             strokes.get(0).add(points.get(Points.END).get(2));
             strokes.get(0).add(points.get(Points.INTER).get(0));
             strokes.get(0).sort();
+            strokes.get(0).isStraight = true;
             //第二横
-            strokes.get(1).add(points.get(Points.END).get(3));
-            strokes.get(1).add(points.get(Points.END).get(4));
-            strokes.get(1).add(points.get(Points.INTER).get(1));
-            strokes.get(1).sort();
+            PointList tempList = new PointList();
+            tempList.add(points.get(Points.END).get(-1));
+            tempList.add(points.get(Points.END).get(-2));
+            tempList.sort();
+            strokes.get(1).addList(contours.getMatchContour(
+                    tempList.get(0), tempList.get(1)), true);
             //竖
-            strokes.get(2).add(points.get(Points.END).get(0));
-            strokes.get(2).addAll(points.get(Points.INTER));
+            strokes.get(2).addList(contours.getMatchContour(
+                    points.get(Points.END).get(0), points.get(Points.INTER).get(0)), true);
+            strokes.get(2).addList(contours.getMatchContour(
+                    points.get(Points.INTER).get(0), points.get(Points.INTER).get(1)));
         } catch (NullPointerException ignored) {
         }
         return strokes;

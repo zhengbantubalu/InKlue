@@ -114,7 +114,7 @@ public class PointList extends ArrayList<PointEx> {
         this.dropDuplicates(Constants.MAX_DISTANCE);
     }
 
-    //取得指定点的角度
+    //取得指定点的角度，返回值为角度制
     //作者 苏崇博
     public int getAngle(int index) {
         Point p1 = this.get(index - 1);
@@ -129,5 +129,19 @@ public class PointList extends ArrayList<PointEx> {
         double len2 = Math.sqrt(delta_x2 * delta_x2 + delta_y2 * delta_y2);
         double cosValue = arrayValue / (len1 * len2);
         return (int) Math.toDegrees(Math.acos(cosValue));
+    }
+
+    //寻找列表中距离该点最近的一个点
+    public PointEx getNearestPoint(PointEx pointEx) {
+        PointEx retPoint = this.get(0);
+        int minDistance = pointEx.getDistance(this.get(0));
+        for (PointEx p : this) {
+            int distance = pointEx.getDistance(p);
+            if (distance < minDistance) {
+                minDistance = distance;
+                retPoint = p;
+            }
+        }
+        return retPoint;
     }
 }

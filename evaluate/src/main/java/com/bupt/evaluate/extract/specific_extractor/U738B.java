@@ -1,6 +1,7 @@
 package com.bupt.evaluate.extract.specific_extractor;
 
 import com.bupt.evaluate.data.Contours;
+import com.bupt.evaluate.data.PointList;
 import com.bupt.evaluate.data.Points;
 import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;
@@ -18,22 +19,33 @@ public class U738B implements SpecificExtractor {
         }
         try {
             //第一横
-            strokes.get(0).add(points.get(Points.END).get(0));
-            strokes.get(0).add(points.get(Points.END).get(1));
-            strokes.get(0).add(points.get(Points.INTER).get(0));
-            strokes.get(0).sort();
+            PointList tempList1 = new PointList();
+            tempList1.add(points.get(Points.END).get(0));
+            tempList1.add(points.get(Points.END).get(1));
+            tempList1.sort();
+            strokes.get(0).addList(contours.getMatchContour(
+                    tempList1.get(0), tempList1.get(1)), true);
             //第二横
-            strokes.get(1).add(points.get(Points.END).get(2));
-            strokes.get(1).add(points.get(Points.END).get(3));
-            strokes.get(1).add(points.get(Points.INTER).get(1));
-            strokes.get(1).sort();
+            PointList tempList2 = new PointList();
+            tempList2.add(points.get(Points.END).get(2));
+            tempList2.add(points.get(Points.END).get(3));
+            tempList2.add(points.get(Points.INTER).get(1));
+            tempList2.sort();
+            strokes.get(1).addList(contours.getMatchContour(
+                    tempList2.get(0), tempList2.get(1)), true);
+            strokes.get(1).addList(contours.getMatchContour(
+                    tempList2.get(1), tempList2.get(2)), true);
             //第三横
-            strokes.get(2).add(points.get(Points.END).get(4));
-            strokes.get(2).add(points.get(Points.END).get(5));
-            strokes.get(2).add(points.get(Points.INTER).get(2));
-            strokes.get(2).sort();
+            PointList tempList3 = new PointList();
+            tempList3.add(points.get(Points.END).get(-1));
+            tempList3.add(points.get(Points.END).get(-2));
+            tempList3.sort();
+            strokes.get(2).addList(contours.getMatchContour(
+                    tempList3.get(0), tempList3.get(1)), true);
             //竖
-            strokes.get(3).addAll(points.get(Points.INTER));
+            strokes.get(3).add(points.get(Points.INTER).get(0));
+            strokes.get(3).addList(contours.getMatchContour(
+                    points.get(Points.INTER).get(1), points.get(Points.INTER).get(2)), true);
         } catch (NullPointerException ignored) {
         }
         return strokes;

@@ -23,26 +23,28 @@ public class U77F3 implements SpecificExtractor {
             points.get(Points.END).sort();
             points.get(Points.INTER).sort();
             //横撇拐点
-            PointEx pointEx1 = contours.findNearestPoint(
+            PointEx pointEx1 = contours.getNearestPoint(
                     new PointEx(0, 0));
-            //横
-            strokes.get(0).addAll(contours.findMatchContour(
-                    pointEx1, points.get(Points.END).get(3)));
-            //撇
-            strokes.get(1).addAll(contours.findMatchContour(
-                    pointEx1, points.get(Points.END).get(0)));
+            //顶部长横
+            strokes.get(0).addList(contours.getMatchContour(
+                    pointEx1, points.get(Points.END).get(3)), true);
+            //左侧长撇
+            strokes.get(1).addList(contours.getMatchContour(
+                    pointEx1, points.get(Points.END).get(0)), false);
             //口字中间短横
             strokes.get(2).add(points.get(Points.INTER).get(0));
             strokes.get(2).add(points.get(Points.INTER).get(1));
+            strokes.get(2).addList(contours.getMatchContour(
+                    points.get(Points.INTER).get(0), points.get(Points.INTER).get(1)), true);
             //口字底部横途径点
-            PointEx pointEx2 = contours.findNearestPoint(
-                    new PointEx(Constants.IMAGE_SIZE / 2, Constants.IMAGE_SIZE / 2));
+            PointEx pointEx2 = contours.getNearestPoint(
+                    new PointEx((int) (Constants.IMAGE_SIZE * 0.6), Constants.IMAGE_SIZE / 2));
             //口字左半
-            strokes.get(3).addAll(contours.findMatchContour(
-                    points.get(Points.END).get(1), pointEx2));
+            strokes.get(3).addList(contours.getMatchContour(
+                    points.get(Points.END).get(1), pointEx2), false);
             //口字右半
-            strokes.get(4).addAll(contours.findMatchContour(
-                    points.get(Points.END).get(2), pointEx2));
+            strokes.get(4).addList(contours.getMatchContour(
+                    points.get(Points.END).get(2), pointEx2), false);
         } catch (NullPointerException ignored) {
         }
         return strokes;

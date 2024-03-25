@@ -1,4 +1,4 @@
-package com.bupt.evaluate.score;
+package com.bupt.evaluate.evaluate;
 
 //对一个笔画书写的评价
 public class StrokeEvaluation {
