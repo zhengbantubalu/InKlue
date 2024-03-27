@@ -20,17 +20,17 @@ public class U4E0A implements SpecificExtractor {
         try {
             //第一横
             strokes.get(0).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(0), points.get(Points.END).get(1)), true);
+                    points.inter.get(0), points.end.get(1)), true);
             //第二横
             PointList tempList = new PointList();
-            tempList.add(points.get(Points.END).get(2));
-            tempList.add(points.get(Points.END).get(3));
+            tempList.add(points.end.get(2));
+            tempList.add(points.end.get(3));
             tempList.sort();
             strokes.get(1).addList(contours.getMatchContour(
                     tempList.get(0), tempList.get(1)), true);
             //竖
             strokes.get(2).addList(contours.getMatchContour(
-                    points.get(Points.END).get(0), points.get(Points.INTER).get(1)), false);
+                    points.end.get(0), points.inter.get(1)), false);
         } catch (NullPointerException ignored) {
         }
         return strokes;

@@ -20,13 +20,13 @@ public class U5EFF implements SpecificExtractor {
         }
         try {
             //从左向右排序
-            points.get(Points.END).sort();
-            points.get(Points.INTER).sort();
+            points.end.sort();
+            points.inter.sort();
             //第一横
-            strokes.get(0).add(points.get(Points.END).get(0));
-            strokes.get(0).add(points.get(Points.INTER).get(0));
-            strokes.get(0).add(points.get(Points.INTER).get(1));
-            strokes.get(0).add(points.get(Points.END).get(-1));
+            strokes.get(0).add(points.end.get(0));
+            strokes.get(0).add(points.inter.get(0));
+            strokes.get(0).add(points.inter.get(1));
+            strokes.get(0).add(points.end.get(-1));
             strokes.get(0).isStraight = true;
             //左下右下转折点
             PointEx pointEx1 = contours.getNearestPoint(
@@ -35,14 +35,14 @@ public class U5EFF implements SpecificExtractor {
                     new PointEx(Constants.IMAGE_SIZE, Constants.IMAGE_SIZE));
             //左边竖
             strokes.get(1).addList(contours.getMatchContour(
-                    points.get(Points.END).get(1), points.get(Points.INTER).get(0)), true);
+                    points.end.get(1), points.inter.get(0)), true);
             strokes.get(1).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(0), pointEx1));
+                    points.inter.get(0), pointEx1));
             //右边竖
             strokes.get(2).addList(contours.getMatchContour(
-                    points.get(Points.END).get(2), points.get(Points.INTER).get(1)), true);
+                    points.end.get(2), points.inter.get(1)), true);
             strokes.get(2).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(1), pointEx2));
+                    points.inter.get(1), pointEx2));
             //底部横
             strokes.get(3).addList(contours.getMatchContour(
                     pointEx1, pointEx2), false);

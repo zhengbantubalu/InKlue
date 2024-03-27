@@ -18,29 +18,29 @@ public class U4E0D implements SpecificExtractor {
         }
         try {
             //从左向右排序
-            points.get(Points.END).sort();
-            points.get(Points.INTER).sort();
+            points.end.sort();
+            points.inter.sort();
             //第一横
             strokes.get(0).addList(contours.getMatchContour(
-                    points.get(Points.END).get(0), points.get(Points.END).get(-1)), true);
+                    points.end.get(0), points.end.get(-1)), true);
             //左下半边口
             strokes.get(1).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(0), points.get(Points.INTER).get(2)), false);
+                    points.inter.get(0), points.inter.get(2)), false);
             //右下半边口
             strokes.get(2).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(-1), points.get(Points.INTER).get(2)), false);
+                    points.inter.get(-1), points.inter.get(2)), false);
             //从上向下排序
-            points.get(Points.INTER).sort(1, true);
+            points.inter.sort(1, true);
             //中间竖
-            strokes.get(3).add(points.get(Points.INTER).get(2));
+            strokes.get(3).add(points.inter.get(2));
             strokes.get(3).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(-1), points.get(Points.END).get(2)), true);
+                    points.inter.get(-1), points.end.get(2)), true);
             //左边竖
             strokes.get(4).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(-1), points.get(Points.END).get(1)), false);
+                    points.inter.get(-1), points.end.get(1)), false);
             //右边竖
             strokes.get(5).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(-1), points.get(Points.END).get(3)), false);
+                    points.inter.get(-1), points.end.get(3)), false);
         } catch (NullPointerException ignored) {
         }
         return strokes;

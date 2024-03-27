@@ -20,9 +20,9 @@ public class PointExtractor {
                 if ((int) img.get(i, j)[0] == 255) {
                     int branchNum = getBranchNum(img, i, j);
                     if (branchNum < 2) {
-                        Objects.requireNonNull(points.get(Points.END)).add(new PointEx(j, i));
+                        Objects.requireNonNull(points.end).add(new PointEx(j, i));
                     } else if (branchNum > 2) {
-                        Objects.requireNonNull(points.get(Points.INTER)).add(new PointEx(j, i));
+                        Objects.requireNonNull(points.inter).add(new PointEx(j, i));
                     }
                 }
             }

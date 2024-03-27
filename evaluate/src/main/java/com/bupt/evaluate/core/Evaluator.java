@@ -3,9 +3,7 @@ package com.bupt.evaluate.core;
 import android.graphics.Bitmap;
 
 import com.bupt.evaluate.data.Contours;
-import com.bupt.evaluate.data.Line;
 import com.bupt.evaluate.data.Points;
-import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;
 import com.bupt.evaluate.evaluate.StrokeEvaluation;
 import com.bupt.evaluate.evaluate.StrokeEvaluator;
@@ -30,92 +28,64 @@ public class Evaluator {
     public static Evaluation evaluate(String cnChar, Bitmap inputBmp, Bitmap stdBmp) {
         //加载OpenCV
         OpenCVLoader.initDebug();
-        //预处理图像，细化为骨架
-        Mat input = preprocess(inputBmp);
-        Mat std = preprocess(stdBmp);
+        //转换图像格式
+        Mat input = new Mat();
+        Utils.bitmapToMat(inputBmp, input, true);
+        Mat std = new Mat();
+        Utils.bitmapToMat(stdBmp, std, true);
         //从图像中提取笔画
         Strokes inputStrokes = getStrokes(cnChar, input);
         Strokes stdStrokes = getStrokes(cnChar, std);
         //取得笔画评价数据
-        ArrayList<StrokeEvaluation> strokeEvaluations = evaluateStrokes(inputStrokes, stdStrokes);
+        ArrayList<StrokeEvaluation> strokeEvaluations = evaluateStrokes(inputStrokes, stdStrokes, input);
         //设置汉字书写评价数据
-        return setEvaluation(cnChar, strokeEvaluations, inputBmp, stdBmp);
-    }
-
-    //预处理图像，细化为骨架，输出图像为单通道Mat
-    private static Mat preprocess(Bitmap bmp) {
-        Mat mat = new Mat();
-        Utils.bitmapToMat(bmp, mat, true);
-        Imgproc.cvtColor(mat, mat, Imgproc.COLOR_RGB2GRAY);//灰度化
-        Imgproc.threshold(mat, mat, 127, 255, Imgproc.THRESH_BINARY_INV);//阈值
-        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(9, 9));
-        Imgproc.morphologyEx(mat, mat, Imgproc.MORPH_CLOSE, kernel);//闭运算
-        Ximgproc.thinning(mat, mat, Ximgproc.THINNING_ZHANGSUEN);//细化
-        return mat;
+        Evaluation evaluation = new Evaluation();
+        evaluation.setEvaluation(strokeEvaluations, cnChar, inputBmp, stdBmp);
+        return evaluation;
     }
 
     //根据汉字名称和图像取得汉字笔画
     private static Strokes getStrokes(String cnChar, Mat img) {
-        //从输入图像中提取特征点
+        //预处理图像，细化为骨架
+        preprocess(img);
+        //从图像中提取特征点
         Points points = PointExtractor.mat2Points(img);
-        //根据输入图像和特征点提取轮廓
+        //根据图像和特征点提取轮廓
         Contours contours = ContourExtractor.mat2Contours(img, points);
         //根据轮廓和特征点提取汉字笔画
-        return StrokeExtractor.extractStrokes(cnChar, contours, points);
+        Strokes strokes = StrokeExtractor.extractStrokes(cnChar, contours, points);
+        //绘制提取结果，用于测试
+        Imgproc.cvtColor(img, img, Imgproc.COLOR_GRAY2RGB);
+        ImageDrawer.drawPoints(img, points);
+        ImageDrawer.drawContours(img, contours);
+        ImageDrawer.drawStrokes(img, strokes);
+        return strokes;
+    }
+
+    //预处理图像，细化为骨架，输出图像为单通道Mat
+    private static void preprocess(Mat img) {
+        Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2GRAY);//灰度化
+        Imgproc.threshold(img, img, 127, 255, Imgproc.THRESH_BINARY_INV);//阈值
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(9, 9));
+        Imgproc.morphologyEx(img, img, Imgproc.MORPH_CLOSE, kernel);//闭运算
+        Imgproc.morphologyEx(img, img, Imgproc.MORPH_OPEN, kernel);//开运算
+        Ximgproc.thinning(img, img, Ximgproc.THINNING_ZHANGSUEN);//细化
     }
 
     //根据输入笔画和标准笔画取得笔画评价数据
-    private static ArrayList<StrokeEvaluation> evaluateStrokes(Strokes inputStrokes, Strokes stdStrokes) {
+    private static ArrayList<StrokeEvaluation> evaluateStrokes(
+            Strokes inputStrokes, Strokes stdStrokes, Mat img) {
+        Imgproc.cvtColor(img, img, Imgproc.COLOR_RGBA2RGB);//转换图像通道，避免绘制时颜色异常
         ArrayList<StrokeEvaluation> strokeEvaluations = new ArrayList<>();
+        int strokeIndex = 0;
         for (int i = 0; i < stdStrokes.size(); i++) {
-            strokeEvaluations.add(
-                    StrokeEvaluator.evaluateStroke(inputStrokes.get(i), stdStrokes.get(i)));
+            StrokeEvaluation strokeEvaluation = StrokeEvaluator.evaluateStroke(
+                    inputStrokes.get(i), stdStrokes.get(i), img, strokeIndex);
+            strokeEvaluations.add(strokeEvaluation);
+            if (!strokeEvaluation.advice.isEmpty()) {
+                strokeIndex += 1;
+            }
         }
         return strokeEvaluations;
-    }
-
-    //根据每个笔画的评价设置汉字书写评价数据
-    private static Evaluation setEvaluation(String cnChar, ArrayList<StrokeEvaluation> strokeEvaluations,
-                                            Bitmap inputBmp, Bitmap stdBmp) {
-        Evaluation evaluation = new Evaluation();
-        int scoreSum = 0;
-        int scoreNum = 0;
-        StringBuilder stringBuilder = new StringBuilder();
-        for (StrokeEvaluation strokeEvaluation : strokeEvaluations) {
-            if (strokeEvaluation.advice != null) {
-                scoreSum += strokeEvaluation.score;
-                stringBuilder.append(strokeEvaluation.advice);
-                scoreNum += 1;
-            }
-        }
-        if (scoreNum != 0) {
-            evaluation.score = scoreSum / scoreNum;
-        } else {
-            evaluation.score = 100;
-        }
-        if (evaluation.score > 90) {
-            stringBuilder.append("这个\"" + cnChar + "\"字写得真好");
-        } else if (evaluation.score > 70) {
-            stringBuilder.append("这个\"" + cnChar + "\"字写得不错");
-        } else {
-            stringBuilder.append("这个\"" + cnChar + "\"字需要加油");
-        }
-        evaluation.advice = stringBuilder.toString();
-        Mat output = preprocess(inputBmp);
-//        Contours contours = ContourExtractor.mat2Contours(output);
-        Strokes inputStrokes = getStrokes(cnChar, output);
-        Imgproc.cvtColor(output, output, Imgproc.COLOR_GRAY2RGB);
-//        ImageDrawer.drawContours(output, contours);
-        ImageDrawer.drawStrokes(output, inputStrokes);
-        for (Stroke stroke : inputStrokes) {
-            if (stroke.isStraight) {
-                Line line = stroke.fitLine();
-                ImageDrawer.drawLine(output, line);
-            }
-        }
-        Bitmap outputBmp = Bitmap.createBitmap(output.cols(), output.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(output, outputBmp);
-        evaluation.outputBmp = outputBmp;
-        return evaluation;
     }
 }

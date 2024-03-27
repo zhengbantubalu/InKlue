@@ -1,9 +1,5 @@
 package com.bupt.evaluate.data;
 
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
-
 //一个笔画
 public class Stroke extends PointList {
 
@@ -21,16 +17,28 @@ public class Stroke extends PointList {
         this.addAll(pointList);
     }
 
-    //直线拟合
-    public Line fitLine() {
-        Mat points = new Mat(this.size(), 1, CvType.CV_16SC2);
-        for (int i = 0; i < this.size(); i++) {
-            points.put(i, 0, this.get(i).x, this.get(i).y);
+    //取得笔画长度
+    public int getLength() {
+        int length = 0;
+        for (int i = 0; i < this.size() - 1; i++) {
+            length += this.get(i).getDistance(this.get(i + 1));
         }
-        Mat line = new Mat();
-        Imgproc.fitLine(points, line, Imgproc.DIST_L2, 0, 0.01, 0.01);
-        Line retLine = new Line(line);
-        retLine.setEndpoints(this);
-        return retLine;
+        return length;
+    }
+
+    //取得指定点沿笔画向后移动指定步长后的点
+    public PointEx getNextPoint(PointEx currentPoint, int[] index, int stepSize) {
+        PointEx nextNode = this.get(index[0] + 1);
+        int distance = currentPoint.getDistance(nextNode);
+        while (distance < stepSize) {
+            stepSize -= distance;
+            index[0]++;
+            currentPoint = nextNode;
+            nextNode = this.get(index[0] + 1);
+            distance = currentPoint.getDistance(nextNode);
+        }
+        int x = (int) (currentPoint.x + (nextNode.x - currentPoint.x) * stepSize / distance);
+        int y = (int) (currentPoint.y + (nextNode.y - currentPoint.y) * stepSize / distance);
+        return new PointEx(x, y);
     }
 }

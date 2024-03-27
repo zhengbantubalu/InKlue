@@ -20,7 +20,7 @@ public class U56DB implements SpecificExtractor {
         }
         try {
             //从左向右排序
-            points.get(Points.INTER).sort();
+            points.inter.sort();
             //四个角点
             PointEx pointEx1 = contours.getNearestPoint(
                     new PointEx(0, 0));
@@ -45,14 +45,14 @@ public class U56DB implements SpecificExtractor {
                     new PointEx((int) (Constants.IMAGE_SIZE * 0.6), Constants.IMAGE_SIZE / 2));
             //中间撇
             strokes.get(4).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(1), pointEx5), false);
+                    points.inter.get(1), pointEx5), false);
             strokes.get(4).addList(contours.getMatchContour(
-                    pointEx5, points.get(Points.INTER).get(0)));
+                    pointEx5, points.inter.get(0)));
             //中间捺
             strokes.get(5).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(2), pointEx6), false);
+                    points.inter.get(2), pointEx6), false);
             strokes.get(5).addList(contours.getMatchContour(
-                    pointEx6, points.get(Points.INTER).get(3)));
+                    pointEx6, points.inter.get(3)));
         } catch (NullPointerException ignored) {
         }
         return strokes;

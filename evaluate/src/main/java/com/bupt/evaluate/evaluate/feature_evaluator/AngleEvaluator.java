@@ -1,25 +1,34 @@
-package com.bupt.evaluate.evaluate;
+package com.bupt.evaluate.evaluate.feature_evaluator;
 
 import com.bupt.evaluate.data.Line;
+import com.bupt.evaluate.evaluate.EvaluationBuilder;
 import com.bupt.evaluate.util.Constants;
+import com.bupt.evaluate.util.ImageDrawer;
+
+import org.opencv.core.Scalar;
 
 //笔画倾角评价器
 public class AngleEvaluator {
 
-    public static StrokeEvaluation getEvaluation(Line inputLine, Line stdLine) {
-        StrokeEvaluation strokeEvaluation = new StrokeEvaluation();
-        strokeEvaluation.score = getScore(inputLine, stdLine);
-        if (strokeEvaluation.score < Constants.MIN_SCORE) {
-            strokeEvaluation.advice = getAdvice(inputLine, stdLine);
+    public static void evaluate(EvaluationBuilder evaluationBuilder, Line inputLine, Line stdLine, int strokeIndex) {
+        int score = getScore(inputLine, stdLine);
+        evaluationBuilder.scores.add(score);
+        if (score < Constants.MIN_SCORE) {
+            evaluationBuilder.advices.add(getAdvice(inputLine, stdLine));
+            if (!evaluationBuilder.isDrawn) {
+                ImageDrawer.drawLine(evaluationBuilder.outputMat, stdLine,
+                        new Scalar(Constants.COLOR_GREEN), Constants.THICKNESS);
+                ImageDrawer.drawText(evaluationBuilder.outputMat, Integer.toString(strokeIndex + 1),
+                        inputLine.getQuartPoint(), new Scalar(Constants.COLOR_RED));
+            }
         }
-        return strokeEvaluation;
     }
 
     private static int getScore(Line inputLine, Line stdLine) {
         double inputAngle = inputLine.getAngle();
         double stdAngle = stdLine.getAngle();
         double angleDifference = Math.abs(inputAngle - stdAngle);
-        double difference = Math.min(angleDifference, 180 - angleDifference) / 30;
+        double difference = Math.min(angleDifference, 180 - angleDifference) / Constants.ANGLE_CRITERION;
         return Math.max((int) (100 - (difference * 100)), 0);
     }
 

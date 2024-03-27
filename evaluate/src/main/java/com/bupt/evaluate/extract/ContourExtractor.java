@@ -39,19 +39,20 @@ public class ContourExtractor {
         List<MatOfPoint> contours = new ArrayList<>();
         for (MatOfPoint contour : originalData) {
             MatOfPoint2f contour2f = new MatOfPoint2f(contour.toArray());
-            Imgproc.approxPolyDP(contour2f, contour2f, 3, false);
+            Imgproc.approxPolyDP(contour2f, contour2f, 3, true);
             MatOfPoint matOfPoint = new MatOfPoint(contour2f.toArray());
             contours.add(matOfPoint);
         }
         return contours;
     }
 
+    //将笔画端点重置为特征点中的端点
     private static void resetEndPoints(Contours contours, Points points) {
         for (PointList contour : contours) {
             for (int i = 0; i < contour.size(); i++) {
                 int angle = contour.getAngle(i);
                 if (angle < Constants.MAX_ANGLE || angle > 360 - Constants.MAX_ANGLE) {
-                    contour.set(i, points.get(Points.END).getNearestPoint(contour.get(i)));
+                    contour.set(i, points.end.getNearestPoint(contour.get(i)));
                 }
             }
         }

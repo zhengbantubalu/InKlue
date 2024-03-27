@@ -11,8 +11,11 @@ public class StrokeExtractor {
         //根据汉字名创建指定的笔画提取器实例
         SpecificExtractor specificExtractor = ExtractorFactory.createInstance(cnChar);
         if (specificExtractor != null) {
-            //创建实例成功，则调用笔画提取器的提取方法，并返回
-            return specificExtractor.extractStrokes(contours, points);
+            //创建实例成功，则调用笔画提取器的提取方法
+            Strokes strokes = specificExtractor.extractStrokes(contours, points);
+            //去除笔画中的重复点
+            strokes.dropDuplicates();
+            return strokes;
         }
         //创建实例失败，返回空的笔画类
         return new Strokes();

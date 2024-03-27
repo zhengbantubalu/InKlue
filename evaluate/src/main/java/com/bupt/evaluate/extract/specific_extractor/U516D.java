@@ -19,33 +19,33 @@ public class U516D implements SpecificExtractor {
         }
         try {
             //从左向右排序
-            points.get(Points.INTER).sort();
+            points.inter.sort();
             //顶部短竖
-            strokes.get(0).add(points.get(Points.END).get(0));
-            strokes.get(0).add(points.get(Points.INTER).get(1));
+            strokes.get(0).add(points.end.get(0));
+            strokes.get(0).add(points.inter.get(1));
             strokes.get(0).isStraight = true;
             //分辨两个横的端点
             PointList tempList1 = new PointList();
-            tempList1.add(points.get(Points.END).get(1));
-            tempList1.add(points.get(Points.END).get(2));
+            tempList1.add(points.end.get(1));
+            tempList1.add(points.end.get(2));
             tempList1.sort();
             //左半弯横
             strokes.get(1).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(1), tempList1.get(0)), false);
+                    points.inter.get(1), tempList1.get(0)), false);
             //右半弯横
             strokes.get(2).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(1), tempList1.get(1)), false);
+                    points.inter.get(1), tempList1.get(1)), false);
             //分辨两个竖的端点
             PointList tempList2 = new PointList();
-            tempList2.add(points.get(Points.END).get(-1));
-            tempList2.add(points.get(Points.END).get(-2));
+            tempList2.add(points.end.get(-1));
+            tempList2.add(points.end.get(-2));
             tempList2.sort();
             //左边弯竖
             strokes.get(3).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(0), tempList2.get(0)), false);
+                    points.inter.get(0), tempList2.get(0)), false);
             //右边弯竖
             strokes.get(4).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(2), tempList2.get(1)), false);
+                    points.inter.get(2), tempList2.get(1)), false);
         } catch (NullPointerException ignored) {
         }
         return strokes;

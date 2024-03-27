@@ -4,39 +4,51 @@
     android:layout_height="match_parent"
     android:background="?attr/colorBackground">
 
-    <ImageView
-        android:id="@+id/img1"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_alignParentTop="true"
+    <LinearLayout
+        android:id="@+id/img_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp" />
+        android:layout_marginTop="20dp">
+
+        <ImageView
+            android:id="@+id/img1"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="10dp" />
+
+        <ImageView
+            android:id="@+id/img2"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="10dp" />
+
+    </LinearLayout>
 
     <ImageView
-        android:id="@+id/img2"
+        android:id="@+id/img3"
         android:layout_width="400dp"
         android:layout_height="400dp"
-        android:layout_below="@id/img1"
+        android:layout_below="@id/img_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:id="@+id/score"
         android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_below="@id/img2"
+        android:layout_height="40dp"
+        android:layout_below="@id/img3"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
         android:gravity="center"
         android:textSize="30sp" />
 
     <TextView
         android:id="@+id/advice"
         android:layout_width="wrap_content"
-        android:layout_height="150dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/score"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
         android:textSize="11sp" />
 

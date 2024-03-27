@@ -1,6 +1,10 @@
 package com.bupt.evaluate.data;
 
+import android.util.Log;
+
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 //直线类，包含多种描述方式
 public class Line {
@@ -11,6 +15,23 @@ public class Line {
     public double vy;//直线方向向量y分量
     public double x0;//直线上任意一点x坐标
     public double y0;//直线上任意一点y坐标
+
+    //直线拟合
+    public static Line fitLine(Stroke stroke) {
+        if (stroke.isEmpty()) {
+            stroke.add(new PointEx(0, 0));
+            stroke.add(new PointEx(512, 512));
+        }
+        Mat points = new Mat(stroke.size(), 1, CvType.CV_16SC2);
+        for (int i = 0; i < stroke.size(); i++) {
+            points.put(i, 0, stroke.get(i).x, stroke.get(i).y);
+        }
+        Mat line = new Mat();
+        Imgproc.fitLine(points, line, Imgproc.DIST_L2, 0, 0.01, 0.01);
+        Line retLine = new Line(line);
+        retLine.setEndpoints(stroke);
+        return retLine;
+    }
 
     //直接输入两个端点构造本类
     public Line(PointEx p1, PointEx p2) {
@@ -27,7 +48,7 @@ public class Line {
     }
 
     //根据笔画端点设置直线的端点
-    //使用需要直线端点的方法前，需要先调用此方法。Stroke类的直线拟合fitLine()会自动调用此方法
+    //使用需要直线端点的方法前，需要先调用此方法
     public void setEndpoints(Stroke stroke) {
         p1 = getNearestPoint(stroke.get(0));
         p2 = getNearestPoint(stroke.get(stroke.size() - 1));
@@ -50,6 +71,11 @@ public class Line {
     //取得直线的中点
     public PointEx getMidpoint() {
         return new PointEx((int) ((p1.x + p2.x) / 2), (int) ((p1.y + p2.y) / 2));
+    }
+
+    //取得直线的四分之一点
+    public PointEx getQuartPoint() {
+        return new PointEx((int) (p1.x * 0.75 + p2.x * 0.25), (int) (p1.y * 0.75 + p2.y * 0.25));
     }
 
     //取得点p到直线的距离

@@ -20,7 +20,7 @@ public class U65E5 implements SpecificExtractor {
         }
         try {
             //从左向右排序
-            points.get(Points.END).sort();
+            points.end.sort();
             //四个角点
             PointEx pointEx1 = contours.getNearestPoint(
                     new PointEx(0, 0));
@@ -40,7 +40,7 @@ public class U65E5 implements SpecificExtractor {
             strokes.get(3).addList(contours.getMatchContour(pointEx2, pointEx4), false);
             //中间横
             strokes.get(4).addList(contours.getMatchContour(
-                    points.get(Points.END).get(0), points.get(Points.END).get(1)), true);
+                    points.end.get(0), points.end.get(1)), true);
         } catch (NullPointerException ignored) {
         }
         return strokes;

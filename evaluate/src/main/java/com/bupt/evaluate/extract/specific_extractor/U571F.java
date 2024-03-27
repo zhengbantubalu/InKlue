@@ -19,23 +19,23 @@ public class U571F implements SpecificExtractor {
         }
         try {
             //第一横
-            strokes.get(0).add(points.get(Points.END).get(1));
-            strokes.get(0).add(points.get(Points.END).get(2));
-            strokes.get(0).add(points.get(Points.INTER).get(0));
+            strokes.get(0).add(points.end.get(1));
+            strokes.get(0).add(points.end.get(2));
+            strokes.get(0).add(points.inter.get(0));
             strokes.get(0).sort();
             strokes.get(0).isStraight = true;
             //第二横
             PointList tempList = new PointList();
-            tempList.add(points.get(Points.END).get(-1));
-            tempList.add(points.get(Points.END).get(-2));
+            tempList.add(points.end.get(-1));
+            tempList.add(points.end.get(-2));
             tempList.sort();
             strokes.get(1).addList(contours.getMatchContour(
                     tempList.get(0), tempList.get(1)), true);
             //竖
             strokes.get(2).addList(contours.getMatchContour(
-                    points.get(Points.END).get(0), points.get(Points.INTER).get(0)), true);
+                    points.end.get(0), points.inter.get(0)), true);
             strokes.get(2).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(0), points.get(Points.INTER).get(1)));
+                    points.inter.get(0), points.inter.get(1)));
         } catch (NullPointerException ignored) {
         }
         return strokes;

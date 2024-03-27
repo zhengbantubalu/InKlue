@@ -63,10 +63,6 @@ public class PointList extends ArrayList<PointEx> {
         return false;
     }
 
-    public boolean has(PointEx pointEx) {
-        return this.has(pointEx, Constants.MAX_DISTANCE);
-    }
-
     //搜索当前列表中某个点的索引，不存在则返回-1
     //两点横纵坐标差值均小于等于maxDistance则认为是同一点
     public int getIndex(PointEx pointEx, int maxDistance) {
@@ -76,10 +72,6 @@ public class PointList extends ArrayList<PointEx> {
             }
         }
         return -1;
-    }
-
-    public int getIndex(PointEx pointEx) {
-        return this.getIndex(pointEx, Constants.MAX_DISTANCE);
     }
 
     //取得某个点在列表中的全部索引
@@ -108,10 +100,6 @@ public class PointList extends ArrayList<PointEx> {
                 this.add(pointEx);
             }
         }
-    }
-
-    public void dropDuplicates() {
-        this.dropDuplicates(Constants.MAX_DISTANCE);
     }
 
     //取得指定点的角度，返回值为角度制

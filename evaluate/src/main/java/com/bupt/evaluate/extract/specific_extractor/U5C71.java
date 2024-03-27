@@ -18,26 +18,26 @@ public class U5C71 implements SpecificExtractor {
         }
         try {
             //从左向右排序
-            points.get(Points.END).sort();
-            points.get(Points.INTER).sort();
+            points.end.sort();
+            points.inter.sort();
             //中间竖
             strokes.get(0).addList(contours.getMatchContour(
-                    points.get(Points.END).get(1), points.get(Points.INTER).get(1)), true);
+                    points.end.get(1), points.inter.get(1)), true);
             //底部横
             strokes.get(1).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(0), points.get(Points.INTER).get(2)), false);
+                    points.inter.get(0), points.inter.get(2)), false);
             //左边竖
             strokes.get(2).addList(contours.getMatchContour(
-                    points.get(Points.END).get(0), points.get(Points.INTER).get(0)), false);
+                    points.end.get(0), points.inter.get(0)), false);
             //右边竖
             strokes.get(3).addList(contours.getMatchContour(
-                    points.get(Points.END).get(2), points.get(Points.INTER).get(2)), false);
+                    points.end.get(2), points.inter.get(2)), false);
             //左边斜竖
             strokes.get(4).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(1), points.get(Points.INTER).get(0)), true);
+                    points.inter.get(1), points.inter.get(0)), true);
             //右边斜竖
             strokes.get(5).addList(contours.getMatchContour(
-                    points.get(Points.INTER).get(1), points.get(Points.INTER).get(2)), true);
+                    points.inter.get(1), points.inter.get(2)), true);
         } catch (NullPointerException ignored) {
         }
         return strokes;
