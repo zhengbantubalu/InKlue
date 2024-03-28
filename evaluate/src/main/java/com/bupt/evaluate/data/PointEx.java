@@ -1,7 +1,5 @@
 package com.bupt.evaluate.data;
 
-import com.bupt.evaluate.util.Constants;
-
 import org.opencv.core.Point;
 
 //点，继承自OpenCV的Point类
@@ -37,9 +35,5 @@ public class PointEx extends Point {
     public boolean equals(PointEx pointEx, int maxDistance) {
         return (Math.abs(this.x - pointEx.x) <= maxDistance &&
                 Math.abs(this.y - pointEx.y) <= maxDistance);
-    }
-
-    public boolean equals(PointEx pointEx) {
-        return this.equals(pointEx, Constants.MAX_DISTANCE);
     }
 }

@@ -1,12 +1,20 @@
 package com.bupt.evaluate.data;
 
+import com.bupt.evaluate.extract.PointExtractor;
 import com.bupt.evaluate.util.Constants;
+
+import org.opencv.core.Mat;
 
 //一个汉字的所有特征点
 public class Points {
 
     public PointList end;//端点列表
     public PointList inter;//交点列表
+
+    //调用特征点提取器，从细化图像中提取笔画的端点和交点
+    public static Points mat2Points(Mat img) {
+        return PointExtractor.mat2Points(img);
+    }
 
     //初始化点列表
     public Points() {

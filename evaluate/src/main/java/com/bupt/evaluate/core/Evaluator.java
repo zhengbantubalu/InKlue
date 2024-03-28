@@ -7,10 +7,6 @@ import com.bupt.evaluate.data.Points;
 import com.bupt.evaluate.data.Strokes;
 import com.bupt.evaluate.evaluate.StrokeEvaluation;
 import com.bupt.evaluate.evaluate.StrokeEvaluator;
-import com.bupt.evaluate.extract.ContourExtractor;
-import com.bupt.evaluate.extract.PointExtractor;
-import com.bupt.evaluate.extract.StrokeExtractor;
-import com.bupt.evaluate.util.ImageDrawer;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
@@ -34,7 +30,7 @@ public class Evaluator {
         Mat std = new Mat();
         Utils.bitmapToMat(stdBmp, std, true);
         //从图像中提取笔画
-        Strokes inputStrokes = getStrokes(cnChar, input);
+        Strokes inputStrokes = getStrokes(cnChar, input.clone());
         Strokes stdStrokes = getStrokes(cnChar, std);
         //取得笔画评价数据
         ArrayList<StrokeEvaluation> strokeEvaluations = evaluateStrokes(inputStrokes, stdStrokes, input);
@@ -49,16 +45,16 @@ public class Evaluator {
         //预处理图像，细化为骨架
         preprocess(img);
         //从图像中提取特征点
-        Points points = PointExtractor.mat2Points(img);
+        Points points = Points.mat2Points(img);
         //根据图像和特征点提取轮廓
-        Contours contours = ContourExtractor.mat2Contours(img, points);
+        Contours contours = Contours.mat2Contours(img, points);
         //根据轮廓和特征点提取汉字笔画
-        Strokes strokes = StrokeExtractor.extractStrokes(cnChar, contours, points);
+        Strokes strokes = Strokes.extractStrokes(cnChar, contours, points);
         //绘制提取结果，用于测试
-        Imgproc.cvtColor(img, img, Imgproc.COLOR_GRAY2RGB);
-        ImageDrawer.drawPoints(img, points);
-        ImageDrawer.drawContours(img, contours);
-        ImageDrawer.drawStrokes(img, strokes);
+//        Imgproc.cvtColor(img, img, Imgproc.COLOR_GRAY2RGB);
+//        ImageDrawer.drawPoints(img, points);
+//        ImageDrawer.drawContours(img, contours);
+//        ImageDrawer.drawStrokes(img, strokes);
         return strokes;
     }
 

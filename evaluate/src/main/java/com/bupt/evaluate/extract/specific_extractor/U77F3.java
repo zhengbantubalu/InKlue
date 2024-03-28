@@ -34,8 +34,7 @@ public class U77F3 implements SpecificExtractor {
             //口字中间短横
             strokes.get(2).add(points.inter.get(0));
             strokes.get(2).add(points.inter.get(1));
-            strokes.get(2).addList(contours.getMatchContour(
-                    points.inter.get(0), points.inter.get(1)), true);
+            strokes.get(2).isStraight = true;
             //口字底部横途径点
             PointEx pointEx2 = contours.getNearestPoint(
                     new PointEx((int) (Constants.IMAGE_SIZE * 0.6), Constants.IMAGE_SIZE / 2));

@@ -1,6 +1,6 @@
 package com.bupt.evaluate.extract;
 
-//笔画提取器工厂，用于创建笔画提取器实例
+//笔画提取器工厂
 class ExtractorFactory {
 
     //创建指定的笔画提取器实例

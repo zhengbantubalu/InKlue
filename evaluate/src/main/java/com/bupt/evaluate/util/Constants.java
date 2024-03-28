@@ -4,14 +4,14 @@ package com.bupt.evaluate.util;
 public class Constants {
     //笔画评价标准，与评分正相关
     public static final int LINEARITY_CRITERION = 20;//笔画平直度评价标准
-    public static final int LENGTH_CRITERION = 100;//笔画长度评价标准
-    public static final int ANGLE_CRITERION = 20;//笔画倾角评价标准
+    public static final int LENGTH_CRITERION = 20;//笔画长度评价标准
+    public static final int ANGLE_CRITERION = 15;//笔画倾角评价标准
     public static final int POSITION_CRITERION = 50;//笔画位置评价标准
-    public static final int SIMILARITY_CRITERION = 20;//笔画相似度评价标准
+    public static final int SIMILARITY_CRITERION = 15;//笔画相似度评价标准
 
     //笔画评价常量
-    public static final int MIN_SCORE = 60;//需要提供建议的最低分数
-    public static final int MIN_OFFSET = 30;//需要提供起收笔位置建议的最小偏移量
+    public static final int MIN_SCORE = 70;//需要提供建议的最低分数
+    public static final int MIN_OFFSET = 10;//需要提供位置建议的最小偏移量
 
     //笔画提取常量
     public static final int IMAGE_SIZE = 512;//汉字图片的边长

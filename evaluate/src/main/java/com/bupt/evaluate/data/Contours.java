@@ -1,10 +1,19 @@
 package com.bupt.evaluate.data;
 
+import com.bupt.evaluate.extract.ContourExtractor;
+
+import org.opencv.core.Mat;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
 //一个汉字的轮廓列表
 public class Contours extends ArrayList<PointList> {
+
+    //调用轮廓提取器，从图像中提取轮廓
+    public static Contours mat2Contours(Mat img, Points points) {
+        return ContourExtractor.mat2Contours(img, points);
+    }
 
     //寻找轮廓中距离该点最近的一个点
     public PointEx getNearestPoint(PointEx pointEx) {

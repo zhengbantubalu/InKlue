@@ -34,7 +34,7 @@ public class U738B implements SpecificExtractor {
             strokes.get(1).addList(contours.getMatchContour(
                     tempList2.get(0), tempList2.get(1)), true);
             strokes.get(1).addList(contours.getMatchContour(
-                    tempList2.get(1), tempList2.get(2)), true);
+                    tempList2.get(1), tempList2.get(2)));
             //第三横
             PointList tempList3 = new PointList();
             tempList3.add(points.end.get(-1));

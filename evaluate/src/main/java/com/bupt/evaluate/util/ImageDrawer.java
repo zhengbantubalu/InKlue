@@ -5,6 +5,7 @@ import com.bupt.evaluate.data.Curve;
 import com.bupt.evaluate.data.Line;
 import com.bupt.evaluate.data.PointEx;
 import com.bupt.evaluate.data.Points;
+import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;
 
 import org.opencv.core.Mat;
@@ -32,7 +33,19 @@ public class ImageDrawer {
         Imgproc.putText(img, text, p, 0, 1, color, 2);
     }
 
-    //绘制特征点
+    //绘制笔画
+    public static void drawStroke(Mat img, Stroke stroke,
+                                  Scalar strokeColor, Scalar textColor, int strokeIndex) {
+        if (stroke.isStraight) {
+            ImageDrawer.drawLine(img, stroke.line, strokeColor, Constants.THICKNESS);
+        } else {
+            ImageDrawer.drawCurve(img, stroke.curve, strokeColor, Constants.THICKNESS);
+        }
+        ImageDrawer.drawText(img, Integer.toString(strokeIndex + 1),
+                stroke.getQuartPoint(), textColor);
+    }
+
+    //绘制特征点，用于测试
     public static void drawPoints(Mat img, Points points) {
         for (int i = 0; i < points.end.size(); i++) {
             Imgproc.circle(img, points.end.get(i), 5, new Scalar(Constants.COLOR_BLUE), -1);
@@ -48,7 +61,7 @@ public class ImageDrawer {
         }
     }
 
-    //绘制轮廓
+    //绘制轮廓，用于测试
     public static void drawContours(Mat img, Contours contours) {
         for (int i = 0; i < contours.size(); i++) {
             for (int j = 0; j < contours.get(i).size(); j++) {
@@ -58,7 +71,7 @@ public class ImageDrawer {
         }
     }
 
-    //绘制笔画
+    //绘制笔画，用于测试
     public static void drawStrokes(Mat img, Strokes strokes) {
         for (int i = 0; i < strokes.size(); i++) {
             for (int j = 0; j < strokes.get(i).size(); j++) {

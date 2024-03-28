@@ -68,7 +68,7 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         if (i < 14) {
             name = "/" + c.get(i) + "1.jpg";
         } else {
-            name = "/" + c.get(i) + ".jpg";
+            name = "/" + c.get(i) + "2.jpg";
         }
         Bitmap bitmap1 = BitmapFactory.decodeFile(
                 getExternalFilesDir(Environment.DIRECTORY_PICTURES) +

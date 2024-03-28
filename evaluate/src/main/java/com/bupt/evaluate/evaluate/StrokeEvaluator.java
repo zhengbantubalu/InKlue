@@ -1,13 +1,6 @@
 package com.bupt.evaluate.evaluate;
 
-import com.bupt.evaluate.data.Curve;
-import com.bupt.evaluate.data.Line;
 import com.bupt.evaluate.data.Stroke;
-import com.bupt.evaluate.evaluate.feature_evaluator.AngleEvaluator;
-import com.bupt.evaluate.evaluate.feature_evaluator.LengthEvaluator;
-import com.bupt.evaluate.evaluate.feature_evaluator.LinearityEvaluator;
-import com.bupt.evaluate.evaluate.feature_evaluator.PositionEvaluator;
-import com.bupt.evaluate.evaluate.feature_evaluator.SimilarityEvaluator;
 import com.bupt.evaluate.util.Constants;
 
 import org.opencv.core.Mat;
@@ -18,6 +11,9 @@ public class StrokeEvaluator {
     //取得对一个笔画的评价
     public static StrokeEvaluation evaluateStroke(
             Stroke inputStroke, Stroke stdStroke, Mat img, int strokeIndex) {
+        if (inputStroke.isEmpty()) {
+            return StrokeEvaluation.emptyError(stdStroke, img, strokeIndex);
+        }
         EvaluationBuilder evaluationBuilder;
         //根据笔画是否是直线，采用不同的评价方法取得评价构建器
         if (inputStroke.isStraight) {
@@ -33,19 +29,18 @@ public class StrokeEvaluator {
     private static EvaluationBuilder evaluateLine(
             Stroke inputStroke, Stroke stdStroke, Mat img, int strokeIndex) {
         //创建笔画评价构建器
-        EvaluationBuilder evaluationBuilder = new EvaluationBuilder();
-        evaluationBuilder.outputMat = img;
+        EvaluationBuilder evaluationBuilder = new EvaluationBuilder(img);
         //直线拟合
-        Line inputLine = Line.fitLine(inputStroke);
-        Line stdLine = Line.fitLine(stdStroke);
+        inputStroke.fitLine();
+        stdStroke.fitLine();
         //评价平直度
-        LinearityEvaluator.evaluate(evaluationBuilder, inputStroke, inputLine, stdLine, strokeIndex);
+        evaluationBuilder.evaluateFeature(inputStroke, stdStroke, EvaluationBuilder.LINEARITY, strokeIndex);
         //评价长度
-        LengthEvaluator.evaluate(evaluationBuilder, inputLine, stdLine, strokeIndex);
+        evaluationBuilder.evaluateFeature(inputStroke, stdStroke, EvaluationBuilder.LENGTH, strokeIndex);
         //评价倾角
-        AngleEvaluator.evaluate(evaluationBuilder, inputLine, stdLine, strokeIndex);
+        evaluationBuilder.evaluateFeature(inputStroke, stdStroke, EvaluationBuilder.ANGLE, strokeIndex);
         //评价位置
-        PositionEvaluator.evaluate(evaluationBuilder, inputLine, stdLine, strokeIndex);
+        evaluationBuilder.evaluateFeature(inputStroke, stdStroke, EvaluationBuilder.POSITION, strokeIndex);
         return evaluationBuilder;
     }
 
@@ -53,14 +48,13 @@ public class StrokeEvaluator {
     private static EvaluationBuilder evaluateCurve(
             Stroke inputStroke, Stroke stdStroke, Mat img, int strokeIndex) {
         //创建笔画评价构建器
-        EvaluationBuilder evaluationBuilder = new EvaluationBuilder();
-        evaluationBuilder.outputMat = img;
+        EvaluationBuilder evaluationBuilder = new EvaluationBuilder(img);
         //曲线插值
         int size = stdStroke.getLength() / Constants.STEP_SIZE + 1;//+1防止提取笔画失败导致size为0
-        Curve inputCurve = Curve.interpolateCurve(inputStroke, size);
-        Curve stdCurve = Curve.interpolateCurve(stdStroke, size);
+        inputStroke.interpolateCurve(size);
+        stdStroke.interpolateCurve(size);
         //评价相似度
-        SimilarityEvaluator.evaluate(evaluationBuilder, inputCurve, stdCurve, strokeIndex);
+        evaluationBuilder.evaluateFeature(inputStroke, stdStroke, EvaluationBuilder.SIMILARITY, strokeIndex);
         return evaluationBuilder;
     }
 }

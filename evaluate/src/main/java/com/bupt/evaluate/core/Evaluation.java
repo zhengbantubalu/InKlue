@@ -39,9 +39,9 @@ public class Evaluation {
         } else {
             this.score = 100;
         }
-        if (this.score > 90) {
+        if (this.score >= 90) {
             stringBuilder.append("这个“" + cnChar + "”字写得真好");
-        } else if (this.score > 70) {
+        } else if (this.score >= 70) {
             stringBuilder.append("这个“" + cnChar + "”字写得不错");
         } else {
             stringBuilder.append("这个“" + cnChar + "”字需要加油");

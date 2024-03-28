@@ -1,10 +1,6 @@
 package com.bupt.evaluate.data;
 
-import android.util.Log;
-
-import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
 
 //直线类，包含多种描述方式
 public class Line {
@@ -15,29 +11,6 @@ public class Line {
     public double vy;//直线方向向量y分量
     public double x0;//直线上任意一点x坐标
     public double y0;//直线上任意一点y坐标
-
-    //直线拟合
-    public static Line fitLine(Stroke stroke) {
-        if (stroke.isEmpty()) {
-            stroke.add(new PointEx(0, 0));
-            stroke.add(new PointEx(512, 512));
-        }
-        Mat points = new Mat(stroke.size(), 1, CvType.CV_16SC2);
-        for (int i = 0; i < stroke.size(); i++) {
-            points.put(i, 0, stroke.get(i).x, stroke.get(i).y);
-        }
-        Mat line = new Mat();
-        Imgproc.fitLine(points, line, Imgproc.DIST_L2, 0, 0.01, 0.01);
-        Line retLine = new Line(line);
-        retLine.setEndpoints(stroke);
-        return retLine;
-    }
-
-    //直接输入两个端点构造本类
-    public Line(PointEx p1, PointEx p2) {
-        this.p1 = p1;
-        this.p2 = p2;
-    }
 
     //将OpenCV的fitLine直线拟合结果转为本类
     public Line(Mat line) {
@@ -81,6 +54,11 @@ public class Line {
     //取得点p到直线的距离
     public double getDistance(PointEx p) {
         return Math.abs(vy * p.x - vx * p.y + vy * x0 - vx * y0) / Math.sqrt(vx * vx + vy * vy);
+    }
+
+    //取得当前直线与另一条平行直线的距离
+    public double getDistance(Line l) {
+        return Math.abs((x0 - l.x0) * vy - (y0 - l.y0) * vx) / Math.sqrt(vx * vx + vy * vy);
     }
 
     //取得直线上距离点p最近的一点
