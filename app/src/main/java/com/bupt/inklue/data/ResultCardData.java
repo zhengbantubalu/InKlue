@@ -2,8 +2,8 @@ package com.bupt.inklue.data;
 
 import android.graphics.Bitmap;
 
-//用于存放练习卡片数据的类
-public class PractiseCardData {
+//用于存放搜索结果卡片数据的类
+public class ResultCardData {
     private String name;
     private Bitmap image;
 

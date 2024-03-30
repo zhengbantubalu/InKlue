@@ -16,12 +16,12 @@ import java.util.List;
 //练习卡片适配器
 public class PractiseCardAdapter extends BaseAdapter {
 
-    private final List<PractiseCardData> practise_cards_data;
     private final Context context;
+    private final List<PractiseCardData> practise_cards_data;
 
-    public PractiseCardAdapter(List<PractiseCardData> practise_cards_data, Context context) {
-        this.practise_cards_data = practise_cards_data;
+    public PractiseCardAdapter(Context context, List<PractiseCardData> practise_cards_data) {
         this.context = context;
+        this.practise_cards_data = practise_cards_data;
     }
 
     public int getCount() {
@@ -38,13 +38,16 @@ public class PractiseCardAdapter extends BaseAdapter {
 
     public View getView(int position, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.card_practise, viewGroup, false);
+            view = LayoutInflater.from(context).inflate(R.layout.item_practise_card,
+                    viewGroup, false);
         }
+
         //设置卡片资源
         TextView name = view.findViewById(R.id.textview_practise_name);
-        name.setText(practise_cards_data.get(position).getName());
+        name.setText(practise_cards_data.get(position).getName());//设置卡片名称
         ImageView image = view.findViewById(R.id.imageview_practise_image);
-        image.setImageBitmap(practise_cards_data.get(position).getImage());
+        image.setImageBitmap(practise_cards_data.get(position).getImage());//设置卡片图片
+
         return view;
     }
 }

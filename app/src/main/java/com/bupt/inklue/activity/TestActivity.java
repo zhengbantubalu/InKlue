@@ -1,4 +1,4 @@
-package com.bupt.inklue.ui;
+package com.bupt.inklue.activity;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,10 +14,6 @@ import com.bupt.evaluate.core.Evaluation;
 import com.bupt.evaluate.core.Evaluator;
 import com.bupt.inklue.R;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -54,7 +50,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         if (view.getId() == R.id.img1) {
             i = (i + c.size() - 1) % c.size();
         } else if (view.getId() == R.id.img2 || view.getId() == R.id.img3) {
-            //循环计数器
             i = (i + 1) % c.size();
         }
         //取得View
@@ -85,18 +80,5 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         img3.setImageBitmap(evaluation.outputBmp);
         score.setText(String.valueOf(evaluation.score));
         advice.setText(evaluation.advice.toString());
-    }
-
-    //存储Bitmap方法，图片被以jpg格式存储在app的私有外部存储中的图片目录中，不需要申请权限，其他app无法访问
-    public void saveBitmap(Bitmap bitmap, String fileName) {
-        File image = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), fileName);
-        BufferedOutputStream bos;
-        try {
-            bos = new BufferedOutputStream(Files.newOutputStream(image.toPath()));
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            bos.flush();
-            bos.close();
-        } catch (IOException ignored) {
-        }
     }
 }

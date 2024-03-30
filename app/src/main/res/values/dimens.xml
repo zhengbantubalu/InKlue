@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="spacing">5dp</dimen>
+    <dimen name="double_spacing">10dp</dimen>
+    <dimen name="top_bar">45dp</dimen>
+    <dimen name="bottom_bar">50dp</dimen>
+</resources>

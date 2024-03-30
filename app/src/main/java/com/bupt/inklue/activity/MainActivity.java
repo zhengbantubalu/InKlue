@@ -1,7 +1,6 @@
-package com.bupt.inklue.ui;
+package com.bupt.inklue.activity;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -11,13 +10,15 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.HomepageAdapter;
+import com.bupt.inklue.fragment.PractiseFragment;
+import com.bupt.inklue.fragment.SearchFragment;
+import com.bupt.inklue.fragment.UserFragment;
 
 import java.util.ArrayList;
 
 //主页面
 public class MainActivity extends AppCompatActivity
-        implements RadioGroup.OnCheckedChangeListener,
-        View.OnClickListener {
+        implements RadioGroup.OnCheckedChangeListener {
 
     ViewPager2 viewpager_homepage;//用于切换页面的类
 
@@ -26,10 +27,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         RadioGroup bottomBar = findViewById(R.id.bottomBar);
         viewpager_homepage = findViewById(R.id.viewpager_homepage);
-        //设置和添加Button的点击监听器，详见onClick方法
-        findViewById(R.id.button_settings).setOnClickListener(this);
-        findViewById(R.id.button_add).setOnClickListener(this);
-        //底部导航栏RadioGroup的点击监听器，详见onCheckedChanged方法
+        //设置底部导航栏RadioGroup的选中变化监听器，详见onCheckedChanged方法
         bottomBar.setOnCheckedChangeListener(this);
         //ViewPager监听到页面切换后将对应的RadioButton设为选中状态
         //用于解决滑动页面后底部导航栏的RadioButton的选中反馈问题
@@ -51,7 +49,7 @@ public class MainActivity extends AppCompatActivity
     //初始化ViewPager
     private void initPager() {
         ArrayList<Fragment> fragments = new ArrayList<>();
-        fragments.add(new PractiseFragment());
+        fragments.add(new SearchFragment());
         fragments.add(new PractiseFragment());
         fragments.add(new UserFragment());
         HomepageAdapter homepageAdapter = new HomepageAdapter(
@@ -70,9 +68,5 @@ public class MainActivity extends AppCompatActivity
         } else if (checkedId == R.id.button_user && viewpager_homepage.getCurrentItem() != 2) {
             viewpager_homepage.setCurrentItem(2, false);
         }
-    }
-
-    //按下按钮的回调方法
-    public void onClick(View view) {
     }
 }

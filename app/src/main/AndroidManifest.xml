@@ -14,15 +14,16 @@
         tools:targetApi="34">
 
         <activity
-            android:name=".ui.MainActivity"
-            android:exported="true">
+            android:name=".activity.MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.TestActivity" />
+        <activity android:name=".activity.TestActivity" />
 
     </application>
 
