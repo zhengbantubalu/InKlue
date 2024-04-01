@@ -17,7 +17,7 @@ import com.bupt.inklue.R;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-//测试评价模块
+//测试评价模块页面
 public class TestActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ArrayList<String> c;//存储汉字的列表
@@ -79,6 +79,6 @@ public class TestActivity extends AppCompatActivity implements View.OnClickListe
         //显示评价模块返回的信息
         img3.setImageBitmap(evaluation.outputBmp);
         score.setText(String.valueOf(evaluation.score));
-        advice.setText(evaluation.advice.toString());
+        advice.setText(evaluation.advice);
     }
 }

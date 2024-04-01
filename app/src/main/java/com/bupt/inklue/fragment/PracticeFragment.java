@@ -2,15 +2,12 @@ package com.bupt.inklue.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -26,20 +23,18 @@ import com.bupt.inklue.data.CardsData;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-//“我的”碎片
-public class UserFragment extends Fragment {
+//“练习”碎片
+public class PracticeFragment extends Fragment {
 
     private View root;//根视图
     private Context context;//环境
     private ListView listView;//用于排列练习卡片的类
-    private View userCard;//用户卡片视图
-    private CardsData practiseCardsData;//练习卡片数据
+    private CardsData practiceCardsData;//练习卡片数据
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         if (root == null) {
-            root = inflater.inflate(R.layout.fragment_user, container, false);
-            userCard = inflater.inflate(R.layout.item_user_card, container, false);
+            root = inflater.inflate(R.layout.fragment_practice, container, false);
             context = getContext();
 
             //初始化ListView
@@ -49,12 +44,15 @@ public class UserFragment extends Fragment {
             listView.setOnItemClickListener((adapterView, view, i, l) -> {
                 Intent intent = new Intent();
                 intent.setClass(context, PracticeActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("practiceCardData", practiceCardsData.get(i - 1));
+                intent.putExtras(bundle);
                 startActivity(intent);
             });
 
-            //“设置”按钮的点击监听器
-            ImageButton button_settings = root.findViewById(R.id.button_settings);
-            button_settings.setOnClickListener(view -> {
+            //“添加”按钮的点击监听器
+            ImageButton button_add = root.findViewById(R.id.button_add);
+            button_add.setOnClickListener(view -> {
                 Intent intent = new Intent();
                 intent.setClass(context, TestActivity.class);
                 startActivity(intent);
@@ -66,13 +64,12 @@ public class UserFragment extends Fragment {
     //初始化ListView
     private void initListView() {
         listView = root.findViewById(R.id.listview_practice);
-        practiseCardsData = new CardsData();
+        practiceCardsData = new CardsData();
         setCardsData();//设置练习卡片数据
-        setUserCard();//设置用户卡片
-        listView.addHeaderView(userCard);//将ListView的头视图设为用户卡片
         View emptyView = new View(context);
+        listView.addHeaderView(emptyView);//将ListView的头视图设为空
         listView.addFooterView(emptyView);//将ListView的尾视图设为空
-        PracticeCardAdapter adapter = new PracticeCardAdapter(context, practiseCardsData);
+        PracticeCardAdapter adapter = new PracticeCardAdapter(context, practiceCardsData);
         listView.setAdapter(adapter);//设置练习卡片适配器
     }
 
@@ -84,17 +81,8 @@ public class UserFragment extends Fragment {
             CardData cardData = new CardData();
             cardData.setName(c.get(i - 1));
             cardData.setImgPath(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
-                    "/" + c.get(i - 1) + "1.jpg");
-            practiseCardsData.add(cardData);
+                    "/" + c.get(i - 1) + ".jpg");
+            practiceCardsData.add(cardData);
         }
-    }
-
-    //设置用户卡片
-    private void setUserCard() {
-        ImageView user_avatar = userCard.findViewById(R.id.user_avatar);
-        Bitmap bitmap = BitmapFactory.decodeFile(
-                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
-                        "/avatar.jpg");
-        user_avatar.setImageBitmap(bitmap);
     }
 }

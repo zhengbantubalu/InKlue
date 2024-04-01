@@ -5,20 +5,20 @@
     android:background="@drawable/shape_card">
 
     <ImageView
-        android:id="@+id/imageview_result_image"
+        android:id="@+id/imageview_card_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="@dimen/double_spacing" />
 
     <TextView
-        android:id="@+id/textview_result_name"
+        android:id="@+id/textview_card_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="5dp"
         android:gravity="center"
-        android:textSize="15sp" />
+        android:textSize="@dimen/text_size" />
 
 </RelativeLayout>

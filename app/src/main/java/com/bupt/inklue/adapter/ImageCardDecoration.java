@@ -6,12 +6,12 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-//用于设置搜索结果卡片间距的装饰类
-public class ResultCardDecoration extends RecyclerView.ItemDecoration {
+//用于设置图像卡片间距的装饰类
+public class ImageCardDecoration extends RecyclerView.ItemDecoration {
 
     private final int spacing;
 
-    public ResultCardDecoration(int spacing) {
+    public ImageCardDecoration(int spacing) {
         this.spacing = spacing;
     }
 

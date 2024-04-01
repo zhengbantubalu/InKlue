@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/topBar"
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar"
         android:background="?attr/colorBar">
@@ -15,12 +15,12 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="@string/app_name"
-            android:textSize="18sp"
+            android:textSize="@dimen/title_size"
             android:textStyle="bold" />
 
         <ImageButton
             android:id="@+id/button_add"
-            android:layout_width="60dp"
+            android:layout_width="@dimen/top_bar_button"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -29,10 +29,10 @@
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/listview_practise"
+        android:id="@+id/listview_practice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/topBar"
+        android:layout_below="@id/top_bar"
         android:divider="@null"
         android:dividerHeight="@dimen/spacing"
         android:listSelector="@drawable/selector_listview"

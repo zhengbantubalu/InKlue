@@ -1,6 +1,8 @@
 package com.bupt.inklue.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,20 +13,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.ResultCardData;
+import com.bupt.inklue.data.CardData;
 
 import java.util.List;
 
-//搜索结果卡片适配器
-public class ResultCardAdapter extends RecyclerView.Adapter<ResultCardAdapter.ViewHolder> {
+//图像卡片适配器
+public class ImageCardAdapter extends RecyclerView.Adapter<ImageCardAdapter.ViewHolder> {
 
     private final Context context;
-    private final List<ResultCardData> result_cards_data;
+    private final List<CardData> image_cards_data;
     private OnItemClickListener listener;
 
-    public ResultCardAdapter(Context context, List<ResultCardData> result_cards_data) {
+    public ImageCardAdapter(Context context, List<CardData> image_cards_data) {
         this.context = context;
-        this.result_cards_data = result_cards_data;
+        this.image_cards_data = image_cards_data;
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -32,19 +34,18 @@ public class ResultCardAdapter extends RecyclerView.Adapter<ResultCardAdapter.Vi
     }
 
     public int getItemCount() {
-        return result_cards_data.size();
+        return image_cards_data.size();
     }
 
     public void onBindViewHolder(ViewHolder holder, int position) {
         //设置卡片资源
-        holder.textView.setText(result_cards_data.get(position).getName());//设置卡片名称
-        holder.imageView.setImageBitmap(result_cards_data.get(position).getImage());//设置卡片图片
+        holder.textView.setText(image_cards_data.get(position).getName());//设置卡片名称
+        Bitmap bitmap = BitmapFactory.decodeFile(image_cards_data.get(position).getImgPath());
+        holder.imageView.setImageBitmap(bitmap);//设置卡片图片
         //设置卡片的点击监听器
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (listener != null) {
-                    listener.onItemClick(holder.getAdapterPosition());
-                }
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(holder.getAdapterPosition());
             }
         });
     }
@@ -56,7 +57,7 @@ public class ResultCardAdapter extends RecyclerView.Adapter<ResultCardAdapter.Vi
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(
-                R.layout.item_result_card, parent, false);
+                R.layout.item_image_card, parent, false);
         return new ViewHolder(view);
     }
 
@@ -66,8 +67,8 @@ public class ResultCardAdapter extends RecyclerView.Adapter<ResultCardAdapter.Vi
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.textview_result_name);
-            imageView = itemView.findViewById(R.id.imageview_result_image);
+            textView = itemView.findViewById(R.id.textview_card_name);
+            imageView = itemView.findViewById(R.id.imageview_card_image);
         }
     }
 }

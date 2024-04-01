@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/topBar"
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar"
         android:background="?attr/colorBar">
@@ -24,7 +24,7 @@
 
         <ImageButton
             android:id="@+id/button_submit"
-            android:layout_width="60dp"
+            android:layout_width="@dimen/top_bar_button"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:background="?attr/selectableItemBackgroundBorderless"
@@ -35,8 +35,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_search"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/topBar"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_bar"
         android:paddingStart="@dimen/double_spacing"
         android:paddingEnd="@dimen/spacing" />
 

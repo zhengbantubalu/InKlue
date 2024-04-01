@@ -9,7 +9,7 @@
         android:id="@+id/imageview_practise_image"
         android:layout_width="120dp"
         android:layout_height="match_parent"
-        android:padding="10dp" />
+        android:padding="@dimen/double_spacing" />
 
     <TextView
         android:id="@+id/textview_practise_name"
@@ -19,6 +19,6 @@
         android:gravity="start"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:textSize="18sp" />
+        android:textSize="@dimen/title_size" />
 
 </LinearLayout>

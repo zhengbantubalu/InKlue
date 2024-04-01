@@ -32,7 +32,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="@string/user_name_default"
-                android:textSize="18sp" />
+                android:textSize="@dimen/title_size" />
 
             <TextView
                 android:id="@+id/textview_signature"
@@ -41,7 +41,7 @@
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:text="@string/user_signature_default"
-                android:textSize="14sp" />
+                android:textSize="@dimen/text_size" />
 
         </LinearLayout>
 

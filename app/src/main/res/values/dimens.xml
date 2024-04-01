@@ -4,4 +4,7 @@
     <dimen name="double_spacing">10dp</dimen>
     <dimen name="top_bar">45dp</dimen>
     <dimen name="bottom_bar">50dp</dimen>
+    <dimen name="top_bar_button">60dp</dimen>
+    <dimen name="title_size">18sp</dimen>
+    <dimen name="text_size">14sp</dimen>
 </resources>

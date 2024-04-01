@@ -33,4 +33,7 @@ android {
 dependencies {
     implementation(project(":evaluate"))
     implementation(libs.material)
+    implementation("androidx.camera:camera-camera2:1.2.2")
+    implementation("androidx.camera:camera-lifecycle:1.2.2")
+    implementation("androidx.camera:camera-view:1.3.2")
 }
