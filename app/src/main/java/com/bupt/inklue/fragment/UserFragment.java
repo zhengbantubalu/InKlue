@@ -33,7 +33,7 @@ public class UserFragment extends Fragment {
     private Context context;//环境
     private ListView listView;//用于排列练习卡片的类
     private View userCard;//用户卡片视图
-    private CardsData practiseCardsData;//练习卡片数据
+    private final CardsData practiseCardsData = new CardsData();//练习卡片数据
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -66,7 +66,6 @@ public class UserFragment extends Fragment {
     //初始化ListView
     private void initListView() {
         listView = root.findViewById(R.id.listview_practice);
-        practiseCardsData = new CardsData();
         setCardsData();//设置练习卡片数据
         setUserCard();//设置用户卡片
         listView.addHeaderView(userCard);//将ListView的头视图设为用户卡片
@@ -83,7 +82,7 @@ public class UserFragment extends Fragment {
         for (int i = 1; i <= c.size(); i++) {
             CardData cardData = new CardData();
             cardData.setName(c.get(i - 1));
-            cardData.setImgPath(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
+            cardData.setStdImgPath(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
                     "/" + c.get(i - 1) + "1.jpg");
             practiseCardsData.add(cardData);
         }

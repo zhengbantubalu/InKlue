@@ -30,9 +30,17 @@
 
         <activity android:name=".activity.PracticeActivity" />
 
+        <activity android:name=".activity.ConfirmActivity" />
+
         <activity android:name=".activity.ImageActivity" />
 
+        <activity android:name=".activity.WritingActivity" />
+
+        <activity android:name=".activity.CheckActivity" />
+
         <activity android:name=".activity.CameraActivity" />
+
+        <activity android:name=".activity.ReshotActivity" />
 
         <activity android:name=".activity.TestActivity" />
 

@@ -14,13 +14,13 @@ import androidx.fragment.app.Fragment;
 import com.bupt.inklue.R;
 import com.bupt.inklue.data.CardData;
 
-//图像显示碎片
-public class ImageFragment extends Fragment {
+//图像检查碎片
+public class CheckFragment extends Fragment {
 
     private View root;//根视图
-    private final CardData cardData;//图片数据
+    private CardData cardData;//图片数据
 
-    public ImageFragment(CardData cardData) {
+    public CheckFragment(CardData cardData) {
         this.cardData = cardData;
     }
 
@@ -31,9 +31,17 @@ public class ImageFragment extends Fragment {
 
             //显示图像
             ImageView imageView = root.findViewById(R.id.imageview_image);
-            Bitmap bitmap = BitmapFactory.decodeFile(cardData.getStdImgPath());
+            Bitmap bitmap = BitmapFactory.decodeFile(cardData.getWrittenImgPath());
             imageView.setImageBitmap(bitmap);
         }
         return root;
+    }
+
+    //更新数据
+    public void update(CardData cardData) {
+        this.cardData = cardData;
+        ImageView imageView = root.findViewById(R.id.imageview_image);
+        Bitmap bitmap = BitmapFactory.decodeFile(cardData.getWrittenImgPath());
+        imageView.setImageBitmap(bitmap);
     }
 }

@@ -3,6 +3,6 @@
     <attr name="colorBackground" format="color" />
     <attr name="colorBar" format="color" />
     <attr name="colorCard" format="color" />
-    <attr name="colorButton" format="color" />
+    <attr name="colorTheme" format="color" />
     <attr name="colorRadioButtonUnChecked" format="color" />
 </resources>

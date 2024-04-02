@@ -3,12 +3,12 @@
     <style name="Theme.InKlue" parent="Theme.MaterialComponents.DayNight.NoActionBar.Bridge">
         <item name="colorBackground">@color/素</item>
         <item name="colorBar">@color/荼白</item>
-        <item name="colorCard">@color/white</item>
-        <item name="colorButton">@color/松花绿</item>
+        <item name="colorCard">@android:color/white</item>
+        <item name="colorTheme">@color/松花绿</item>
         <item name="colorRadioButtonUnChecked">@color/蟹壳青</item>
 
         <item name="android:statusBarColor">?attr/colorBar</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 </resources>

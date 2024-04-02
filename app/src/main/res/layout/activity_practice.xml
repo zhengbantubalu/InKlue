@@ -44,15 +44,15 @@
         android:layout_alignParentBottom="true">
 
         <Button
-            android:id="@+id/button_next_step"
+            android:id="@+id/button_start"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="30dp"
             android:background="@drawable/shape_round"
-            android:text="@string/next_step"
-            android:textColor="@color/white"
+            android:text="@string/start"
+            android:textColor="@android:color/white"
             android:textSize="@dimen/title_size"
             android:textStyle="bold" />
 

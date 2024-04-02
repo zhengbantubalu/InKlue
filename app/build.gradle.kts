@@ -32,6 +32,7 @@ android {
 
 dependencies {
     implementation(project(":evaluate"))
+    implementation(project(":opencv"))
     implementation(libs.material)
     implementation("androidx.camera:camera-camera2:1.2.2")
     implementation("androidx.camera:camera-lifecycle:1.2.2")

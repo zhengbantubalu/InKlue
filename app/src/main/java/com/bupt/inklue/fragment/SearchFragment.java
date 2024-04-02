@@ -31,7 +31,7 @@ public class SearchFragment extends Fragment {
     private View root;//根视图
     private Context context;//环境
     private ImageCardAdapter adapter;//图像卡片适配器
-    private CardsData resultCardsData;//搜索结果卡片数据
+    private final CardsData resultCardsData = new CardsData();//搜索结果卡片数据
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class SearchFragment extends Fragment {
             });
 
             //“搜索”按钮的点击监听器
-            ImageButton button_submit = root.findViewById(R.id.button_submit);
+            ImageButton button_submit = root.findViewById(R.id.button_search_submit);
             button_submit.setOnClickListener(view -> {
 
             });
@@ -67,7 +67,6 @@ public class SearchFragment extends Fragment {
     //初始化RecyclerView
     private void initRecyclerView() {
         RecyclerView recyclerView = root.findViewById(R.id.recyclerview_search);
-        resultCardsData = new CardsData();
         setCardsData();//设置图像卡片数据
         GridLayoutManager layoutManager = new GridLayoutManager(context, 3);
         recyclerView.setLayoutManager(layoutManager);//设置布局管理器
@@ -96,7 +95,7 @@ public class SearchFragment extends Fragment {
                 name = "/" + c.get(i - 1) + "2.jpg";
             }
             String pathName = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + name;
-            cardData.setImgPath(pathName);
+            cardData.setStdImgPath(pathName);
             resultCardsData.add(cardData);
         }
     }

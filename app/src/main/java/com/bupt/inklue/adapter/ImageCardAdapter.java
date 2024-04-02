@@ -13,20 +13,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.CardData;
-
-import java.util.List;
+import com.bupt.inklue.data.CardsData;
 
 //图像卡片适配器
 public class ImageCardAdapter extends RecyclerView.Adapter<ImageCardAdapter.ViewHolder> {
 
     private final Context context;
-    private final List<CardData> image_cards_data;
-    private OnItemClickListener listener;
+    protected CardsData imageCardsData;
+    protected OnItemClickListener listener;
 
-    public ImageCardAdapter(Context context, List<CardData> image_cards_data) {
+    public ImageCardAdapter(Context context, CardsData imageCardsData) {
         this.context = context;
-        this.image_cards_data = image_cards_data;
+        this.imageCardsData = imageCardsData;
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -34,13 +32,13 @@ public class ImageCardAdapter extends RecyclerView.Adapter<ImageCardAdapter.View
     }
 
     public int getItemCount() {
-        return image_cards_data.size();
+        return imageCardsData.size();
     }
 
     public void onBindViewHolder(ViewHolder holder, int position) {
         //设置卡片资源
-        holder.textView.setText(image_cards_data.get(position).getName());//设置卡片名称
-        Bitmap bitmap = BitmapFactory.decodeFile(image_cards_data.get(position).getImgPath());
+        holder.textView.setText(imageCardsData.get(position).getName());//设置卡片名称
+        Bitmap bitmap = BitmapFactory.decodeFile(imageCardsData.get(position).getStdImgPath());
         holder.imageView.setImageBitmap(bitmap);//设置卡片图片
         //设置卡片的点击监听器
         holder.itemView.setOnClickListener(v -> {

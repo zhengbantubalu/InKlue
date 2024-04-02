@@ -19,8 +19,8 @@ import java.util.ArrayList;
 //图片查看页面
 public class ImageActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ViewPager2 viewpager;//用于切换图片的类
-    CardsData imageCardsData;//图像卡片数据列表
+    private ViewPager2 viewpager;//用于切换图片的类
+    private CardsData imageCardsData;//图像卡片数据列表
 
     @SuppressWarnings("unchecked")//忽略取得图像卡片数据时类型转换产生的警告
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
 
         //取得图像卡片数据
         imageCardsData = new CardsData((ArrayList<CardData>)
-                getIntent().getSerializableExtra("imageCardsData"));
+                (getIntent().getSerializableExtra("imageCardsData")));
 
         //初始化ViewPager
         initViewPager();

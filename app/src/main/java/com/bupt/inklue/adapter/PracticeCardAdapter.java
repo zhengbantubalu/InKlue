@@ -46,7 +46,7 @@ public class PracticeCardAdapter extends BaseAdapter {
         TextView name = view.findViewById(R.id.textview_practise_name);
         name.setText(practiceCardsData.get(position).getName());//设置卡片名称
         ImageView image = view.findViewById(R.id.imageview_practise_image);
-        Bitmap bitmap = BitmapFactory.decodeFile(practiceCardsData.get(position).getImgPath());
+        Bitmap bitmap = BitmapFactory.decodeFile(practiceCardsData.get(position).getStdImgPath());
         image.setImageBitmap(bitmap);//设置卡片图片
 
         return view;

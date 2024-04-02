@@ -19,7 +19,7 @@ import java.util.ArrayList;
 //主页面
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
-    ViewPager2 viewpager;//用于切换页面的类
+    private ViewPager2 viewpager;//用于切换页面的类
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
