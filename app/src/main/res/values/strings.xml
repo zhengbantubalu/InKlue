@@ -11,4 +11,6 @@
     <string name="save">留痕</string>
     <string name="reshot">重拍</string>
     <string name="camera_error">拍摄失败，请重试</string>
+    <string name="save_success">保存成功</string>
+    <string name="save_error">保存失败</string>
 </resources>

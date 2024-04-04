@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.adapter.CheckCardAdapter;
 import com.bupt.inklue.adapter.CharCardDecoration;
+import com.bupt.inklue.adapter.CheckCardAdapter;
 import com.bupt.inklue.data.CardData;
 import com.bupt.inklue.data.CardsData;
 import com.bupt.inklue.util.BitmapProcessor;
@@ -25,27 +25,27 @@ import java.util.ArrayList;
 //确认页面
 public class ConfirmActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private CheckCardAdapter adapter;//图像检查卡片适配器
-    private CardsData imageCardsData = new CardsData();//图像卡片数据
-    private String practiceName;//练习名称
+    private CheckCardAdapter adapter;//卡片适配器
+    private CardsData charCardsData;//汉字卡片数据列表
+    private CardData practiceCardData;//练习数据
 
     @SuppressWarnings("unchecked")//忽略取得图像卡片数据时类型转换产生的警告
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice);
 
+        //取得Intent数据
+        charCardsData = new CardsData((ArrayList<CardData>)
+                (getIntent().getSerializableExtra("charCardsData")));
+        practiceCardData = (CardData) getIntent().getSerializableExtra("practiceCardData");
+
         //设置练习标题
-        TextView textView = findViewById(R.id.title);
-        textView.setText(practiceName);
+        TextView textView = findViewById(R.id.textview_title);
+        textView.setText(practiceCardData.getName());
 
         //修改开始按钮文字
         Button button_start = findViewById(R.id.button_start);
         button_start.setText(R.string.confirm);
-
-        //取得Intent数据
-        imageCardsData = new CardsData((ArrayList<CardData>)
-                (getIntent().getSerializableExtra("imageCardsData")));
-        practiceName = getIntent().getStringExtra("practiceName");
 
         //初始化RecyclerView
         initRecyclerView();
@@ -59,18 +59,12 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
 
         //异步预处理拍摄的图片
         Handler handler = new Handler(Looper.getMainLooper());
-        new Thread(new Runnable() {
-            public void run() {
-                for (int i = 0; i < imageCardsData.size(); i++) {
-                    CardData cardData = imageCardsData.get(i);
-                    BitmapProcessor.preprocess(cardData.getWrittenImgPath(), 512);
-                    int position = i;
-                    handler.post(new Runnable() {
-                        public void run() {
-                            adapter.update(imageCardsData, position);
-                        }
-                    });
-                }
+        new Thread(() -> {
+            for (int i = 0; i < charCardsData.size(); i++) {
+                CardData cardData = charCardsData.get(i);
+                BitmapProcessor.preprocess(cardData.getWrittenImgPath(), 512);
+                int position = i;
+                handler.post(() -> adapter.update(charCardsData, position));
             }
         }).start();
     }
@@ -89,9 +83,9 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         //更新图像卡片数据
-        imageCardsData = new CardsData((ArrayList<CardData>)
-                (intent.getSerializableExtra("imageCardsData")));
-        adapter.update(imageCardsData);
+        charCardsData = new CardsData((ArrayList<CardData>)
+                (intent.getSerializableExtra("charCardsData")));
+        adapter.update(charCardsData);
     }
 
     //启动图片检查页面
@@ -99,7 +93,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = new Intent();
         intent.setClass(this, CheckActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("imageCardsData", imageCardsData);
+        bundle.putSerializable("charCardsData", charCardsData);
         bundle.putInt("position", position);
         intent.putExtras(bundle);
         startActivityForResult(intent, Activity.RESULT_FIRST_USER);
@@ -110,8 +104,8 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = new Intent();
         intent.setClass(this, ResultActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("imageCardsData", imageCardsData);
-        bundle.putString("practiceName", practiceName);
+        bundle.putSerializable("charCardsData", charCardsData);
+        bundle.putSerializable("practiceCardData", practiceCardData);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
@@ -119,13 +113,13 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
 
     //初始化RecyclerView
     private void initRecyclerView() {
-        RecyclerView recyclerView = findViewById(R.id.recyclerview_practice_detail);
+        RecyclerView recyclerView = findViewById(R.id.recyclerview_practice);
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);//设置布局管理器
         int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
         CharCardDecoration decoration = new CharCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
-        adapter = new CheckCardAdapter(this, imageCardsData);
-        recyclerView.setAdapter(adapter);//设置图像卡片适配器
+        adapter = new CheckCardAdapter(this, charCardsData);
+        recyclerView.setAdapter(adapter);
     }
 }

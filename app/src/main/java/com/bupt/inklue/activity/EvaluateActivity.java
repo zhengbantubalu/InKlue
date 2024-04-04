@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.adapter.PageAdapter;
+import com.bupt.inklue.adapter.ViewPagerAdapter;
 import com.bupt.inklue.data.CardData;
 import com.bupt.inklue.data.CardsData;
 import com.bupt.inklue.fragment.EvaluateFragment;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class EvaluateActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager2 viewpager;//用于切换图片的类
-    private CardsData imageCardsData;//图像卡片数据列表
+    private CardsData charCardsData;//汉字卡片数据列表
 
     @SuppressWarnings("unchecked")//忽略取得图像卡片数据时类型转换产生的警告
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +32,8 @@ public class EvaluateActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_image);
 
         //取得图像卡片数据
-        imageCardsData = new CardsData((ArrayList<CardData>)
-                (getIntent().getSerializableExtra("imageCardsData")));
+        charCardsData = new CardsData((ArrayList<CardData>)
+                (getIntent().getSerializableExtra("charCardsData")));
 
         //初始化ViewPager
         initViewPager();
@@ -57,10 +57,10 @@ public class EvaluateActivity extends AppCompatActivity implements View.OnClickL
     private void initViewPager() {
         viewpager = findViewById(R.id.viewpager_image);
         ArrayList<Fragment> fragments = new ArrayList<>();
-        for (CardData cardData : imageCardsData) {
+        for (CardData cardData : charCardsData) {
             fragments.add(new EvaluateFragment(cardData));
         }
-        viewpager.setAdapter(new PageAdapter(
+        viewpager.setAdapter(new ViewPagerAdapter(
                 getSupportFragmentManager(), getLifecycle(), fragments));
     }
 }

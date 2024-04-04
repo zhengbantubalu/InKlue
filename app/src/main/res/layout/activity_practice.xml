@@ -11,7 +11,7 @@
         android:background="?attr/colorBar">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/textview_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -29,7 +29,7 @@
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_practice_detail"
+        android:id="@+id/recyclerview_practice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/bottom_bar"

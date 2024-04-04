@@ -1,7 +1,10 @@
 package com.bupt.inklue.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -11,29 +14,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.activity.PracticeActivity;
-import com.bupt.inklue.activity.TestActivity;
+import com.bupt.inklue.activity.RecordActivity;
 import com.bupt.inklue.adapter.PracticeCardAdapter;
+import com.bupt.inklue.adapter.PracticeCardDecoration;
 import com.bupt.inklue.data.CardData;
 import com.bupt.inklue.data.CardsData;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.bupt.inklue.data.DatabaseHelper;
+import com.bupt.inklue.data.DatabaseManager;
 
 //“我的”碎片
 public class UserFragment extends Fragment {
 
     private View root;//根视图
     private Context context;//环境
-    private ListView listView;//用于排列练习卡片的类
+    private PracticeCardAdapter adapter;//卡片适配器
     private View userCard;//用户卡片视图
-    private final CardsData practiceCardsData = new CardsData();//练习卡片数据
+    private CardsData recordCardsData;//记录卡片数据
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,50 +45,74 @@ public class UserFragment extends Fragment {
             userCard = inflater.inflate(R.layout.item_user_card, container, false);
             context = getContext();
 
-            //初始化ListView
-            initListView();
+            //取得记录卡片数据
+            recordCardsData = new CardsData();
+            getCardsData();
 
-            //ListView中项目的点击监听器
-            listView.setOnItemClickListener((adapterView, view, i, l) -> {
+            //初始化RecyclerView
+            initRecyclerView();
+
+            //RecyclerView中项目的点击监听器
+            adapter.setOnItemClickListener(position -> {
                 Intent intent = new Intent();
-                intent.setClass(context, PracticeActivity.class);
+                intent.setClass(context, RecordActivity.class);
+                intent.putExtra("recordCardID", recordCardsData.get(position).getID());
                 startActivity(intent);
             });
 
             //“设置”按钮的点击监听器
             ImageButton button_settings = root.findViewById(R.id.button_settings);
             button_settings.setOnClickListener(view -> {
-                Intent intent = new Intent();
-                intent.setClass(context, TestActivity.class);
-                startActivity(intent);
+                DatabaseManager.resetDatabase(context);
+                int size = recordCardsData.size();
+                recordCardsData.clear();
+                adapter.notifyItemRangeRemoved(0, size);
             });
         }
         return root;
     }
 
-    //初始化ListView
-    private void initListView() {
-        listView = root.findViewById(R.id.listview_practice);
-        setCardsData();//设置练习卡片数据
-        setUserCard();//设置用户卡片
-        listView.addHeaderView(userCard);//将ListView的头视图设为用户卡片
-        View emptyView = new View(context);
-        listView.addFooterView(emptyView);//将ListView的尾视图设为空
-        PracticeCardAdapter adapter = new PracticeCardAdapter(context, practiceCardsData);
-        listView.setAdapter(adapter);//设置练习卡片适配器
+    //更新数据
+    @SuppressLint("NotifyDataSetChanged")//忽略更新具体数据的要求
+    public void updateData() {
+        recordCardsData.clear();
+        getCardsData();
+        adapter.notifyDataSetChanged();
     }
 
-    //设置练习卡片数据
-    private void setCardsData() {
-        ArrayList<String> c = new ArrayList<>(Arrays.asList(
-                "土", "王", "五", "上", "下", "不", "之", "山", "廿", "四", "日", "石", "六", "天"));
-        for (int i = 1; i <= c.size(); i++) {
-            CardData cardData = new CardData();
-            cardData.setName(c.get(i - 1));
-            cardData.setStdImgPath(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
-                    "/" + c.get(i - 1) + "1.jpg");
-            practiceCardsData.add(cardData);
+    //取得记录卡片数据
+    private void getCardsData() {
+        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Cursor cursor = db.query("Record", null, null,
+                    null, null, null, null);
+            int idIndex = cursor.getColumnIndex("id");
+            int nameIndex = cursor.getColumnIndex("name");
+            int coverImgPathIndex = cursor.getColumnIndex("coverImgPath");
+            if (cursor.moveToFirst()) {
+                do {
+                    CardData cardData = new CardData();
+                    cardData.setID(cursor.getLong(idIndex));
+                    cardData.setName(cursor.getString(nameIndex));
+                    cardData.setStdImgPath(cursor.getString(coverImgPathIndex));
+                    recordCardsData.add(cardData);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.close();
         }
+    }
+
+    //初始化RecyclerView
+    private void initRecyclerView() {
+        RecyclerView recyclerView = root.findViewById(R.id.recyclerview_practice);
+        GridLayoutManager layoutManager = new GridLayoutManager(context, 1);
+        recyclerView.setLayoutManager(layoutManager);//设置布局管理器
+        int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
+        PracticeCardDecoration decoration = new PracticeCardDecoration(spacing);
+        recyclerView.addItemDecoration(decoration);//设置间距装饰类
+        adapter = new PracticeCardAdapter(context, recordCardsData);
+        recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 
     //设置用户卡片

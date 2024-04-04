@@ -10,7 +10,7 @@
         android:background="?attr/colorBar">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/textview_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -28,16 +28,12 @@
 
     </RelativeLayout>
 
-    <ListView
-        android:id="@+id/listview_practice"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_practice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/top_bar"
-        android:divider="@null"
-        android:dividerHeight="@dimen/spacing"
-        android:listSelector="@drawable/selector_listview"
         android:paddingStart="@dimen/double_spacing"
-        android:paddingEnd="@dimen/double_spacing"
-        android:scrollbars="none" />
+        android:paddingEnd="@dimen/double_spacing" />
 
 </RelativeLayout>

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,7 +32,6 @@ import com.bupt.inklue.R;
 import com.bupt.inklue.data.CardData;
 import com.bupt.inklue.util.BitmapProcessor;
 import com.bupt.inklue.util.ResourceDecoder;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.opencv.core.Scalar;
@@ -46,7 +46,7 @@ public class ReshotActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener {
 
     private Context context;//环境
-    private CardData cardData;//图像卡片数据
+    private CardData cardData;//汉字卡片数据
     private ImageButton button_confirm;//“确认”按钮
     private ImageButton button_cancel;//“取消”按钮
     private PreviewView preview_view;//相机预览视图
@@ -77,7 +77,7 @@ public class ReshotActivity extends AppCompatActivity
         //加载OpenCV
         System.loadLibrary("opencv_java3");
 
-        //取得图像卡片数据
+        //取得汉字卡片数据
         cardData = (CardData) getIntent().getSerializableExtra("cardData");
 
         //初始化相机
@@ -208,18 +208,8 @@ public class ReshotActivity extends AppCompatActivity
                     }
 
                     public void onError(@NonNull ImageCaptureException exception) {
-                        cameraError();
+                        Toast.makeText(context, R.string.camera_error, Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    //显示拍照失败信息
-    private void cameraError() {
-        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
-                R.string.camera_error, Snackbar.LENGTH_SHORT);
-        snackbar.setAnchorView(R.id.bottom_bar);
-        int color = ResourceDecoder.getColor(context, R.attr.colorBackground);
-        snackbar.setBackgroundTint(color);
-        snackbar.show();
     }
 }

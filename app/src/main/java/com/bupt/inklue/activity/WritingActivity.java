@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.adapter.PageAdapter;
+import com.bupt.inklue.adapter.ViewPagerAdapter;
 import com.bupt.inklue.data.CardData;
 import com.bupt.inklue.data.CardsData;
 import com.bupt.inklue.fragment.FinishFragment;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class WritingActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager2 viewpager;//用于切换图片的类
-    private CardsData imageCardsData;//图像卡片数据列表
+    private CardsData charCardsData;//汉字卡片数据列表
     private boolean isReturn = false;//页面当前状态是否为由子页面返回
 
     @SuppressWarnings("unchecked")//忽略取得图像卡片数据时类型转换产生的警告
@@ -39,9 +39,9 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_image);
 
-        //取得图像卡片数据
-        imageCardsData = new CardsData((ArrayList<CardData>)
-                (getIntent().getSerializableExtra("imageCardsData")));
+        //取得汉字卡片数据
+        charCardsData = new CardsData((ArrayList<CardData>)
+                (getIntent().getSerializableExtra("charCardsData")));
 
         //初始化ViewPager
         initViewPager();
@@ -49,7 +49,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         //设置ViewPager的选中位置监听器，用于判断是否滑动到最后一页
         viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             public void onPageSelected(int position) {
-                if (position == imageCardsData.size()) {
+                if (position == charCardsData.size()) {
                     //滑动到最后一页，则尝试启动相机
                     checkCameraPermission();
                 }
@@ -72,7 +72,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         super.onStart();
         //由子页面返回，则将ViewPager回退至前一页
         if (isReturn) {
-            viewpager.setCurrentItem(imageCardsData.size() - 1, false);
+            viewpager.setCurrentItem(charCardsData.size() - 1, false);
         }
     }
 
@@ -85,7 +85,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             startCameraActivity();
         } else {
             //权限申请失败，将ViewPager回退至前一页
-            viewpager.setCurrentItem(imageCardsData.size() - 1);
+            viewpager.setCurrentItem(charCardsData.size() - 1);
         }
     }
 
@@ -107,8 +107,9 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = new Intent();
         intent.setClass(this, CameraActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("imageCardsData", imageCardsData);
-        bundle.putString("practiceName", getIntent().getStringExtra("practiceName"));
+        bundle.putSerializable("charCardsData", charCardsData);
+        bundle.putSerializable("practiceCardData",
+                getIntent().getSerializableExtra("practiceCardData"));
         intent.putExtras(bundle);
         startActivity(intent);
         isReturn = true;//启动了拍照页面，则此页面的状态变为由子页面返回
@@ -118,12 +119,12 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
     private void initViewPager() {
         viewpager = findViewById(R.id.viewpager_image);
         ArrayList<Fragment> fragments = new ArrayList<>();
-        for (CardData cardData : imageCardsData) {
+        for (CardData cardData : charCardsData) {
             fragments.add(new ImageFragment(cardData));
         }
         //添加结束页面
         fragments.add(new FinishFragment());
-        viewpager.setAdapter(new PageAdapter(
+        viewpager.setAdapter(new ViewPagerAdapter(
                 getSupportFragmentManager(), getLifecycle(), fragments));
     }
 }

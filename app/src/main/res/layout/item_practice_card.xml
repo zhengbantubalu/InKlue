@@ -6,13 +6,13 @@
     android:gravity="center">
 
     <ImageView
-        android:id="@+id/imageview_practise_image"
+        android:id="@+id/imageview_practice_image"
         android:layout_width="120dp"
         android:layout_height="match_parent"
         android:padding="@dimen/double_spacing" />
 
     <TextView
-        android:id="@+id/textview_practise_name"
+        android:id="@+id/textview_practice_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"

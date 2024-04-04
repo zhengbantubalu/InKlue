@@ -2,9 +2,9 @@ package com.bupt.inklue.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,17 +21,15 @@ import com.bupt.inklue.adapter.CharCardAdapter;
 import com.bupt.inklue.adapter.CharCardDecoration;
 import com.bupt.inklue.data.CardData;
 import com.bupt.inklue.data.CardsData;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.bupt.inklue.data.DatabaseHelper;
 
 //“搜索”碎片
 public class SearchFragment extends Fragment {
 
     private View root;//根视图
     private Context context;//环境
-    private CharCardAdapter adapter;//图像卡片适配器
-    private final CardsData resultCardsData = new CardsData();//搜索结果卡片数据
+    private CharCardAdapter adapter;//卡片适配器
+    private CardsData resultCardsData;//搜索结果卡片数据
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,8 +37,9 @@ public class SearchFragment extends Fragment {
             root = inflater.inflate(R.layout.fragment_search, container, false);
             context = getContext();
 
-            //设置图像卡片数据
-            setCardsData();
+            //取得搜索结果卡片数据
+            resultCardsData = new CardsData();
+            getCardsData();
 
             //初始化RecyclerView
             initRecyclerView();
@@ -49,10 +48,8 @@ public class SearchFragment extends Fragment {
             adapter.setOnItemClickListener(position -> {
                 Intent intent = new Intent();
                 intent.setClass(context, ImageActivity.class);
-                //在请求中附带图片数据
-                Log.d("appTest", resultCardsData.toString());
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("imageCardsData", resultCardsData);
+                bundle.putSerializable("charCardsData", resultCardsData);
                 bundle.putInt("position", position);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -67,6 +64,29 @@ public class SearchFragment extends Fragment {
         return root;
     }
 
+    //取得搜索结果卡片数据
+    private void getCardsData() {
+        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Cursor cursor = db.query("StdChar", null, null,
+                    null, null, null, null);
+            int idIndex = cursor.getColumnIndex("id");
+            int nameIndex = cursor.getColumnIndex("name");
+            int stdImgPathIndex = cursor.getColumnIndex("stdImgPath");
+            if (cursor.moveToFirst()) {
+                do {
+                    CardData cardData = new CardData();
+                    cardData.setID(cursor.getInt(idIndex));
+                    cardData.setName(cursor.getString(nameIndex));
+                    cardData.setStdImgPath(cursor.getString(stdImgPathIndex));
+                    resultCardsData.add(cardData);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.close();
+        }
+    }
+
     //初始化RecyclerView
     private void initRecyclerView() {
         RecyclerView recyclerView = root.findViewById(R.id.recyclerview_search);
@@ -76,29 +96,6 @@ public class SearchFragment extends Fragment {
         CharCardDecoration decoration = new CharCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
         adapter = new CharCardAdapter(context, resultCardsData);
-        recyclerView.setAdapter(adapter);//设置图像卡片适配器
-    }
-
-    //设置图像卡片数据
-    private void setCardsData() {
-        ArrayList<String> c = new ArrayList<>(Arrays.asList(
-                "土", "王", "五", "上", "下", "不", "之", "山", "廿", "四", "日", "石", "六", "天",
-                "土", "王", "五", "上", "下", "不", "之", "山", "廿", "四", "日", "石", "六", "天",
-                "土", "王", "五", "上", "下", "不", "之", "山", "廿", "四", "日", "石", "六", "天"));
-        for (int i = 1; i <= c.size(); i++) {
-            CardData cardData = new CardData();
-            cardData.setName(c.get(i - 1));
-            String name;
-            if (i <= c.size() / 3) {
-                name = "/" + c.get(i - 1) + ".jpg";
-            } else if (i <= c.size() / 3 * 2) {
-                name = "/" + c.get(i - 1) + "1.jpg";
-            } else {
-                name = "/" + c.get(i - 1) + "2.jpg";
-            }
-            String pathName = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + name;
-            cardData.setStdImgPath(pathName);
-            resultCardsData.add(cardData);
-        }
+        recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 }

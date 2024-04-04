@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.adapter.PageAdapter;
+import com.bupt.inklue.adapter.ViewPagerAdapter;
 import com.bupt.inklue.data.CardData;
 import com.bupt.inklue.data.CardsData;
 import com.bupt.inklue.fragment.CheckFragment;
@@ -23,9 +23,9 @@ import java.util.ArrayList;
 public class CheckActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager2 viewpager;//用于切换图片的类
-    private CardsData imageCardsData;//图像卡片数据列表
+    private CardsData charCardsData;//汉字卡片数据列表
     private int position;//当前图片在列表中的位置
-    private PageAdapter adapter;//ViewPager的适配器
+    private ViewPagerAdapter adapter;//ViewPager的适配器
 
     @SuppressWarnings("unchecked")//忽略取得图像卡片数据时类型转换产生的警告
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +37,8 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_image);
 
         //取得图像卡片数据
-        imageCardsData = new CardsData((ArrayList<CardData>)
-                (getIntent().getSerializableExtra("imageCardsData")));
+        charCardsData = new CardsData((ArrayList<CardData>)
+                (getIntent().getSerializableExtra("charCardsData")));
 
         //初始化ViewPager
         initViewPager();
@@ -63,7 +63,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
             intent.setClass(this, ReshotActivity.class);
             Bundle bundle = new Bundle();
             position = viewpager.getCurrentItem();
-            bundle.putSerializable("cardData", imageCardsData.get(position));
+            bundle.putSerializable("cardData", charCardsData.get(position));
             intent.putExtras(bundle);
             startActivityForResult(intent, Activity.RESULT_FIRST_USER);
         }
@@ -73,7 +73,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
     public void finish() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("imageCardsData", imageCardsData);
+        bundle.putSerializable("charCardsData", charCardsData);
         intent.putExtras(bundle);
         setResult(Activity.RESULT_FIRST_USER, intent);
         super.finish();
@@ -89,7 +89,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
                 CheckFragment fragment = (CheckFragment) adapter.createFragment(position);
                 fragment.update(cardData);
                 adapter.notifyItemChanged(position);
-                imageCardsData.set(position, cardData);
+                charCardsData.set(position, cardData);
             }
         }
     }
@@ -98,10 +98,10 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
     private void initViewPager() {
         viewpager = findViewById(R.id.viewpager_image);
         ArrayList<Fragment> fragments = new ArrayList<>();
-        for (CardData cardData : imageCardsData) {
+        for (CardData cardData : charCardsData) {
             fragments.add(new CheckFragment(cardData));
         }
-        adapter = new PageAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
         viewpager.setAdapter(adapter);
     }
 }

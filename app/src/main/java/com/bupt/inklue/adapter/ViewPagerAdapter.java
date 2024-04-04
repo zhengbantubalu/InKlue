@@ -9,11 +9,11 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import java.util.List;
 
 //ViewPager的页面适配器
-public class PageAdapter extends FragmentStateAdapter {
+public class ViewPagerAdapter extends FragmentStateAdapter {
     List<Fragment> fragmentList;
 
-    public PageAdapter(FragmentManager fragmentManager, Lifecycle lifecycle,
-                       List<Fragment> fragments) {
+    public ViewPagerAdapter(FragmentManager fragmentManager, Lifecycle lifecycle,
+                            List<Fragment> fragments) {
         super(fragmentManager, lifecycle);
         fragmentList = fragments;
     }

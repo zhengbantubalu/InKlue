@@ -1,5 +1,6 @@
 package com.bupt.inklue.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,7 +12,8 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.adapter.PageAdapter;
+import com.bupt.inklue.adapter.ViewPagerAdapter;
+import com.bupt.inklue.data.DatabaseManager;
 import com.bupt.inklue.fragment.PracticeFragment;
 import com.bupt.inklue.fragment.SearchFragment;
 import com.bupt.inklue.fragment.UserFragment;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
     private ViewPager2 viewpager;//用于切换页面的类
+    private ViewPagerAdapter adapter;//页面适配器
+    private UserFragment userFragment;//“我的”碎片
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,12 +37,23 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         //初始化ViewPager
         initViewPager();
 
-        //将ViewPager的初始页面设为中间页面，并取消滚动动画
-        viewpager.setCurrentItem(1, false);
+        //将ViewPager的初始页面设为中间页面
+        int pageNum = getIntent().getIntExtra("pageNum", 1);
+        viewpager.setCurrentItem(pageNum, false);
 
         //设置底部导航栏RadioGroup的选中变化监听器，详见onCheckedChanged方法
         RadioGroup bottomBar = findViewById(R.id.bottom_bar);
         bottomBar.setOnCheckedChangeListener(this);
+    }
+
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        int pageNum = intent.getIntExtra("pageNum", 1);
+        if (pageNum == 2) {
+            viewpager.setCurrentItem(2, false);
+            userFragment.updateData();
+            adapter.notifyItemChanged(2);
+        }
     }
 
     //初始化App
@@ -46,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true);
         if (isFirstLaunch) {
+            DatabaseManager.resetDatabase(this);//重置数据库
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("isFirstLaunch", false);
             editor.apply();
@@ -58,9 +74,10 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(new SearchFragment());
         fragments.add(new PracticeFragment());
-        fragments.add(new UserFragment());
-        viewpager.setAdapter(new PageAdapter(
-                getSupportFragmentManager(), getLifecycle(), fragments));
+        userFragment = new UserFragment();
+        fragments.add(userFragment);
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
+        viewpager.setAdapter(adapter);
         //ViewPager监听到页面切换后将对应的RadioButton设为选中状态
         //用于解决滑动页面后底部导航栏的RadioButton的选中反馈问题
         viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {

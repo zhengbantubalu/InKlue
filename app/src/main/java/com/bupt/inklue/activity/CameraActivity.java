@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +31,6 @@ import com.bupt.inklue.data.CardData;
 import com.bupt.inklue.data.CardsData;
 import com.bupt.inklue.util.BitmapProcessor;
 import com.bupt.inklue.util.ResourceDecoder;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.opencv.core.Scalar;
@@ -46,7 +46,7 @@ public class CameraActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener {
 
     private Context context;//环境
-    private CardsData imageCardsData;//图像卡片数据
+    private CardsData charCardsData;//汉字卡片数据列表
     private int position = 0;//当前拍摄的汉字在卡片列表中的位置
     private PreviewView preview_view;//相机预览视图
     private ImageView imageview_above;//预览视图上层的视图
@@ -74,9 +74,9 @@ public class CameraActivity extends AppCompatActivity
         //加载OpenCV
         System.loadLibrary("opencv_java3");
 
-        //取得图像卡片数据
-        imageCardsData = new CardsData((ArrayList<CardData>)
-                (getIntent().getSerializableExtra("imageCardsData")));
+        //取得汉字卡片数据
+        charCardsData = new CardsData((ArrayList<CardData>)
+                (getIntent().getSerializableExtra("charCardsData")));
 
         //初始化相机
         initCamera();
@@ -98,7 +98,7 @@ public class CameraActivity extends AppCompatActivity
         if (view.getId() == R.id.button_back) {
             finish();
         } else if (view.getId() == R.id.button_shot) {
-            if (position < imageCardsData.size()) {
+            if (position < charCardsData.size()) {
                 takePhoto();
             }
         } else if (view.getId() == R.id.button_torch) {
@@ -135,8 +135,9 @@ public class CameraActivity extends AppCompatActivity
         Intent intent = new Intent();
         intent.setClass(this, ConfirmActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("imageCardsData", imageCardsData);
-        bundle.putString("practiceName", getIntent().getStringExtra("practiceName"));
+        bundle.putSerializable("charCardsData", charCardsData);
+        bundle.putSerializable("practiceCardData",
+                getIntent().getSerializableExtra("practiceCardData"));
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
@@ -154,9 +155,9 @@ public class CameraActivity extends AppCompatActivity
 
     //更新预览上层视图
     private void updateImageView() {
-        if (position < imageCardsData.size()) {
+        if (position < charCardsData.size()) {
             //取得标准汉字半透明图像
-            Bitmap bitmap = BitmapProcessor.toTransparent(imageCardsData.get(position).getStdImgPath(), color);
+            Bitmap bitmap = BitmapProcessor.toTransparent(charCardsData.get(position).getStdImgPath(), color);
             imageview_above.setImageBitmap(bitmap);
         } else {
             //如果拍摄完最后一张，则启动确认页面
@@ -197,28 +198,18 @@ public class CameraActivity extends AppCompatActivity
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(this),
                 new ImageCapture.OnImageSavedCallback() {
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        if (position < imageCardsData.size()) {
-                            imageCardsData.get(position).setWrittenImgPath(writtenImgPath);
+                        if (position < charCardsData.size()) {
+                            charCardsData.get(position).setWrittenImgPath(writtenImgPath);
                             position++;
                             updateImageView();//更新预览上层视图
                         } else {
-                            cameraError();
+                            Toast.makeText(context, R.string.camera_error, Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     public void onError(@NonNull ImageCaptureException exception) {
-                        cameraError();
+                        Toast.makeText(context, R.string.camera_error, Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    //显示拍照失败信息
-    private void cameraError() {
-        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
-                R.string.camera_error, Snackbar.LENGTH_SHORT);
-        snackbar.setAnchorView(R.id.bottom_bar);
-        int color = ResourceDecoder.getColor(context, R.attr.colorBackground);
-        snackbar.setBackgroundTint(color);
-        snackbar.show();
     }
 }
