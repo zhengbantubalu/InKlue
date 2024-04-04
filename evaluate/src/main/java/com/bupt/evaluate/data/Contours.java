@@ -16,19 +16,24 @@ public class Contours extends ArrayList<PointList> {
     }
 
     //寻找轮廓中距离该点最近的一个点
+    //如果产生错误，则返回(0,0)点
     public PointEx getNearestPoint(PointEx pointEx) {
-        PointEx retPoint = this.get(0).get(0);
-        int minDistance = pointEx.getDistance(this.get(0).get(0));
-        for (PointList contour : this) {
-            for (PointEx p : contour) {
-                int distance = pointEx.getDistance(p);
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    retPoint = p;
+        try {
+            PointEx retPoint = this.get(0).get(0);
+            int minDistance = pointEx.getDistance(this.get(0).get(0));
+            for (PointList contour : this) {
+                for (PointEx p : contour) {
+                    int distance = pointEx.getDistance(p);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        retPoint = p;
+                    }
                 }
             }
+            return retPoint;
+        } catch (IndexOutOfBoundsException ignored) {
+            return new PointEx(0, 0);
         }
-        return retPoint;
     }
 
     //根据起止点查找匹配轮廓，返回匹配的轮廓段，并正序排列，无匹配则返回空列表

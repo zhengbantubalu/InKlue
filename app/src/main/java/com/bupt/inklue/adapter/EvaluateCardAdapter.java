@@ -1,0 +1,48 @@
+package com.bupt.inklue.adapter;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import com.bupt.inklue.data.CardsData;
+
+//评价卡片适配器
+public class EvaluateCardAdapter extends CharCardAdapter {
+
+    private final boolean[] isUpdated;//标记每个对象是否被更新过
+
+    public EvaluateCardAdapter(Context context, CardsData imageCardsData) {
+        super(context, imageCardsData);
+        isUpdated = new boolean[imageCardsData.size()];
+    }
+
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        if (isUpdated[position]) {
+            //设置卡片名称为评分
+            holder.textView.setText(imageCardsData.get(position).getScore());
+            //设置卡片图片
+            Bitmap bitmap = BitmapFactory.decodeFile(imageCardsData.get(position).getWrittenImgPath());
+            holder.imageView.setImageBitmap(bitmap);
+            //设置卡片的点击监听器
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(holder.getAdapterPosition());
+                }
+            });
+        } else {
+            //设置卡片的点击监听器
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(holder.getAdapterPosition());
+                }
+            });
+            isUpdated[position] = true;
+        }
+    }
+
+    //更新指定数据
+    public void update(CardsData imageCardsData, int position) {
+        this.imageCardsData = imageCardsData;
+        notifyItemChanged(position);
+    }
+}

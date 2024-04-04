@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/practice_detail_title_default"
+            android:text="@string/practice_title_default"
             android:textSize="18sp" />
 
         <ImageButton

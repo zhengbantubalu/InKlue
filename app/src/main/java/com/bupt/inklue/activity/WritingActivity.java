@@ -28,7 +28,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
     private ViewPager2 viewpager;//用于切换图片的类
     private CardsData imageCardsData;//图像卡片数据列表
-
     private boolean isReturn = false;//页面当前状态是否为由子页面返回
 
     @SuppressWarnings("unchecked")//忽略取得图像卡片数据时类型转换产生的警告
@@ -56,6 +55,9 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
                 }
             }
         });
+
+        //设置按钮的点击监听器
+        findViewById(R.id.button_back).setOnClickListener(this);
     }
 
     //点击事件回调

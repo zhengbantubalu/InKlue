@@ -2,6 +2,8 @@ package com.bupt.inklue.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.LayoutInflater;
@@ -19,6 +21,7 @@ import com.bupt.inklue.activity.TestActivity;
 import com.bupt.inklue.adapter.PracticeCardAdapter;
 import com.bupt.inklue.data.CardData;
 import com.bupt.inklue.data.CardsData;
+import com.bupt.inklue.data.DBHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,6 +40,9 @@ public class PracticeFragment extends Fragment {
             root = inflater.inflate(R.layout.fragment_practice, container, false);
             context = getContext();
 
+            //取得练习卡片数据
+            setCardsData();
+
             //初始化ListView
             initListView();
 
@@ -44,9 +50,7 @@ public class PracticeFragment extends Fragment {
             listView.setOnItemClickListener((adapterView, view, i, l) -> {
                 Intent intent = new Intent();
                 intent.setClass(context, PracticeActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("practiceCardData", practiceCardsData.get(i - 1));
-                intent.putExtras(bundle);
+                intent.putExtra("practiceCardID", practiceCardsData.get(i - 1).getID());
                 startActivity(intent);
             });
 
@@ -61,17 +65,6 @@ public class PracticeFragment extends Fragment {
         return root;
     }
 
-    //初始化ListView
-    private void initListView() {
-        listView = root.findViewById(R.id.listview_practice);
-        setCardsData();//设置练习卡片数据
-        View emptyView = new View(context);
-        listView.addHeaderView(emptyView);//将ListView的头视图设为空
-        listView.addFooterView(emptyView);//将ListView的尾视图设为空
-        PracticeCardAdapter adapter = new PracticeCardAdapter(context, practiceCardsData);
-        listView.setAdapter(adapter);//设置练习卡片适配器
-    }
-
     //设置练习卡片数据
     private void setCardsData() {
         ArrayList<String> c = new ArrayList<>(Arrays.asList(
@@ -83,5 +76,38 @@ public class PracticeFragment extends Fragment {
                     "/" + c.get(i - 1) + ".jpg");
             practiceCardsData.add(cardData);
         }
+    }
+
+    //取得练习卡片数据
+    private void getCardsData() {
+        try (DBHelper dbHelper = new DBHelper(context)) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Cursor cursor = db.query("Practice", null, null,
+                    null, null, null, null);
+            int id = cursor.getColumnIndex("id");
+            int name = cursor.getColumnIndex("name");
+            int coverImgPath = cursor.getColumnIndex("coverImgPath");
+            if (cursor.moveToFirst()) {
+                do {
+                    CardData cardData = new CardData();
+                    cardData.setID(cursor.getInt(id));
+                    cardData.setName(cursor.getString(name));
+                    cardData.setStdImgPath(cursor.getString(coverImgPath));
+                    practiceCardsData.add(cardData);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.close();
+        }
+    }
+
+    //初始化ListView
+    private void initListView() {
+        listView = root.findViewById(R.id.listview_practice);
+        View emptyView = new View(context);
+        listView.addHeaderView(emptyView);//将ListView的头视图设为空
+        listView.addFooterView(emptyView);//将ListView的尾视图设为空
+        PracticeCardAdapter adapter = new PracticeCardAdapter(context, practiceCardsData);
+        listView.setAdapter(adapter);//设置练习卡片适配器
     }
 }

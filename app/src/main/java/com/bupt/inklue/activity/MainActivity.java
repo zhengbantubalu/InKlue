@@ -1,6 +1,8 @@
 package com.bupt.inklue.activity;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -25,6 +27,9 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //初始化App
+        initApp();
+
         //初始化ViewPager
         initViewPager();
 
@@ -34,6 +39,17 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         //设置底部导航栏RadioGroup的选中变化监听器，详见onCheckedChanged方法
         RadioGroup bottomBar = findViewById(R.id.bottom_bar);
         bottomBar.setOnCheckedChangeListener(this);
+    }
+
+    //初始化App
+    private void initApp() {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true);
+        if (isFirstLaunch) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isFirstLaunch", false);
+            editor.apply();
+        }
     }
 
     //初始化ViewPager

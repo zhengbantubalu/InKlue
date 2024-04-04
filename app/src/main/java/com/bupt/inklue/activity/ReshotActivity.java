@@ -6,16 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -32,19 +29,15 @@ import androidx.core.content.ContextCompat;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.data.CardData;
+import com.bupt.inklue.util.BitmapProcessor;
+import com.bupt.inklue.util.ResourceDecoder;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import org.opencv.android.Utils;
-import org.opencv.core.Core;
-import org.opencv.core.CvType;
-import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
-import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -60,7 +53,9 @@ public class ReshotActivity extends AppCompatActivity
     private ImageView imageview_above;//预览视图上层的视图
     private ImageCapture imageCapture;//图像捕捉器，用于拍照
     private CameraControl cameraControl;//相机控制器，用于对焦
-    private Bitmap edgeBitmap;//汉字边缘图像
+    private Bitmap stdBitmap;//标准汉字半透明图像
+    private ImageButton button_torch;//手电筒开关
+    private boolean isTorchOn;//手电筒是否开启
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,6 +72,7 @@ public class ReshotActivity extends AppCompatActivity
         button_cancel = findViewById(R.id.button_cancel);
         preview_view = findViewById(R.id.preview_view);
         imageview_above = findViewById(R.id.imageview_top);
+        button_torch = findViewById(R.id.button_torch);
 
         //加载OpenCV
         System.loadLibrary("opencv_java3");
@@ -98,6 +94,7 @@ public class ReshotActivity extends AppCompatActivity
         findViewById(R.id.button_shot).setOnClickListener(this);
         button_confirm.setOnClickListener(this);
         button_cancel.setOnClickListener(this);
+        button_torch.setOnClickListener(this);
     }
 
     //点击事件回调
@@ -115,10 +112,22 @@ public class ReshotActivity extends AppCompatActivity
             finish();
         } else if (view.getId() == R.id.button_cancel) {
             //隐藏“确认”和“取消”按钮
-            button_confirm.setVisibility(View.VISIBLE);
-            button_cancel.setVisibility(View.VISIBLE);
+            button_confirm.setVisibility(View.GONE);
+            button_cancel.setVisibility(View.GONE);
+            //显示手电筒开关
+            button_torch.setVisibility(View.VISIBLE);
             //重置预览上层视图
-            imageview_above.setImageBitmap(edgeBitmap);
+            imageview_above.setImageBitmap(stdBitmap);
+        } else if (view.getId() == R.id.button_torch) {
+            if (isTorchOn) {
+                cameraControl.enableTorch(false);
+                button_torch.setImageResource(R.drawable.ic_torch_on);
+                isTorchOn = false;
+            } else {
+                cameraControl.enableTorch(true);
+                button_torch.setImageResource(R.drawable.ic_torch_off);
+                isTorchOn = true;
+            }
         }
     }
 
@@ -142,25 +151,11 @@ public class ReshotActivity extends AppCompatActivity
     private void initImageView() {
         //关闭硬件加速
         imageview_above.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
-        //获取绘制汉字边缘的颜色
-        TypedValue typedValue = new TypedValue();
-        this.getTheme().resolveAttribute(R.attr.colorTheme, typedValue, true);
-        int colorResId = typedValue.resourceId;
-        int color = ContextCompat.getColor(this, colorResId);
-        Scalar edgeColor = new Scalar(Color.red(color), Color.green(color), Color.blue(color));
-        edgeBitmap = BitmapFactory.decodeFile(cardData.getStdImgPath());
-        Mat alpha = new Mat();
-        Utils.bitmapToMat(edgeBitmap, alpha);
-        Imgproc.cvtColor(alpha, alpha, Imgproc.COLOR_RGB2GRAY);
-        Imgproc.Canny(alpha, alpha, 50, 150);
-        Imgproc.threshold(alpha, alpha, 127, 255, Imgproc.THRESH_BINARY);
-        List<Mat> channels = new ArrayList<>();
-        channels.add(new Mat(alpha.size(), CvType.CV_8UC3, edgeColor));
-        channels.add(alpha);
-        Mat rgba = new Mat();
-        Core.merge(channels, rgba);
-        Utils.matToBitmap(rgba, edgeBitmap);
-        imageview_above.setImageBitmap(edgeBitmap);
+        //获取绘制标准汉字的颜色
+        Scalar color = ResourceDecoder.getScalar(this, R.attr.colorTheme);
+        //取得标准汉字半透明图像
+        stdBitmap = BitmapProcessor.toTransparent(cardData.getStdImgPath(), color);
+        imageview_above.setImageBitmap(stdBitmap);
     }
 
     //初始化相机
@@ -188,6 +183,10 @@ public class ReshotActivity extends AppCompatActivity
         //显示“确认”和“取消”按钮
         button_confirm.setVisibility(View.VISIBLE);
         button_cancel.setVisibility(View.VISIBLE);
+        //隐藏手电筒开关
+        button_torch.setVisibility(View.GONE);
+        //预处理图像并显示
+        BitmapProcessor.preprocess(cardData.getWrittenImgPath(), 512);
         Bitmap bitmap = BitmapFactory.decodeFile(cardData.getWrittenImgPath());
         imageview_above.setImageBitmap(bitmap);
     }
@@ -209,8 +208,18 @@ public class ReshotActivity extends AppCompatActivity
                     }
 
                     public void onError(@NonNull ImageCaptureException exception) {
-                        Toast.makeText(context, R.string.camera_error, Toast.LENGTH_SHORT).show();
+                        cameraError();
                     }
                 });
+    }
+
+    //显示拍照失败信息
+    private void cameraError() {
+        Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content),
+                R.string.camera_error, Snackbar.LENGTH_SHORT);
+        snackbar.setAnchorView(R.id.bottom_bar);
+        int color = ResourceDecoder.getColor(context, R.attr.colorBackground);
+        snackbar.setBackgroundTint(color);
+        snackbar.show();
     }
 }

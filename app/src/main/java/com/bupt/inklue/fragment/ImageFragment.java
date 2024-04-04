@@ -29,7 +29,7 @@ public class ImageFragment extends Fragment {
         if (root == null) {
             root = inflater.inflate(R.layout.fragment_image, container, false);
 
-            //显示图像
+            //设置图像
             ImageView imageView = root.findViewById(R.id.imageview_image);
             Bitmap bitmap = BitmapFactory.decodeFile(cardData.getStdImgPath());
             imageView.setImageBitmap(bitmap);

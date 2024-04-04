@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">墨痕</string>
-    <string name="practice_detail_title_default">练习</string>
-    <string name="user_title">我的</string>
+    <string name="user_title">墨客</string>
     <string name="user_name_default">无名客</string>
-    <string name="user_signature_default">我家洗砚池头树，朵朵花开淡墨痕</string>
-    <string name="start">着墨</string>
-    <string name="finish">止墨</string>
+    <string name="user_signature_default">我家洗砚池头树\n朵朵花开淡墨痕</string>
+    <string name="practice_title_default">练习</string>
+    <string name="start">落笔</string>
+    <string name="finish">停笔</string>
     <string name="confirm">收笔</string>
+    <string name="save">留痕</string>
     <string name="reshot">重拍</string>
     <string name="camera_error">拍摄失败，请重试</string>
 </resources>

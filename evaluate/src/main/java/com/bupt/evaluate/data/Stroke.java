@@ -1,5 +1,8 @@
 package com.bupt.evaluate.data;
 
+import com.bupt.evaluate.evaluate.StrokeEvaluation;
+import com.bupt.evaluate.evaluate.StrokeEvaluator;
+
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.imgproc.Imgproc;
@@ -7,11 +10,18 @@ import org.opencv.imgproc.Imgproc;
 //一个笔画
 public class Stroke extends PointList {
 
+    public StrokeEvaluation evaluation;//对当前笔画的评价
     public Line line;//经过拟合的直线
     public Curve curve;//经过插值的曲线
 
     //当前笔画是否是直线
     public boolean isStraight = false;
+
+    //取得对一个笔画的评价
+    public static StrokeEvaluation evaluateStroke(
+            Stroke inputStroke, Stroke stdStroke, Mat img, int strokeIndex) {
+        return StrokeEvaluator.evaluateStroke(inputStroke, stdStroke, img, strokeIndex);
+    }
 
     //向当前笔画的末尾添加点列表，并设置当前笔画是否是直线
     public void addList(PointList pointList, boolean isStraight) {

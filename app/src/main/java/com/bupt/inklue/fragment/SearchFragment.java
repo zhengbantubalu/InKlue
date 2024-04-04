@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.activity.ImageActivity;
-import com.bupt.inklue.adapter.ImageCardAdapter;
-import com.bupt.inklue.adapter.ImageCardDecoration;
+import com.bupt.inklue.adapter.CharCardAdapter;
+import com.bupt.inklue.adapter.CharCardDecoration;
 import com.bupt.inklue.data.CardData;
 import com.bupt.inklue.data.CardsData;
 
@@ -30,7 +30,7 @@ public class SearchFragment extends Fragment {
 
     private View root;//根视图
     private Context context;//环境
-    private ImageCardAdapter adapter;//图像卡片适配器
+    private CharCardAdapter adapter;//图像卡片适配器
     private final CardsData resultCardsData = new CardsData();//搜索结果卡片数据
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -38,6 +38,9 @@ public class SearchFragment extends Fragment {
         if (root == null) {
             root = inflater.inflate(R.layout.fragment_search, container, false);
             context = getContext();
+
+            //设置图像卡片数据
+            setCardsData();
 
             //初始化RecyclerView
             initRecyclerView();
@@ -67,13 +70,12 @@ public class SearchFragment extends Fragment {
     //初始化RecyclerView
     private void initRecyclerView() {
         RecyclerView recyclerView = root.findViewById(R.id.recyclerview_search);
-        setCardsData();//设置图像卡片数据
         GridLayoutManager layoutManager = new GridLayoutManager(context, 3);
         recyclerView.setLayoutManager(layoutManager);//设置布局管理器
         int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
-        ImageCardDecoration decoration = new ImageCardDecoration(spacing);
+        CharCardDecoration decoration = new CharCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
-        adapter = new ImageCardAdapter(context, resultCardsData);
+        adapter = new CharCardAdapter(context, resultCardsData);
         recyclerView.setAdapter(adapter);//设置图像卡片适配器
     }
 

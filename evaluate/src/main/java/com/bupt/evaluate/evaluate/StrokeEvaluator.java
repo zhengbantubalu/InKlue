@@ -12,6 +12,11 @@ public class StrokeEvaluator {
     public static StrokeEvaluation evaluateStroke(
             Stroke inputStroke, Stroke stdStroke, Mat img, int strokeIndex) {
         if (inputStroke.isEmpty()) {
+            if (stdStroke.isStraight) {
+                stdStroke.fitLine();
+            } else {
+                stdStroke.interpolateCurve(stdStroke.getLength() / Constants.STEP_SIZE + 1);
+            }
             return StrokeEvaluation.emptyError(stdStroke, img, strokeIndex);
         }
         EvaluationBuilder evaluationBuilder;

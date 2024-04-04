@@ -23,9 +23,10 @@ public class StrokeEvaluation {
     public static StrokeEvaluation emptyError(Stroke stroke, Mat img, int strokeIndex) {
         StrokeEvaluation strokeEvaluation = new StrokeEvaluation();
         strokeEvaluation.score = 0;
-        strokeEvaluation.advice = "第" + (strokeIndex + 1) + "笔未识成功，请规范书写";
+        strokeEvaluation.advice = "第" + (strokeIndex + 1) + "笔未识成功，请规范书写\n";
         ImageDrawer.drawStroke(img, stroke, new Scalar(Constants.COLOR_YELLOW),
                 new Scalar(Constants.COLOR_RED), strokeIndex);
+        strokeEvaluation.outputMat = img;
         return strokeEvaluation;
     }
 }

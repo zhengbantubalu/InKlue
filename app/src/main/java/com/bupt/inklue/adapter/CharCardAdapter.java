@@ -15,14 +15,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bupt.inklue.R;
 import com.bupt.inklue.data.CardsData;
 
-//图像卡片适配器
-public class ImageCardAdapter extends RecyclerView.Adapter<ImageCardAdapter.ViewHolder> {
+//汉字卡片适配器
+public class CharCardAdapter extends RecyclerView.Adapter<CharCardAdapter.ViewHolder> {
 
     private final Context context;
     protected CardsData imageCardsData;
     protected OnItemClickListener listener;
 
-    public ImageCardAdapter(Context context, CardsData imageCardsData) {
+    public CharCardAdapter(Context context, CardsData imageCardsData) {
         this.context = context;
         this.imageCardsData = imageCardsData;
     }

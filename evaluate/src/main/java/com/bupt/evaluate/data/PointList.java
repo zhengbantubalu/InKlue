@@ -23,11 +23,16 @@ public class PointList extends ArrayList<PointEx> {
     }
 
     //重写ArrayList的get方法，使其可以接受负数和超出范围的索引
+    //如果产生错误，则返回(0,0)点
     public PointEx get(int index) {
-        if (index >= 0) {
-            return super.get(index % this.size());
-        } else {
-            return super.get(index + this.size());
+        try {
+            if (index >= 0) {
+                return super.get(index % this.size());
+            } else {
+                return super.get(index + this.size());
+            }
+        } catch (IndexOutOfBoundsException | ArithmeticException ignored) {
+            return new PointEx(0, 0);
         }
     }
 
