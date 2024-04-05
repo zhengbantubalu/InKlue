@@ -4,7 +4,7 @@
     android:viewportWidth="10"
     android:viewportHeight="10">
     <path
-        android:fillColor="?attr/colorCard"
+        android:fillColor="?attr/colorBar"
         android:pathData="M 0,0 L 10,0 L 10,10 L 0,10 Z
                          M 5,5 m -5,0 a 5,5 0 1,0 10,0 a 5,5 0 1,0 -10,0" />
 </vector>

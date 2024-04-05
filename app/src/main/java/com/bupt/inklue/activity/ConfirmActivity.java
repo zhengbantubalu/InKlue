@@ -20,7 +20,7 @@ import com.bupt.inklue.data.CardData;
 import com.bupt.inklue.data.CardsData;
 import com.bupt.inklue.util.BitmapProcessor;
 
-import java.util.ArrayList;
+import java.util.List;
 
 //确认页面
 public class ConfirmActivity extends AppCompatActivity implements View.OnClickListener {
@@ -35,7 +35,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_practice);
 
         //取得Intent数据
-        charCardsData = new CardsData((ArrayList<CardData>)
+        charCardsData = new CardsData((List<CardData>)
                 (getIntent().getSerializableExtra("charCardsData")));
         practiceCardData = (CardData) getIntent().getSerializableExtra("practiceCardData");
 
@@ -83,7 +83,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         //更新图像卡片数据
-        charCardsData = new CardsData((ArrayList<CardData>)
+        charCardsData = new CardsData((List<CardData>)
                 (intent.getSerializableExtra("charCardsData")));
         adapter.update(charCardsData);
     }

@@ -1,5 +1,6 @@
 package com.bupt.inklue.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -57,11 +59,20 @@ public class SearchFragment extends Fragment {
 
             //“搜索”按钮的点击监听器
             ImageButton button_submit = root.findViewById(R.id.button_search_submit);
-            button_submit.setOnClickListener(view -> {
-
-            });
+            button_submit.setOnClickListener(view ->
+                    Toast.makeText(context, R.string.developing, Toast.LENGTH_SHORT).show());
         }
         return root;
+    }
+
+    //更新数据
+    @SuppressLint("NotifyDataSetChanged")//忽略更新具体数据的要求
+    public void updateData() {
+        if (resultCardsData != null) {
+            resultCardsData.clear();
+            getCardsData();
+            adapter.notifyDataSetChanged();
+        }
     }
 
     //取得搜索结果卡片数据

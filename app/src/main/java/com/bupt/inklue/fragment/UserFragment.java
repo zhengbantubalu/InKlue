@@ -1,6 +1,7 @@
 package com.bupt.inklue.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -29,21 +30,24 @@ import com.bupt.inklue.data.CardsData;
 import com.bupt.inklue.data.DatabaseHelper;
 import com.bupt.inklue.data.DatabaseManager;
 
+import java.util.Collections;
+
 //“我的”碎片
 public class UserFragment extends Fragment {
 
     private View root;//根视图
     private Context context;//环境
     private PracticeCardAdapter adapter;//卡片适配器
-    private View userCard;//用户卡片视图
     private CardsData recordCardsData;//记录卡片数据
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         if (root == null) {
             root = inflater.inflate(R.layout.fragment_user, container, false);
-            userCard = inflater.inflate(R.layout.item_user_card, container, false);
             context = getContext();
+
+            //设置用户信息
+            setUserinfo();
 
             //取得记录卡片数据
             recordCardsData = new CardsData();
@@ -63,10 +67,19 @@ public class UserFragment extends Fragment {
             //“设置”按钮的点击监听器
             ImageButton button_settings = root.findViewById(R.id.button_settings);
             button_settings.setOnClickListener(view -> {
-                DatabaseManager.resetDatabase(context);
-                int size = recordCardsData.size();
-                recordCardsData.clear();
-                adapter.notifyItemRangeRemoved(0, size);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("该按钮现在用于测试");
+                builder.setMessage("确认将会清空练习记录");
+                builder.setPositiveButton("确认", (dialog, which) -> {
+                    int size = recordCardsData.size();
+                    recordCardsData.clear();
+                    DatabaseManager.resetDatabase(context);
+                    adapter.notifyItemRangeRemoved(0, size);
+                });
+                builder.setNegativeButton("取消", (dialog, which) -> {
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
             });
         }
         return root;
@@ -75,9 +88,20 @@ public class UserFragment extends Fragment {
     //更新数据
     @SuppressLint("NotifyDataSetChanged")//忽略更新具体数据的要求
     public void updateData() {
-        recordCardsData.clear();
-        getCardsData();
-        adapter.notifyDataSetChanged();
+        if (recordCardsData != null) {
+            recordCardsData.clear();
+            getCardsData();
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    //设置用户信息
+    private void setUserinfo() {
+        ImageView user_avatar = root.findViewById(R.id.user_avatar);
+        Bitmap bitmap = BitmapFactory.decodeFile(
+                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
+                        "/avatar.jpg");
+        user_avatar.setImageBitmap(bitmap);
     }
 
     //取得记录卡片数据
@@ -101,6 +125,7 @@ public class UserFragment extends Fragment {
             cursor.close();
             db.close();
         }
+        Collections.reverse(recordCardsData);//反转卡片数据
     }
 
     //初始化RecyclerView
@@ -113,14 +138,5 @@ public class UserFragment extends Fragment {
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
         adapter = new PracticeCardAdapter(context, recordCardsData);
         recyclerView.setAdapter(adapter);//设置卡片适配器
-    }
-
-    //设置用户卡片
-    private void setUserCard() {
-        ImageView user_avatar = userCard.findViewById(R.id.user_avatar);
-        Bitmap bitmap = BitmapFactory.decodeFile(
-                context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
-                        "/avatar.jpg");
-        user_avatar.setImageBitmap(bitmap);
     }
 }

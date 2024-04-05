@@ -36,8 +36,8 @@ import com.google.common.util.concurrent.ListenableFuture;
 import org.opencv.core.Scalar;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -48,6 +48,7 @@ public class CameraActivity extends AppCompatActivity
     private Context context;//环境
     private CardsData charCardsData;//汉字卡片数据列表
     private int position = 0;//当前拍摄的汉字在卡片列表中的位置
+    private int savedNum = 0;//已经保存的图像数
     private PreviewView preview_view;//相机预览视图
     private ImageView imageview_above;//预览视图上层的视图
     private ImageCapture imageCapture;//图像捕捉器，用于拍照
@@ -75,7 +76,7 @@ public class CameraActivity extends AppCompatActivity
         System.loadLibrary("opencv_java3");
 
         //取得汉字卡片数据
-        charCardsData = new CardsData((ArrayList<CardData>)
+        charCardsData = new CardsData((List<CardData>)
                 (getIntent().getSerializableExtra("charCardsData")));
 
         //初始化相机
@@ -98,8 +99,10 @@ public class CameraActivity extends AppCompatActivity
         if (view.getId() == R.id.button_back) {
             finish();
         } else if (view.getId() == R.id.button_shot) {
-            if (position < charCardsData.size()) {
+            if (savedNum < charCardsData.size()) {
                 takePhoto();
+                position++;
+                updateImageView();//更新预览上层视图
             }
         } else if (view.getId() == R.id.button_torch) {
             if (isTorchOn) {
@@ -159,9 +162,8 @@ public class CameraActivity extends AppCompatActivity
             //取得标准汉字半透明图像
             Bitmap bitmap = BitmapProcessor.toTransparent(charCardsData.get(position).getStdImgPath(), color);
             imageview_above.setImageBitmap(bitmap);
-        } else {
-            //如果拍摄完最后一张，则启动确认页面
-            startConfirmActivity();
+        } else if (position == charCardsData.size()) {
+            Toast.makeText(context, R.string.camera_saving, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -198,10 +200,13 @@ public class CameraActivity extends AppCompatActivity
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(this),
                 new ImageCapture.OnImageSavedCallback() {
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        if (position < charCardsData.size()) {
-                            charCardsData.get(position).setWrittenImgPath(writtenImgPath);
-                            position++;
-                            updateImageView();//更新预览上层视图
+                        if (savedNum < charCardsData.size()) {
+                            charCardsData.get(savedNum).setWrittenImgPath(writtenImgPath);
+                            savedNum++;
+                            if (savedNum == charCardsData.size()) {
+                                //如果保存完最后一张，则启动确认页面
+                                startConfirmActivity();
+                            }
                         } else {
                             Toast.makeText(context, R.string.camera_error, Toast.LENGTH_SHORT).show();
                         }

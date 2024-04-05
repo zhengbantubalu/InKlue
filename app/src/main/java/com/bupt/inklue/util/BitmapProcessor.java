@@ -2,7 +2,10 @@ package com.bupt.inklue.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+
+import com.bupt.inklue.data.CardsData;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -69,5 +72,50 @@ public class BitmapProcessor {
         Imgproc.threshold(mat, mat, 100, 255, Imgproc.THRESH_BINARY);
         Utils.matToBitmap(mat, bitmap);
         return bitmap;
+    }
+
+    //根据卡片数据列表创建练习封面，并保存到指定路径
+    public static void createCover(CardsData cardsData, String filePath) {
+        if (cardsData.size() >= 9) {
+            ArrayList<Bitmap> bitmaps = new ArrayList<>();
+            for (int i = 0; i < 9; i++) {
+                Bitmap bitmap = BitmapFactory.decodeFile(cardsData.get(i).getStdImgPath());
+                bitmaps.add(bitmap);
+            }
+            int squareSize = bitmaps.get(0).getWidth();
+            Bitmap drawnBitmap = Bitmap.createBitmap(squareSize * 3, squareSize * 3,
+                    Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(drawnBitmap);
+            canvas.drawBitmap(bitmaps.get(0), 0, 0, null);
+            canvas.drawBitmap(bitmaps.get(1), squareSize, 0, null);
+            canvas.drawBitmap(bitmaps.get(2), squareSize * 2, 0, null);
+            canvas.drawBitmap(bitmaps.get(3), 0, squareSize, null);
+            canvas.drawBitmap(bitmaps.get(4), squareSize, squareSize, null);
+            canvas.drawBitmap(bitmaps.get(5), squareSize * 2, squareSize, null);
+            canvas.drawBitmap(bitmaps.get(6), 0, squareSize * 2, null);
+            canvas.drawBitmap(bitmaps.get(7), squareSize, squareSize * 2, null);
+            canvas.drawBitmap(bitmaps.get(8), squareSize * 2, squareSize * 2, null);
+            Bitmap resultBitmap = Bitmap.createScaledBitmap(drawnBitmap, squareSize, squareSize, true);
+            save(resultBitmap, filePath);
+        } else if (cardsData.size() >= 4) {
+            ArrayList<Bitmap> bitmaps = new ArrayList<>();
+            for (int i = 0; i < 4; i++) {
+                Bitmap bitmap = BitmapFactory.decodeFile(cardsData.get(i).getStdImgPath());
+                bitmaps.add(bitmap);
+            }
+            int squareSize = bitmaps.get(0).getWidth();
+            Bitmap drawnBitmap = Bitmap.createBitmap(squareSize * 2, squareSize * 2,
+                    Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(drawnBitmap);
+            canvas.drawBitmap(bitmaps.get(0), 0, 0, null);
+            canvas.drawBitmap(bitmaps.get(1), squareSize, 0, null);
+            canvas.drawBitmap(bitmaps.get(2), 0, squareSize, null);
+            canvas.drawBitmap(bitmaps.get(3), squareSize, squareSize, null);
+            Bitmap resultBitmap = Bitmap.createScaledBitmap(drawnBitmap, squareSize, squareSize, true);
+            save(resultBitmap, filePath);
+        } else if (!cardsData.isEmpty()) {
+            Bitmap bitmap = BitmapFactory.decodeFile(cardsData.get(0).getStdImgPath());
+            save(bitmap, filePath);
+        }
     }
 }

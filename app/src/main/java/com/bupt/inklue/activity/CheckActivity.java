@@ -18,6 +18,7 @@ import com.bupt.inklue.data.CardsData;
 import com.bupt.inklue.fragment.CheckFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //图片检查页面
 public class CheckActivity extends AppCompatActivity implements View.OnClickListener {
@@ -37,7 +38,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_image);
 
         //取得图像卡片数据
-        charCardsData = new CardsData((ArrayList<CardData>)
+        charCardsData = new CardsData((List<CardData>)
                 (getIntent().getSerializableExtra("charCardsData")));
 
         //初始化ViewPager

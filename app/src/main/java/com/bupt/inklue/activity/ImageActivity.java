@@ -15,6 +15,7 @@ import com.bupt.inklue.data.CardsData;
 import com.bupt.inklue.fragment.ImageFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //图片查看页面
 public class ImageActivity extends AppCompatActivity implements View.OnClickListener {
@@ -32,7 +33,7 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_image);
 
         //取得汉字卡片数据
-        charCardsData = new CardsData((ArrayList<CardData>)
+        charCardsData = new CardsData((List<CardData>)
                 (getIntent().getSerializableExtra("charCardsData")));
 
         //初始化ViewPager

@@ -1,11 +1,15 @@
 package com.bupt.inklue.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -13,6 +17,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.ViewPagerAdapter;
+import com.bupt.inklue.data.DataDownloader;
 import com.bupt.inklue.data.DatabaseManager;
 import com.bupt.inklue.fragment.PracticeFragment;
 import com.bupt.inklue.fragment.SearchFragment;
@@ -25,56 +30,76 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     private ViewPager2 viewpager;//用于切换页面的类
     private ViewPagerAdapter adapter;//页面适配器
+    private SearchFragment searchFragment;//“搜索”碎片
+    private PracticeFragment practiceFragment;//“练习”碎片
     private UserFragment userFragment;//“我的”碎片
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //初始化App
-        initApp();
-
-        //初始化ViewPager
-        initViewPager();
-
-        //将ViewPager的初始页面设为中间页面
-        int pageNum = getIntent().getIntExtra("pageNum", 1);
-        viewpager.setCurrentItem(pageNum, false);
+        //判断App是否为首次启动
+        SharedPreferences sharedPreferences = getSharedPreferences(
+                "user_preferences", Context.MODE_PRIVATE);
+        boolean isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true);
+        if (isFirstLaunch) {
+            //初始化App
+            initApp();
+            //标记App为非首次启动
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("isFirstLaunch", false);
+            editor.apply();
+        } else {
+            //初始化ViewPager
+            initViewPager();
+        }
 
         //设置底部导航栏RadioGroup的选中变化监听器，详见onCheckedChanged方法
         RadioGroup bottomBar = findViewById(R.id.bottom_bar);
         bottomBar.setOnCheckedChangeListener(this);
     }
 
+    //当前页面取得新请求的回调
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         int pageNum = intent.getIntExtra("pageNum", 1);
-        if (pageNum == 2) {
-            viewpager.setCurrentItem(2, false);
+        if (pageNum == 0) {
+            searchFragment.updateData();
+        } else if (pageNum == 2) {
             userFragment.updateData();
-            adapter.notifyItemChanged(2);
+        } else {
+            practiceFragment.updateData();
         }
+        adapter.notifyItemChanged(pageNum);
+        viewpager.setCurrentItem(pageNum, false);
     }
 
     //初始化App
     private void initApp() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true);
-        if (isFirstLaunch) {
-            DatabaseManager.resetDatabase(this);//重置数据库
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("isFirstLaunch", false);
-            editor.apply();
-        }
+        Toast.makeText(this, R.string.downloading, Toast.LENGTH_SHORT).show();
+        //异步下载资源图片
+        Handler handler = new Handler(Looper.getMainLooper());
+        new Thread(() -> {
+            DataDownloader.downloadImg(
+                    this.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "");
+            handler.post(() -> {
+                //重置数据库
+                DatabaseManager.resetDatabase(this);
+                //初始化ViewPager
+                initViewPager();
+            });
+        }).start();
     }
 
     //初始化ViewPager
     private void initViewPager() {
         viewpager = findViewById(R.id.viewpager_homepage);
-        ArrayList<Fragment> fragments = new ArrayList<>();
-        fragments.add(new SearchFragment());
-        fragments.add(new PracticeFragment());
+        searchFragment = new SearchFragment();
+        practiceFragment = new PracticeFragment();
         userFragment = new UserFragment();
+        ArrayList<Fragment> fragments = new ArrayList<>();
+        fragments.add(searchFragment);
+        fragments.add(practiceFragment);
         fragments.add(userFragment);
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
         viewpager.setAdapter(adapter);
@@ -91,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 }
             }
         });
+        //将ViewPager的初始页面设为中间页面
+        viewpager.setCurrentItem(1, false);
     }
 
     //RadioGroup选项切换后的回调方法

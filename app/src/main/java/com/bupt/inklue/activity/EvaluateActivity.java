@@ -15,6 +15,7 @@ import com.bupt.inklue.data.CardsData;
 import com.bupt.inklue.fragment.EvaluateFragment;
 
 import java.util.ArrayList;
+import java.util.List;
 
 //评价页面
 public class EvaluateActivity extends AppCompatActivity implements View.OnClickListener {
@@ -32,7 +33,7 @@ public class EvaluateActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_image);
 
         //取得图像卡片数据
-        charCardsData = new CardsData((ArrayList<CardData>)
+        charCardsData = new CardsData((List<CardData>)
                 (getIntent().getSerializableExtra("charCardsData")));
 
         //初始化ViewPager

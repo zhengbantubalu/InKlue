@@ -2,6 +2,7 @@ package com.bupt.inklue.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 //卡片数据列表
 public class CardsData extends ArrayList<CardData> implements Serializable {
@@ -10,8 +11,8 @@ public class CardsData extends ArrayList<CardData> implements Serializable {
     public CardsData() {
     }
 
-    //将ArrayList<CardData>转为本类
-    public CardsData(ArrayList<CardData> cardsData) {
+    //将List<CardData>转为本类
+    public CardsData(List<CardData> cardsData) {
         this.addAll(cardsData);
     }
 }

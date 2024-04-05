@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -27,7 +28,9 @@ import com.bupt.inklue.data.CardsData;
 import com.bupt.inklue.data.DatabaseHelper;
 import com.bupt.inklue.util.BitmapProcessor;
 
-import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 //评价结果页面
 public class ResultActivity extends AppCompatActivity implements View.OnClickListener {
@@ -35,6 +38,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
     private EvaluateCardAdapter adapter;//卡片适配器
     private CardsData charCardsData;//汉字卡片数据
     private CardData practiceCardData;//练习数据
+    private boolean isFinished = false;//评价是否完成
 
     @SuppressWarnings("unchecked")//忽略取得图像卡片数据时类型转换产生的警告
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_practice);
 
         //取得Intent数据
-        charCardsData = new CardsData((ArrayList<CardData>)
+        charCardsData = new CardsData((List<CardData>)
                 (getIntent().getSerializableExtra("charCardsData")));
         practiceCardData = (CardData) getIntent().getSerializableExtra("practiceCardData");
 
@@ -79,6 +83,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 int position = i;
                 handler.post(() -> adapter.update(charCardsData, position));
             }
+            isFinished = true;
         }).start();
     }
 
@@ -87,7 +92,11 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         if (view.getId() == R.id.button_back) {
             finish();
         } else if (view.getId() == R.id.button_start) {
-            saveRecord();
+            if (isFinished) {
+                saveRecord();
+            } else {
+                Toast.makeText(this, R.string.evaluating, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -133,7 +142,9 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
             CharIDs.deleteCharAt(CharIDs.length() - 1);//移除最后一个逗号
             //保存练习卡片
             ContentValues values = new ContentValues();
-            values.put("name", practiceCardData.getName());
+            SimpleDateFormat sdf = new SimpleDateFormat(" MM.dd HH:mm", Locale.getDefault());
+            String time = sdf.format(new Date());
+            values.put("name", practiceCardData.getName() + time);
             values.put("coverImgPath", practiceCardData.getStdImgPath());
             values.put("charIDs", CharIDs.toString());
             long newID = db.insert("Record", null, values);

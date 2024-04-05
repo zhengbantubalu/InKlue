@@ -18,7 +18,7 @@
             android:layout_toStartOf="@id/button_search_submit"
             android:background="@drawable/shape_search_bar"
             android:gravity="center"
-            android:maxLines="1"
+            android:maxLength="10"
             android:paddingStart="@dimen/double_spacing"
             android:paddingEnd="@dimen/double_spacing" />
 
