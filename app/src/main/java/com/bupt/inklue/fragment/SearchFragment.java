@@ -18,12 +18,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.activity.ImageActivity;
+import com.bupt.inklue.activity.SearchActivity;
 import com.bupt.inklue.adapter.CharCardAdapter;
 import com.bupt.inklue.adapter.CharCardDecoration;
-import com.bupt.inklue.data.CardData;
-import com.bupt.inklue.data.CardsData;
+import com.bupt.inklue.data.CharData;
 import com.bupt.inklue.data.DatabaseHelper;
+
+import java.util.ArrayList;
 
 //“搜索”碎片
 public class SearchFragment extends Fragment {
@@ -31,7 +32,7 @@ public class SearchFragment extends Fragment {
     private View root;//根视图
     private Context context;//环境
     private CharCardAdapter adapter;//卡片适配器
-    private CardsData resultCardsData;//搜索结果卡片数据
+    private ArrayList<CharData> resultCharsData;//搜索结果汉字数据列表
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,9 +40,9 @@ public class SearchFragment extends Fragment {
             root = inflater.inflate(R.layout.fragment_search, container, false);
             context = getContext();
 
-            //取得搜索结果卡片数据
-            resultCardsData = new CardsData();
-            getCardsData();
+            //取得搜索结果汉字数据列表
+            resultCharsData = new ArrayList<>();
+            getResultCharsData();
 
             //初始化RecyclerView
             initRecyclerView();
@@ -49,9 +50,9 @@ public class SearchFragment extends Fragment {
             //RecyclerView中项目的点击监听器
             adapter.setOnItemClickListener(position -> {
                 Intent intent = new Intent();
-                intent.setClass(context, ImageActivity.class);
+                intent.setClass(context, SearchActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("charCardsData", resultCardsData);
+                bundle.putSerializable("charsData", resultCharsData);
                 bundle.putInt("position", position);
                 intent.putExtras(bundle);
                 startActivity(intent);
@@ -68,15 +69,15 @@ public class SearchFragment extends Fragment {
     //更新数据
     @SuppressLint("NotifyDataSetChanged")//忽略更新具体数据的要求
     public void updateData() {
-        if (resultCardsData != null) {
-            resultCardsData.clear();
-            getCardsData();
+        if (resultCharsData != null) {
+            resultCharsData.clear();
+            getResultCharsData();
             adapter.notifyDataSetChanged();
         }
     }
 
-    //取得搜索结果卡片数据
-    private void getCardsData() {
+    //取得搜索结果汉字数据列表
+    public void getResultCharsData() {
         try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             Cursor cursor = db.query("StdChar", null, null,
@@ -86,11 +87,11 @@ public class SearchFragment extends Fragment {
             int stdImgPathIndex = cursor.getColumnIndex("stdImgPath");
             if (cursor.moveToFirst()) {
                 do {
-                    CardData cardData = new CardData();
-                    cardData.setID(cursor.getInt(idIndex));
-                    cardData.setName(cursor.getString(nameIndex));
-                    cardData.setStdImgPath(cursor.getString(stdImgPathIndex));
-                    resultCardsData.add(cardData);
+                    CharData charData = new CharData();
+                    charData.setID(cursor.getInt(idIndex));
+                    charData.setName(cursor.getString(nameIndex));
+                    charData.setStdImgPath(cursor.getString(stdImgPathIndex));
+                    resultCharsData.add(charData);
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -106,7 +107,7 @@ public class SearchFragment extends Fragment {
         int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
         CharCardDecoration decoration = new CharCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
-        adapter = new CharCardAdapter(context, resultCardsData);
+        adapter = new CharCardAdapter(context, resultCharsData);
         recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 }

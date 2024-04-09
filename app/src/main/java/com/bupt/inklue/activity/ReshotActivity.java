@@ -29,7 +29,7 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.CardData;
+import com.bupt.inklue.data.CharData;
 import com.bupt.inklue.util.BitmapProcessor;
 import com.bupt.inklue.util.ResourceDecoder;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -46,7 +46,7 @@ public class ReshotActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener {
 
     private Context context;//环境
-    private CardData cardData;//汉字卡片数据
+    private CharData charData;//汉字数据
     private ImageButton button_confirm;//“确认”按钮
     private ImageButton button_cancel;//“取消”按钮
     private PreviewView preview_view;//相机预览视图
@@ -77,8 +77,8 @@ public class ReshotActivity extends AppCompatActivity
         //加载OpenCV
         System.loadLibrary("opencv_java3");
 
-        //取得汉字卡片数据
-        cardData = (CardData) getIntent().getSerializableExtra("cardData");
+        //取得汉字数据
+        charData = (CharData) getIntent().getSerializableExtra("charData");
 
         //初始化相机
         initCamera();
@@ -106,7 +106,7 @@ public class ReshotActivity extends AppCompatActivity
         } else if (view.getId() == R.id.button_confirm) {
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
-            bundle.putSerializable("cardData", cardData);
+            bundle.putSerializable("charData", charData);
             intent.putExtras(bundle);
             setResult(Activity.RESULT_FIRST_USER, intent);
             finish();
@@ -154,7 +154,7 @@ public class ReshotActivity extends AppCompatActivity
         //获取绘制标准汉字的颜色
         Scalar color = ResourceDecoder.getScalar(this, R.attr.colorTheme);
         //取得标准汉字半透明图像
-        stdBitmap = BitmapProcessor.toTransparent(cardData.getStdImgPath(), color);
+        stdBitmap = BitmapProcessor.toTransparent(charData.getStdImgPath(), color);
         imageview_above.setImageBitmap(stdBitmap);
     }
 
@@ -186,8 +186,8 @@ public class ReshotActivity extends AppCompatActivity
         //隐藏手电筒开关
         button_torch.setVisibility(View.GONE);
         //预处理图像并显示
-        BitmapProcessor.preprocess(cardData.getWrittenImgPath(), 512);
-        Bitmap bitmap = BitmapFactory.decodeFile(cardData.getWrittenImgPath());
+        BitmapProcessor.preprocess(charData.getWrittenImgPath(), 512);
+        Bitmap bitmap = BitmapFactory.decodeFile(charData.getWrittenImgPath());
         imageview_above.setImageBitmap(bitmap);
     }
 
@@ -203,7 +203,7 @@ public class ReshotActivity extends AppCompatActivity
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(this),
                 new ImageCapture.OnImageSavedCallback() {
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        cardData.setWrittenImgPath(writtenImgPath);
+                        charData.setWrittenImgPath(writtenImgPath);
                         showPhoto();//展示图片
                     }
 

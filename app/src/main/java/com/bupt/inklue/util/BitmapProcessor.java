@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 
-import com.bupt.inklue.data.CardsData;
+import com.bupt.inklue.data.PracticeData;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -51,17 +51,28 @@ public class BitmapProcessor {
     //图像预处理，包含裁剪、旋转、缩放、阈值，将拍摄的图片处理为评价模块可接收的图片，并覆盖原图
     public static void preprocess(String filePath, int squareSize) {
         Bitmap originalBmp = BitmapFactory.decodeFile(filePath);
-        Bitmap scaledBmp = Bitmap.createScaledBitmap(originalBmp,
-                squareSize * originalBmp.getWidth() / originalBmp.getHeight()
-                , squareSize, true);
-        Bitmap croppedBmp = Bitmap.createBitmap(scaledBmp,
-                (scaledBmp.getWidth() - squareSize) / 2, 0, squareSize, squareSize);
-        Matrix matrix = new Matrix();
-        matrix.postRotate(90);
-        Bitmap rotatedBmp = Bitmap.createBitmap(croppedBmp, 0, 0,
-                squareSize, squareSize, matrix, false);
-        Bitmap thresholdBmp = threshold(rotatedBmp);
-        save(thresholdBmp, filePath);
+        if (originalBmp.getWidth() < originalBmp.getHeight()) {
+            //针对图片方向正确的机型
+            Bitmap scaledBmp = Bitmap.createScaledBitmap(originalBmp, squareSize,
+                    squareSize * originalBmp.getHeight() / originalBmp.getWidth(), true);
+            Bitmap croppedBmp = Bitmap.createBitmap(scaledBmp,
+                    0, (scaledBmp.getHeight() - squareSize) / 2, squareSize, squareSize);
+            Bitmap thresholdBmp = threshold(croppedBmp);
+            save(thresholdBmp, filePath);
+        } else {
+            //针对图片方向不正确的机型
+            Bitmap scaledBmp = Bitmap.createScaledBitmap(originalBmp,
+                    squareSize * originalBmp.getWidth() / originalBmp.getHeight()
+                    , squareSize, true);
+            Bitmap croppedBmp = Bitmap.createBitmap(scaledBmp,
+                    (scaledBmp.getWidth() - squareSize) / 2, 0, squareSize, squareSize);
+            Matrix matrix = new Matrix();
+            matrix.postRotate(90);
+            Bitmap rotatedBmp = Bitmap.createBitmap(croppedBmp, 0, 0,
+                    squareSize, squareSize, matrix, false);
+            Bitmap thresholdBmp = threshold(rotatedBmp);
+            save(thresholdBmp, filePath);
+        }
     }
 
     //图像阈值处理
@@ -74,12 +85,18 @@ public class BitmapProcessor {
         return bitmap;
     }
 
-    //根据卡片数据列表创建练习封面，并保存到指定路径
-    public static void createCover(CardsData cardsData, String filePath) {
-        if (cardsData.size() >= 9) {
+    //创建练习封面，并保存到指定路径
+    //isStd为真则以标准图像创建，否则以书写图像创建
+    public static void createCover(PracticeData practiceData, String filePath, boolean isStd) {
+        if (practiceData.charsData.size() >= 9) {
             ArrayList<Bitmap> bitmaps = new ArrayList<>();
             for (int i = 0; i < 9; i++) {
-                Bitmap bitmap = BitmapFactory.decodeFile(cardsData.get(i).getStdImgPath());
+                Bitmap bitmap;
+                if (isStd) {
+                    bitmap = BitmapFactory.decodeFile(practiceData.charsData.get(i).getStdImgPath());
+                } else {
+                    bitmap = BitmapFactory.decodeFile(practiceData.charsData.get(i).getWrittenImgPath());
+                }
                 bitmaps.add(bitmap);
             }
             int squareSize = bitmaps.get(0).getWidth();
@@ -97,10 +114,15 @@ public class BitmapProcessor {
             canvas.drawBitmap(bitmaps.get(8), squareSize * 2, squareSize * 2, null);
             Bitmap resultBitmap = Bitmap.createScaledBitmap(drawnBitmap, squareSize, squareSize, true);
             save(resultBitmap, filePath);
-        } else if (cardsData.size() >= 4) {
+        } else if (practiceData.charsData.size() >= 4) {
             ArrayList<Bitmap> bitmaps = new ArrayList<>();
             for (int i = 0; i < 4; i++) {
-                Bitmap bitmap = BitmapFactory.decodeFile(cardsData.get(i).getStdImgPath());
+                Bitmap bitmap;
+                if (isStd) {
+                    bitmap = BitmapFactory.decodeFile(practiceData.charsData.get(i).getStdImgPath());
+                } else {
+                    bitmap = BitmapFactory.decodeFile(practiceData.charsData.get(i).getWrittenImgPath());
+                }
                 bitmaps.add(bitmap);
             }
             int squareSize = bitmaps.get(0).getWidth();
@@ -113,8 +135,13 @@ public class BitmapProcessor {
             canvas.drawBitmap(bitmaps.get(3), squareSize, squareSize, null);
             Bitmap resultBitmap = Bitmap.createScaledBitmap(drawnBitmap, squareSize, squareSize, true);
             save(resultBitmap, filePath);
-        } else if (!cardsData.isEmpty()) {
-            Bitmap bitmap = BitmapFactory.decodeFile(cardsData.get(0).getStdImgPath());
+        } else if (!practiceData.charsData.isEmpty()) {
+            Bitmap bitmap;
+            if (isStd) {
+                bitmap = BitmapFactory.decodeFile(practiceData.charsData.get(0).getStdImgPath());
+            } else {
+                bitmap = BitmapFactory.decodeFile(practiceData.charsData.get(0).getWrittenImgPath());
+            }
             save(bitmap, filePath);
         }
     }

@@ -1,50 +1,48 @@
 package com.bupt.inklue.activity;
 
+import android.Manifest;
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.CharCardAdapter;
 import com.bupt.inklue.adapter.CharCardDecoration;
-import com.bupt.inklue.data.CardData;
-import com.bupt.inklue.data.CardsData;
-import com.bupt.inklue.data.DatabaseHelper;
+import com.bupt.inklue.data.PracticeData;
+import com.bupt.inklue.data.PracticeDataManager;
 
 //作业详情页面
 public class PracticeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private CharCardAdapter adapter;//卡片适配器
-    private CardData practiceCardData;//练习数据
-    private String charIDs;//汉字ID列表
-    private CardsData charCardsData;//汉字卡片数据
+    private PracticeData practiceData;//练习数据
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice);
 
         //取得练习数据
-        getPracticeData();
+        long id = getIntent().getLongExtra("practiceID", 0);
+        practiceData = PracticeDataManager.getPracticeData(this, id);
 
         //设置练习标题
         TextView textView = findViewById(R.id.textview_title);
-        textView.setText(practiceCardData.getName());
-
-        //取得汉字卡片数据
-        getCardsData();
+        textView.setText(practiceData.getName());
 
         //初始化RecyclerView
         initRecyclerView();
 
         //RecyclerView中项目的点击监听器
-        adapter.setOnItemClickListener(this::startImageActivity);
+        adapter.setOnItemClickListener(this::startWritingActivity);
 
         //设置按钮的点击监听器
         findViewById(R.id.button_back).setOnClickListener(this);
@@ -56,75 +54,53 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         if (view.getId() == R.id.button_back) {
             finish();
         } else if (view.getId() == R.id.button_start) {
-            startWritingActivity();
+            checkCameraPermission();
         }
     }
 
-    //取得练习数据
-    private void getPracticeData() {
-        practiceCardData = new CardData();
-        try (DatabaseHelper dbHelper = new DatabaseHelper(this)) {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            long id = getIntent().getLongExtra("practiceCardID", 0);
-            Cursor cursor = db.rawQuery("SELECT * FROM Practice WHERE id = " + id, null);
-            int nameIndex = cursor.getColumnIndex("name");
-            int coverImgPathIndex = cursor.getColumnIndex("coverImgPath");
-            int charIDsIndex = cursor.getColumnIndex("charIDs");
-            if (cursor.moveToFirst()) {
-                practiceCardData.setName(cursor.getString(nameIndex));
-                practiceCardData.setStdImgPath(cursor.getString(coverImgPathIndex));
-                charIDs = cursor.getString(charIDsIndex);
-            }
-            cursor.close();
+    //权限申请的回调，用于在获取权限后继续刚才中断的操作
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 0 && grantResults.length != 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            //权限申请成功，继续启动拍照页面
+            startCameraActivity();
         }
     }
 
-    //取得汉字卡片数据
-    private void getCardsData() {
-        charCardsData = new CardsData();
-        String[] idArray = charIDs.split(",");
-        try (DatabaseHelper dbHelper = new DatabaseHelper(this)) {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            for (String id : idArray) {
-                Cursor cursor = db.rawQuery("SELECT * FROM StdChar WHERE id = " +
-                        id, null);
-                int name = cursor.getColumnIndex("name");
-                int stdImgPath = cursor.getColumnIndex("stdImgPath");
-                if (cursor.moveToFirst()) {
-                    do {
-                        CardData cardData = new CardData();
-                        cardData.setID(Long.parseLong(id));
-                        cardData.setName(cursor.getString(name));
-                        cardData.setStdImgPath(cursor.getString(stdImgPath));
-                        charCardsData.add(cardData);
-                    } while (cursor.moveToNext());
-                }
-                cursor.close();
-            }
-            db.close();
-        }
-    }
-
-    //启动图片查看页面
-    private void startImageActivity(int position) {
+    //启动书写页面
+    private void startWritingActivity(int position) {
         Intent intent = new Intent();
-        intent.setClass(this, ImageActivity.class);
+        intent.setClass(this, WritingActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("charCardsData", charCardsData);
+        bundle.putSerializable("practiceData", practiceData);
         bundle.putInt("position", position);
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
-    //启动书写页面
-    private void startWritingActivity() {
+    //启动拍照页面
+    private void startCameraActivity() {
         Intent intent = new Intent();
-        intent.setClass(this, WritingActivity.class);
+        intent.setClass(this, CameraActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("charCardsData", charCardsData);
-        bundle.putSerializable("practiceCardData", practiceCardData);
+        bundle.putSerializable("practiceData", practiceData);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    //检查相机权限
+    private void checkCameraPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
+                PackageManager.PERMISSION_GRANTED) {
+            //拥有权限，启动拍照页面
+            startCameraActivity();
+        } else {
+            //无权限则申请
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, 0);
+        }
     }
 
     //初始化RecyclerView
@@ -135,7 +111,7 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
         CharCardDecoration decoration = new CharCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
-        adapter = new CharCardAdapter(this, charCardsData);
+        adapter = new CharCardAdapter(this, practiceData.charsData);
         recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 }

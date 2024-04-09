@@ -13,16 +13,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.CardData;
+import com.bupt.inklue.data.CharData;
 
-//图像显示碎片
+//汉字评价碎片
 public class EvaluateFragment extends Fragment {
 
     private View root;//根视图
-    private final CardData cardData;//图片数据
+    private final CharData charData;//汉字数据
 
-    public EvaluateFragment(CardData cardData) {
-        this.cardData = cardData;
+    public EvaluateFragment(CharData charData) {
+        this.charData = charData;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -32,16 +32,16 @@ public class EvaluateFragment extends Fragment {
 
             //设置图像
             ImageView imageview_image = root.findViewById(R.id.imageview_image);
-            Bitmap bitmap = BitmapFactory.decodeFile(cardData.getWrittenImgPath());
+            Bitmap bitmap = BitmapFactory.decodeFile(charData.getWrittenImgPath());
             imageview_image.setImageBitmap(bitmap);
 
             //设置评分
             TextView textview_score = root.findViewById(R.id.textview_score);
-            textview_score.setText(cardData.getScore());
+            textview_score.setText(charData.getScore());
 
             //设置建议
             TextView textview_advice = root.findViewById(R.id.textview_advice);
-            textview_advice.setText(cardData.getAdvice());
+            textview_advice.setText(charData.getAdvice());
         }
         return root;
     }

@@ -3,17 +3,23 @@
     <string name="app_name">墨痕</string>
     <string name="user_name_default">无名客</string>
     <string name="user_signature_default">我家洗砚池头树\n朵朵花开淡墨痕</string>
-    <string name="start">落笔</string>
-    <string name="finish">停笔</string>
-    <string name="confirm">收笔</string>
-    <string name="save">留痕</string>
+
+    <string name="start">拍摄</string>
+    <string name="finish">完成</string>
+    <string name="confirm">确认</string>
     <string name="reshot">重拍</string>
+    <string name="save">保存</string>
+    <string name="settings">设置</string>
+    <string name="clear_cache">清空缓存</string>
+    <string name="reset_database">重置数据</string>
+
+    <string name="downloading">资源下载中，请稍候</string>
     <string name="camera_error">拍摄失败，请重试</string>
     <string name="camera_saving">保存中，请稍候</string>
     <string name="evaluating">处理中，请稍候</string>
     <string name="save_success">保存成功</string>
     <string name="save_error">保存失败</string>
+    <string name="cache_cleared">缓存已清空</string>
     <string name="database_reset">数据已重置</string>
-    <string name="downloading">资源下载中，请稍候</string>
     <string name="developing">开发中，敬请期待</string>
 </resources>

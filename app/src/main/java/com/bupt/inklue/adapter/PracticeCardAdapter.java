@@ -14,18 +14,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.CardsData;
+import com.bupt.inklue.data.PracticeData;
+
+import java.util.ArrayList;
 
 //练习卡片适配器
 public class PracticeCardAdapter extends RecyclerView.Adapter<PracticeCardAdapter.ViewHolder> {
 
     private final Context context;
-    protected CardsData practiceCardsData;
+    protected ArrayList<PracticeData> practicesData;
     protected OnItemClickListener listener;
 
-    public PracticeCardAdapter(Context context, CardsData practiceCardsData) {
+    public PracticeCardAdapter(Context context, ArrayList<PracticeData> practicesData) {
         this.context = context;
-        this.practiceCardsData = practiceCardsData;
+        this.practicesData = practicesData;
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -33,13 +35,13 @@ public class PracticeCardAdapter extends RecyclerView.Adapter<PracticeCardAdapte
     }
 
     public int getItemCount() {
-        return practiceCardsData.size();
+        return practicesData.size();
     }
 
     public void onBindViewHolder(ViewHolder holder, int position) {
         //设置卡片资源
-        holder.textView.setText(practiceCardsData.get(position).getName());//设置卡片名称
-        Bitmap bitmap = BitmapFactory.decodeFile(practiceCardsData.get(position).getStdImgPath());
+        holder.textView.setText(practicesData.get(position).getName());//设置卡片名称
+        Bitmap bitmap = BitmapFactory.decodeFile(practicesData.get(position).getCoverImgPath());
         holder.imageView.setImageBitmap(bitmap);//设置卡片图片
         //设置卡片的点击监听器
         holder.itemView.setOnClickListener(v -> {
@@ -61,20 +63,20 @@ public class PracticeCardAdapter extends RecyclerView.Adapter<PracticeCardAdapte
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
         TextView textView;
+        ImageView imageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.textview_practice_name);
             imageView = itemView.findViewById(R.id.imageview_practice_image);
+            textView = itemView.findViewById(R.id.textview_practice_name);
         }
     }
 
     //更新全部数据
     @SuppressLint("NotifyDataSetChanged")//忽略更新具体数据的要求
-    public void update(CardsData practiceCardsData) {
-        this.practiceCardsData = practiceCardsData;
+    public void update(ArrayList<PracticeData> practicesData) {
+        this.practicesData = practicesData;
         notifyDataSetChanged();
     }
 }

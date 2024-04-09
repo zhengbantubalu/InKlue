@@ -1,12 +1,11 @@
 package com.bupt.inklue.activity;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
@@ -23,36 +22,40 @@ import com.bupt.evaluate.core.Evaluator;
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.CharCardDecoration;
 import com.bupt.inklue.adapter.EvaluateCardAdapter;
-import com.bupt.inklue.data.CardData;
-import com.bupt.inklue.data.CardsData;
-import com.bupt.inklue.data.DatabaseHelper;
+import com.bupt.inklue.data.CharData;
+import com.bupt.inklue.data.PracticeData;
+import com.bupt.inklue.data.PracticeDataManager;
 import com.bupt.inklue.util.BitmapProcessor;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 //评价结果页面
 public class ResultActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EvaluateCardAdapter adapter;//卡片适配器
-    private CardsData charCardsData;//汉字卡片数据
-    private CardData practiceCardData;//练习数据
+    private PracticeData practiceData;//练习数据
     private boolean isFinished = false;//评价是否完成
 
-    @SuppressWarnings("unchecked")//忽略取得图像卡片数据时类型转换产生的警告
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice);
 
-        //取得Intent数据
-        charCardsData = new CardsData((List<CardData>)
-                (getIntent().getSerializableExtra("charCardsData")));
-        practiceCardData = (CardData) getIntent().getSerializableExtra("practiceCardData");
+        //取得练习数据
+        practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
+
+        //创建记录封面
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault());
+        String time = sdf.format(new Date());
+        if (practiceData != null) {
+            practiceData.setCoverImgPath(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
+                    "/record/cover/" + time + ".jpg");
+            BitmapProcessor.createCover(practiceData, practiceData.getCoverImgPath(), false);
+        }
 
         //设置练习标题
         TextView textView = findViewById(R.id.textview_title);
-        textView.setText(practiceCardData.getName());
+        textView.setText(practiceData.getName());
 
         //修改开始按钮文字
         Button button_start = findViewById(R.id.button_start);
@@ -71,17 +74,17 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         //异步调用评价模块
         Handler handler = new Handler(Looper.getMainLooper());
         new Thread(() -> {
-            for (int i = 0; i < charCardsData.size(); i++) {
-                CardData cardData = charCardsData.get(i);
-                String cnChar = cardData.getName();
-                Bitmap inputBmp = BitmapFactory.decodeFile(cardData.getWrittenImgPath());
-                Bitmap stdBmp = BitmapFactory.decodeFile(cardData.getStdImgPath());
+            for (int i = 0; i < practiceData.charsData.size(); i++) {
+                CharData charData = practiceData.charsData.get(i);
+                String cnChar = charData.getName();
+                Bitmap inputBmp = BitmapFactory.decodeFile(charData.getWrittenImgPath());
+                Bitmap stdBmp = BitmapFactory.decodeFile(charData.getStdImgPath());
                 Evaluation evaluation = Evaluator.evaluate(cnChar, inputBmp, stdBmp);
-                BitmapProcessor.save(evaluation.outputBmp, cardData.getWrittenImgPath());
-                cardData.setScore(Integer.toString(evaluation.score));
-                cardData.setAdvice(evaluation.advice);
+                BitmapProcessor.save(evaluation.outputBmp, charData.getWrittenImgPath());
+                charData.setScore(Integer.toString(evaluation.score));
+                charData.setAdvice(evaluation.advice);
                 int position = i;
-                handler.post(() -> adapter.update(charCardsData, position));
+                handler.post(() -> adapter.update(practiceData.charsData, position));
             }
             isFinished = true;
         }).start();
@@ -93,7 +96,10 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
             finish();
         } else if (view.getId() == R.id.button_start) {
             if (isFinished) {
-                saveRecord();
+                //保存练习记录
+                PracticeDataManager.saveRecord(this, practiceData);
+                //回退到主页面
+                backToMainActivity();
             } else {
                 Toast.makeText(this, R.string.evaluating, Toast.LENGTH_SHORT).show();
             }
@@ -105,7 +111,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent();
         intent.setClass(this, EvaluateActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("charCardsData", charCardsData);
+        bundle.putSerializable("practiceData", practiceData);
         bundle.putInt("position", position);
         intent.putExtras(bundle);
         startActivity(intent);
@@ -119,50 +125,6 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         startActivity(intent);
     }
 
-    //保存练习记录
-    private void saveRecord() {
-        int successNum = 0;
-        try (DatabaseHelper dbHelper = new DatabaseHelper(this)) {
-            StringBuilder CharIDs = new StringBuilder();
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            //保存汉字卡片
-            for (CardData cardData : charCardsData) {
-                ContentValues values = new ContentValues();
-                values.put("name", cardData.getName());
-                values.put("stdImgPath", cardData.getStdImgPath());
-                values.put("writtenImgPath", cardData.getWrittenImgPath());
-                values.put("score", cardData.getScore());
-                values.put("advice", cardData.getAdvice());
-                long newID = db.insert("WrittenChar", null, values);
-                if (newID != -1) {
-                    successNum++;
-                    CharIDs.append(newID).append(",");
-                }
-            }
-            CharIDs.deleteCharAt(CharIDs.length() - 1);//移除最后一个逗号
-            //保存练习卡片
-            ContentValues values = new ContentValues();
-            SimpleDateFormat sdf = new SimpleDateFormat(" MM.dd HH:mm", Locale.getDefault());
-            String time = sdf.format(new Date());
-            values.put("name", practiceCardData.getName() + time);
-            values.put("coverImgPath", practiceCardData.getStdImgPath());
-            values.put("charIDs", CharIDs.toString());
-            long newID = db.insert("Record", null, values);
-            if (newID != -1) {
-                successNum++;
-            }
-            db.close();
-        }
-        //显示保存反馈信息
-        if (successNum == charCardsData.size() + 1) {
-            Toast.makeText(this, R.string.save_success, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, R.string.save_error, Toast.LENGTH_SHORT).show();
-        }
-        //回退到主页面
-        backToMainActivity();
-    }
-
     //初始化RecyclerView
     private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recyclerview_practice);
@@ -171,7 +133,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
         CharCardDecoration decoration = new CharCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
-        adapter = new EvaluateCardAdapter(this, charCardsData);
+        adapter = new EvaluateCardAdapter(this, practiceData.charsData);
         recyclerView.setAdapter(adapter);
     }
 }

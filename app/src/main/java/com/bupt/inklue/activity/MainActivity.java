@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.widget.RadioButton;
@@ -17,8 +16,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.ViewPagerAdapter;
-import com.bupt.inklue.data.DataDownloader;
 import com.bupt.inklue.data.DatabaseManager;
+import com.bupt.inklue.data.FileManager;
 import com.bupt.inklue.fragment.PracticeFragment;
 import com.bupt.inklue.fragment.SearchFragment;
 import com.bupt.inklue.fragment.UserFragment;
@@ -33,28 +32,23 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     private SearchFragment searchFragment;//“搜索”碎片
     private PracticeFragment practiceFragment;//“练习”碎片
     private UserFragment userFragment;//“我的”碎片
+    private SharedPreferences sharedPreferences;//用于访问App是否为首次启动
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //判断App是否为首次启动
-        SharedPreferences sharedPreferences = getSharedPreferences(
-                "user_preferences", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("user_preferences", Context.MODE_PRIVATE);
         boolean isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true);
         if (isFirstLaunch) {
             //初始化App
             initApp();
-            //标记App为非首次启动
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("isFirstLaunch", false);
-            editor.apply();
         } else {
             //初始化ViewPager
             initViewPager();
         }
-
-        //设置底部导航栏RadioGroup的选中变化监听器，详见onCheckedChanged方法
+        //设置底部导航栏RadioGroup的选中变化监听器
         RadioGroup bottomBar = findViewById(R.id.bottom_bar);
         bottomBar.setOnCheckedChangeListener(this);
     }
@@ -76,17 +70,23 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     //初始化App
     private void initApp() {
-        Toast.makeText(this, R.string.downloading, Toast.LENGTH_SHORT).show();
+        //初始化目录
+        FileManager.initDirectory(this);
         //异步下载资源图片
+        Toast.makeText(this, R.string.downloading, Toast.LENGTH_SHORT).show();
         Handler handler = new Handler(Looper.getMainLooper());
         new Thread(() -> {
-            DataDownloader.downloadImg(
-                    this.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "");
+            //下载资源图片
+            FileManager.downloadImg(this);
             handler.post(() -> {
                 //重置数据库
                 DatabaseManager.resetDatabase(this);
                 //初始化ViewPager
                 initViewPager();
+                //标记App为非首次启动
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("isFirstLaunch", false);
+                editor.apply();
             });
         }).start();
     }

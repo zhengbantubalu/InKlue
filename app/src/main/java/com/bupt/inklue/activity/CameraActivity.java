@@ -27,8 +27,7 @@ import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.CardData;
-import com.bupt.inklue.data.CardsData;
+import com.bupt.inklue.data.PracticeData;
 import com.bupt.inklue.util.BitmapProcessor;
 import com.bupt.inklue.util.ResourceDecoder;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -37,7 +36,6 @@ import org.opencv.core.Scalar;
 
 import java.io.File;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
@@ -46,8 +44,8 @@ public class CameraActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener {
 
     private Context context;//环境
-    private CardsData charCardsData;//汉字卡片数据列表
-    private int position = 0;//当前拍摄的汉字在卡片列表中的位置
+    private PracticeData practiceData;//练习数据
+    private int position = 0;//当前拍摄的汉字在列表中的位置
     private int savedNum = 0;//已经保存的图像数
     private PreviewView preview_view;//相机预览视图
     private ImageView imageview_above;//预览视图上层的视图
@@ -57,7 +55,6 @@ public class CameraActivity extends AppCompatActivity
     private ImageButton button_torch;//手电筒开关
     private boolean isTorchOn;//手电筒是否开启
 
-    @SuppressWarnings("unchecked")//忽略取得图像卡片数据时类型转换产生的警告
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //隐藏系统顶部状态栏
@@ -75,9 +72,8 @@ public class CameraActivity extends AppCompatActivity
         //加载OpenCV
         System.loadLibrary("opencv_java3");
 
-        //取得汉字卡片数据
-        charCardsData = new CardsData((List<CardData>)
-                (getIntent().getSerializableExtra("charCardsData")));
+        //取得练习数据
+        practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
 
         //初始化相机
         initCamera();
@@ -99,7 +95,7 @@ public class CameraActivity extends AppCompatActivity
         if (view.getId() == R.id.button_back) {
             finish();
         } else if (view.getId() == R.id.button_shot) {
-            if (savedNum < charCardsData.size()) {
+            if (savedNum < practiceData.charsData.size()) {
                 takePhoto();
                 position++;
                 updateImageView();//更新预览上层视图
@@ -138,9 +134,7 @@ public class CameraActivity extends AppCompatActivity
         Intent intent = new Intent();
         intent.setClass(this, ConfirmActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("charCardsData", charCardsData);
-        bundle.putSerializable("practiceCardData",
-                getIntent().getSerializableExtra("practiceCardData"));
+        bundle.putSerializable("practiceData", practiceData);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
@@ -158,11 +152,12 @@ public class CameraActivity extends AppCompatActivity
 
     //更新预览上层视图
     private void updateImageView() {
-        if (position < charCardsData.size()) {
+        if (position < practiceData.charsData.size()) {
             //取得标准汉字半透明图像
-            Bitmap bitmap = BitmapProcessor.toTransparent(charCardsData.get(position).getStdImgPath(), color);
+            Bitmap bitmap = BitmapProcessor.toTransparent(
+                    practiceData.charsData.get(position).getStdImgPath(), color);
             imageview_above.setImageBitmap(bitmap);
-        } else if (position == charCardsData.size()) {
+        } else if (position == practiceData.charsData.size()) {
             Toast.makeText(context, R.string.camera_saving, Toast.LENGTH_SHORT).show();
         }
     }
@@ -200,10 +195,10 @@ public class CameraActivity extends AppCompatActivity
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(this),
                 new ImageCapture.OnImageSavedCallback() {
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        if (savedNum < charCardsData.size()) {
-                            charCardsData.get(savedNum).setWrittenImgPath(writtenImgPath);
+                        if (savedNum < practiceData.charsData.size()) {
+                            practiceData.charsData.get(savedNum).setWrittenImgPath(writtenImgPath);
                             savedNum++;
-                            if (savedNum == charCardsData.size()) {
+                            if (savedNum == practiceData.charsData.size()) {
                                 //如果保存完最后一张，则启动确认页面
                                 startConfirmActivity();
                             }

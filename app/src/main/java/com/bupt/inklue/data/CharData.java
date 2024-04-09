@@ -2,8 +2,9 @@ package com.bupt.inklue.data;
 
 import java.io.Serializable;
 
-//卡片数据
-public class CardData implements Serializable {
+//汉字数据
+public class CharData implements Serializable {
+
     private long id;//主键
     private String name;//名称
     private String stdImgPath;//标准图像路径

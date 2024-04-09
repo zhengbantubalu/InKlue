@@ -10,20 +10,18 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.ViewPagerAdapter;
-import com.bupt.inklue.data.CardData;
-import com.bupt.inklue.data.CardsData;
+import com.bupt.inklue.data.CharData;
 import com.bupt.inklue.fragment.ImageFragment;
 
 import java.util.ArrayList;
-import java.util.List;
 
-//图片查看页面
-public class ImageActivity extends AppCompatActivity implements View.OnClickListener {
+//搜索结果查看页面
+public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager2 viewpager;//用于切换图片的类
-    private CardsData charCardsData;//汉字卡片数据列表
+    private ArrayList<CharData> charsData;//汉字数据列表
 
-    @SuppressWarnings("unchecked")//忽略取得图像卡片数据时类型转换产生的警告
+    @SuppressWarnings("unchecked")//忽略取得汉字数据时类型转换产生的警告
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //隐藏系统顶部状态栏
@@ -32,9 +30,8 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_image);
 
-        //取得汉字卡片数据
-        charCardsData = new CardsData((List<CardData>)
-                (getIntent().getSerializableExtra("charCardsData")));
+        //取得汉字数据列表
+        charsData = (ArrayList<CharData>) getIntent().getSerializableExtra("charsData");
 
         //初始化ViewPager
         initViewPager();
@@ -58,8 +55,8 @@ public class ImageActivity extends AppCompatActivity implements View.OnClickList
     private void initViewPager() {
         viewpager = findViewById(R.id.viewpager_image);
         ArrayList<Fragment> fragments = new ArrayList<>();
-        for (CardData cardData : charCardsData) {
-            fragments.add(new ImageFragment(cardData));
+        for (CharData charData : charsData) {
+            fragments.add(new ImageFragment(charData));
         }
         viewpager.setAdapter(new ViewPagerAdapter(
                 getSupportFragmentManager(), getLifecycle(), fragments));

@@ -12,16 +12,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.CardData;
+import com.bupt.inklue.data.CharData;
 
 //图像检查碎片
 public class CheckFragment extends Fragment {
 
     private View root;//根视图
-    private CardData cardData;//图片数据
+    private CharData charData;//汉字数据
 
-    public CheckFragment(CardData cardData) {
-        this.cardData = cardData;
+    public CheckFragment(CharData charData) {
+        this.charData = charData;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -31,17 +31,17 @@ public class CheckFragment extends Fragment {
 
             //设置图像
             ImageView imageView = root.findViewById(R.id.imageview_image);
-            Bitmap bitmap = BitmapFactory.decodeFile(cardData.getWrittenImgPath());
+            Bitmap bitmap = BitmapFactory.decodeFile(charData.getWrittenImgPath());
             imageView.setImageBitmap(bitmap);
         }
         return root;
     }
 
     //更新数据
-    public void update(CardData cardData) {
-        this.cardData = cardData;
+    public void update(CharData charData) {
+        this.charData = charData;
         ImageView imageView = root.findViewById(R.id.imageview_image);
-        Bitmap bitmap = BitmapFactory.decodeFile(cardData.getWrittenImgPath());
+        Bitmap bitmap = BitmapFactory.decodeFile(charData.getWrittenImgPath());
         imageView.setImageBitmap(bitmap);
     }
 }

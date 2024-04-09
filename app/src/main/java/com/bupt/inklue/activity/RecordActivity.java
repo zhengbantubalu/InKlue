@@ -1,8 +1,6 @@
 package com.bupt.inklue.activity;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -13,17 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.CharCardDecoration;
-import com.bupt.inklue.adapter.RecordCardAdapter;
-import com.bupt.inklue.data.CardData;
-import com.bupt.inklue.data.CardsData;
-import com.bupt.inklue.data.DatabaseHelper;
+import com.bupt.inklue.adapter.ResultCardAdapter;
+import com.bupt.inklue.data.PracticeData;
+import com.bupt.inklue.data.PracticeDataManager;
 
 public class RecordActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private RecordCardAdapter adapter;//卡片适配器
-    private CardData recordCardData;//记录数据
-    private String charIDs;//汉字ID列表
-    private CardsData charCardsData;//汉字卡片数据
+    private ResultCardAdapter adapter;//卡片适配器
+    private PracticeData recordData;//记录数据
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,14 +28,12 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.bottom_bar).setVisibility(View.GONE);
 
         //取得记录数据
-        getRecordData();
+        long id = getIntent().getLongExtra("recordID", 0);
+        recordData = PracticeDataManager.getRecordData(this, id);
 
         //设置练习标题
         TextView textView = findViewById(R.id.textview_title);
-        textView.setText(recordCardData.getName());
-
-        //取得汉字卡片数据
-        getCardsData();
+        textView.setText(recordData.getName());
 
         //初始化RecyclerView
         initRecyclerView();
@@ -59,59 +52,12 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    //取得记录数据
-    private void getRecordData() {
-        recordCardData = new CardData();
-        try (DatabaseHelper dbHelper = new DatabaseHelper(this)) {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            long id = getIntent().getLongExtra("recordCardID", 0);
-            Cursor cursor = db.rawQuery("SELECT * FROM Record WHERE id = " + id, null);
-            int nameIndex = cursor.getColumnIndex("name");
-            int charIDsIndex = cursor.getColumnIndex("charIDs");
-            if (cursor.moveToFirst()) {
-                recordCardData.setName(cursor.getString(nameIndex));
-                charIDs = cursor.getString(charIDsIndex);
-            }
-            cursor.close();
-        }
-    }
-
-    //取得汉字卡片数据
-    private void getCardsData() {
-        charCardsData = new CardsData();
-        String[] idArray = charIDs.split(",");
-        try (DatabaseHelper dbHelper = new DatabaseHelper(this)) {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            for (String id : idArray) {
-                Cursor cursor = db.rawQuery("SELECT * FROM WrittenChar WHERE id = " +
-                        id, null);
-                int nameIndex = cursor.getColumnIndex("name");
-                int writtenImgPathIndex = cursor.getColumnIndex("writtenImgPath");
-                int scoreIndex = cursor.getColumnIndex("score");
-                int adviceIndex = cursor.getColumnIndex("advice");
-                if (cursor.moveToFirst()) {
-                    do {
-                        CardData cardData = new CardData();
-                        cardData.setID(Long.parseLong(id));
-                        cardData.setName(cursor.getString(nameIndex));
-                        cardData.setWrittenImgPath(cursor.getString(writtenImgPathIndex));
-                        cardData.setScore(cursor.getString(scoreIndex));
-                        cardData.setAdvice(cursor.getString(adviceIndex));
-                        charCardsData.add(cardData);
-                    } while (cursor.moveToNext());
-                }
-                cursor.close();
-            }
-            db.close();
-        }
-    }
-
     //启动评价页面
     private void startEvaluateActivity(int position) {
         Intent intent = new Intent();
         intent.setClass(this, EvaluateActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("charCardsData", charCardsData);
+        bundle.putSerializable("practiceData", recordData);
         bundle.putInt("position", position);
         intent.putExtras(bundle);
         startActivity(intent);
@@ -125,7 +71,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
         CharCardDecoration decoration = new CharCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
-        adapter = new RecordCardAdapter(this, charCardsData);
+        adapter = new ResultCardAdapter(this, recordData.charsData);
         recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 }

@@ -1,7 +1,6 @@
 package com.bupt.inklue.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -23,13 +22,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.activity.RecordActivity;
-import com.bupt.inklue.adapter.PracticeCardAdapter;
+import com.bupt.inklue.activity.SettingsActivity;
 import com.bupt.inklue.adapter.PracticeCardDecoration;
-import com.bupt.inklue.data.CardData;
-import com.bupt.inklue.data.CardsData;
+import com.bupt.inklue.adapter.RecordCardAdapter;
 import com.bupt.inklue.data.DatabaseHelper;
-import com.bupt.inklue.data.DatabaseManager;
+import com.bupt.inklue.data.PracticeData;
 
+import java.util.ArrayList;
 import java.util.Collections;
 
 //“我的”碎片
@@ -37,8 +36,8 @@ public class UserFragment extends Fragment {
 
     private View root;//根视图
     private Context context;//环境
-    private PracticeCardAdapter adapter;//卡片适配器
-    private CardsData recordCardsData;//记录卡片数据
+    private RecordCardAdapter adapter;//卡片适配器
+    private ArrayList<PracticeData> recordsData;//记录数据列表
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -49,9 +48,9 @@ public class UserFragment extends Fragment {
             //设置用户信息
             setUserinfo();
 
-            //取得记录卡片数据
-            recordCardsData = new CardsData();
-            getCardsData();
+            //取得记录数据列表
+            recordsData = new ArrayList<>();
+            getRecordsData();
 
             //初始化RecyclerView
             initRecyclerView();
@@ -60,26 +59,16 @@ public class UserFragment extends Fragment {
             adapter.setOnItemClickListener(position -> {
                 Intent intent = new Intent();
                 intent.setClass(context, RecordActivity.class);
-                intent.putExtra("recordCardID", recordCardsData.get(position).getID());
+                intent.putExtra("recordID", recordsData.get(position).getID());
                 startActivity(intent);
             });
 
             //“设置”按钮的点击监听器
             ImageButton button_settings = root.findViewById(R.id.button_settings);
             button_settings.setOnClickListener(view -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("该按钮现在用于测试");
-                builder.setMessage("确认将会清空练习记录");
-                builder.setPositiveButton("确认", (dialog, which) -> {
-                    int size = recordCardsData.size();
-                    recordCardsData.clear();
-                    DatabaseManager.resetDatabase(context);
-                    adapter.notifyItemRangeRemoved(0, size);
-                });
-                builder.setNegativeButton("取消", (dialog, which) -> {
-                });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                Intent intent = new Intent();
+                intent.setClass(context, SettingsActivity.class);
+                startActivity(intent);
             });
         }
         return root;
@@ -88,9 +77,9 @@ public class UserFragment extends Fragment {
     //更新数据
     @SuppressLint("NotifyDataSetChanged")//忽略更新具体数据的要求
     public void updateData() {
-        if (recordCardsData != null) {
-            recordCardsData.clear();
-            getCardsData();
+        if (recordsData != null) {
+            recordsData.clear();
+            getRecordsData();
             adapter.notifyDataSetChanged();
         }
     }
@@ -104,28 +93,30 @@ public class UserFragment extends Fragment {
         user_avatar.setImageBitmap(bitmap);
     }
 
-    //取得记录卡片数据
-    private void getCardsData() {
+    //取得记录数据列表
+    private void getRecordsData() {
         try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             Cursor cursor = db.query("Record", null, null,
                     null, null, null, null);
             int idIndex = cursor.getColumnIndex("id");
             int nameIndex = cursor.getColumnIndex("name");
+            int timeIndex = cursor.getColumnIndex("time");
             int coverImgPathIndex = cursor.getColumnIndex("coverImgPath");
             if (cursor.moveToFirst()) {
                 do {
-                    CardData cardData = new CardData();
-                    cardData.setID(cursor.getLong(idIndex));
-                    cardData.setName(cursor.getString(nameIndex));
-                    cardData.setStdImgPath(cursor.getString(coverImgPathIndex));
-                    recordCardsData.add(cardData);
+                    PracticeData practiceData = new PracticeData();
+                    practiceData.setID(cursor.getLong(idIndex));
+                    practiceData.setName(cursor.getString(nameIndex));
+                    practiceData.setTime(cursor.getString(timeIndex));
+                    practiceData.setCoverImgPath(cursor.getString(coverImgPathIndex));
+                    recordsData.add(practiceData);
                 } while (cursor.moveToNext());
             }
             cursor.close();
             db.close();
         }
-        Collections.reverse(recordCardsData);//反转卡片数据
+        Collections.reverse(recordsData);//反转记录数据列表
     }
 
     //初始化RecyclerView
@@ -136,7 +127,7 @@ public class UserFragment extends Fragment {
         int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
         PracticeCardDecoration decoration = new PracticeCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
-        adapter = new PracticeCardAdapter(context, recordCardsData);
+        adapter = new RecordCardAdapter(context, recordsData);
         recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 }

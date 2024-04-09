@@ -21,9 +21,10 @@ import com.bupt.inklue.R;
 import com.bupt.inklue.activity.PracticeActivity;
 import com.bupt.inklue.adapter.PracticeCardAdapter;
 import com.bupt.inklue.adapter.PracticeCardDecoration;
-import com.bupt.inklue.data.CardData;
-import com.bupt.inklue.data.CardsData;
 import com.bupt.inklue.data.DatabaseHelper;
+import com.bupt.inklue.data.PracticeData;
+
+import java.util.ArrayList;
 
 //“练习”碎片
 public class PracticeFragment extends Fragment {
@@ -31,7 +32,7 @@ public class PracticeFragment extends Fragment {
     private View root;//根视图
     private Context context;//环境
     private PracticeCardAdapter adapter;//卡片适配器
-    private CardsData practiceCardsData;//练习卡片数据
+    private ArrayList<PracticeData> practicesData;//练习数据列表
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -39,9 +40,9 @@ public class PracticeFragment extends Fragment {
             root = inflater.inflate(R.layout.fragment_practice, container, false);
             context = getContext();
 
-            //取得练习卡片数据
-            practiceCardsData = new CardsData();
-            getCardsData();
+            //取得练习数据列表
+            practicesData = new ArrayList<>();
+            getPracticesData();
 
             //初始化RecyclerView
             initRecyclerView();
@@ -50,7 +51,7 @@ public class PracticeFragment extends Fragment {
             adapter.setOnItemClickListener(position -> {
                 Intent intent = new Intent();
                 intent.setClass(context, PracticeActivity.class);
-                intent.putExtra("practiceCardID", practiceCardsData.get(position).getID());
+                intent.putExtra("practiceID", practicesData.get(position).getID());
                 startActivity(intent);
             });
 
@@ -65,15 +66,15 @@ public class PracticeFragment extends Fragment {
     //更新数据
     @SuppressLint("NotifyDataSetChanged")//忽略更新具体数据的要求
     public void updateData() {
-        if (practiceCardsData != null) {
-            practiceCardsData.clear();
-            getCardsData();
+        if (practicesData != null) {
+            practicesData.clear();
+            getPracticesData();
             adapter.notifyDataSetChanged();
         }
     }
 
-    //取得练习卡片数据
-    private void getCardsData() {
+    //取得练习数据列表
+    private void getPracticesData() {
         try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             Cursor cursor = db.query("Practice", null, null,
@@ -83,11 +84,11 @@ public class PracticeFragment extends Fragment {
             int coverImgPathIndex = cursor.getColumnIndex("coverImgPath");
             if (cursor.moveToFirst()) {
                 do {
-                    CardData cardData = new CardData();
-                    cardData.setID(cursor.getLong(idIndex));
-                    cardData.setName(cursor.getString(nameIndex));
-                    cardData.setStdImgPath(cursor.getString(coverImgPathIndex));
-                    practiceCardsData.add(cardData);
+                    PracticeData practiceData = new PracticeData();
+                    practiceData.setID(cursor.getLong(idIndex));
+                    practiceData.setName(cursor.getString(nameIndex));
+                    practiceData.setCoverImgPath(cursor.getString(coverImgPathIndex));
+                    practicesData.add(practiceData);
                 } while (cursor.moveToNext());
             }
             cursor.close();
@@ -103,7 +104,7 @@ public class PracticeFragment extends Fragment {
         int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
         PracticeCardDecoration decoration = new PracticeCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
-        adapter = new PracticeCardAdapter(context, practiceCardsData);
+        adapter = new PracticeCardAdapter(context, practicesData);
         recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 }
