@@ -1,5 +1,6 @@
 package com.bupt.inklue.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.TypedValue;
@@ -18,5 +19,16 @@ public class ResourceDecoder {
         int colorResId = typedValue.resourceId;
         int color = ContextCompat.getColor(context, colorResId);
         return new Scalar(Color.red(color), Color.green(color), Color.blue(color));
+    }
+
+    //获取状态栏高度
+    @SuppressLint({"DiscouragedApi", "InternalInsetResource"})
+    public static int getStatusBarHeight(Context context) {
+        int resourceId = context.getResources().getIdentifier(
+                "status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            return context.getResources().getDimensionPixelSize(resourceId);
+        }
+        return 0;
     }
 }

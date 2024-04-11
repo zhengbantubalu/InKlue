@@ -20,7 +20,7 @@ import com.bupt.inklue.adapter.CharCardDecoration;
 import com.bupt.inklue.data.PracticeData;
 import com.bupt.inklue.data.PracticeDataManager;
 
-//作业详情页面
+//练习详情页面
 public class PracticeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private CharCardAdapter adapter;//卡片适配器
@@ -31,8 +31,10 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_practice);
 
         //取得练习数据
-        long id = getIntent().getLongExtra("practiceID", 0);
-        practiceData = PracticeDataManager.getPracticeData(this, id);
+        practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
+        if (practiceData != null) {
+            practiceData.charsData = PracticeDataManager.getStdCharsData(this, practiceData);
+        }
 
         //设置练习标题
         TextView textView = findViewById(R.id.textview_title);

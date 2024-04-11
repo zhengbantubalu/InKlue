@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
@@ -48,8 +47,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault());
         String time = sdf.format(new Date());
         if (practiceData != null) {
-            practiceData.setCoverImgPath(this.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
-                    "/record/cover/" + time + ".jpg");
+            practiceData.setCoverImgPath(this.getExternalCacheDir() + "/" + time + ".jpg");
             BitmapProcessor.createCover(practiceData, practiceData.getCoverImgPath(), false);
         }
 
@@ -101,12 +99,12 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 //回退到主页面
                 backToMainActivity();
             } else {
-                Toast.makeText(this, R.string.evaluating, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.processing, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    //启动评价页面
+    //启动评价查看页面
     private void startEvaluateActivity(int position) {
         Intent intent = new Intent();
         intent.setClass(this, EvaluateActivity.class);

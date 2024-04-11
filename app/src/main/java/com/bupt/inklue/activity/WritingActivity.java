@@ -20,6 +20,7 @@ import com.bupt.inklue.data.CharData;
 import com.bupt.inklue.data.PracticeData;
 import com.bupt.inklue.fragment.FinishFragment;
 import com.bupt.inklue.fragment.ImageFragment;
+import com.bupt.inklue.util.ResourceDecoder;
 
 import java.util.ArrayList;
 
@@ -28,7 +29,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
     private ViewPager2 viewpager;//用于切换图片的类
     private PracticeData practiceData;//练习数据
-    private boolean isReturn = false;//页面当前状态是否为由子页面返回
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,15 +69,6 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    //显示页面的回调
-    protected void onStart() {
-        super.onStart();
-        //由子页面返回，则将ViewPager回退至前一页
-        if (isReturn) {
-            viewpager.setCurrentItem(practiceData.charsData.size() - 1, false);
-        }
-    }
-
     //权限申请的回调，用于在获取权限后继续刚才中断的操作
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
@@ -88,7 +79,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             startCameraActivity();
         } else {
             //权限申请失败，将ViewPager回退至前一页
-            viewpager.setCurrentItem(practiceData.charsData.size() - 1);
+            viewpager.setCurrentItem(practiceData.charsData.size() - 1, true);
         }
     }
 
@@ -113,12 +104,15 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         bundle.putSerializable("practiceData", practiceData);
         intent.putExtras(bundle);
         startActivity(intent);
-        isReturn = true;//启动了拍照页面，则此页面的状态变为由子页面返回
+        finish();
     }
 
     //初始化ViewPager
     private void initViewPager() {
         viewpager = findViewById(R.id.viewpager_image);
+        //设置图像向上偏移状态栏高度的一半，以实现图像居中
+        int statusBarHeight = ResourceDecoder.getStatusBarHeight(this);
+        viewpager.setTranslationY((float) -statusBarHeight / 2);
         ArrayList<Fragment> fragments = new ArrayList<>();
         for (CharData charData : practiceData.charsData) {
             fragments.add(new ImageFragment(charData));

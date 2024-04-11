@@ -1,6 +1,5 @@
 package com.bupt.inklue.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,14 +31,14 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     private SearchFragment searchFragment;//“搜索”碎片
     private PracticeFragment practiceFragment;//“练习”碎片
     private UserFragment userFragment;//“我的”碎片
-    private SharedPreferences sharedPreferences;//用于访问App是否为首次启动
+    private SharedPreferences sharedPreferences;//用于访问偏好设置的类
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //判断App是否为首次启动
-        sharedPreferences = getSharedPreferences("user_preferences", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences("app", MODE_PRIVATE);
         boolean isFirstLaunch = sharedPreferences.getBoolean("isFirstLaunch", true);
         if (isFirstLaunch) {
             //初始化App
@@ -65,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
             practiceFragment.updateData();
         }
         adapter.notifyItemChanged(pageNum);
-        viewpager.setCurrentItem(pageNum, false);
+        viewpager.setCurrentItem(pageNum, true);
     }
 
     //初始化App

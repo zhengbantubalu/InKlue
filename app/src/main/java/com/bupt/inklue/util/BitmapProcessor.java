@@ -80,7 +80,7 @@ public class BitmapProcessor {
         Mat mat = new Mat();
         Utils.bitmapToMat(bitmap, mat);
         Imgproc.cvtColor(mat, mat, Imgproc.COLOR_RGB2GRAY);
-        Imgproc.threshold(mat, mat, 100, 255, Imgproc.THRESH_BINARY);
+        Imgproc.threshold(mat, mat, 63, 255, Imgproc.THRESH_BINARY);
         Utils.matToBitmap(mat, bitmap);
         return bitmap;
     }

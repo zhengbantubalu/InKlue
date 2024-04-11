@@ -25,6 +25,15 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back" />
 
+        <ImageButton
+            android:id="@+id/button_more"
+            android:layout_width="@dimen/top_bar_button"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_more"
+            android:visibility="gone" />
+
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView

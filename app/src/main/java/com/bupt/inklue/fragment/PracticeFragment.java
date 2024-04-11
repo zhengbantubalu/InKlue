@@ -51,7 +51,9 @@ public class PracticeFragment extends Fragment {
             adapter.setOnItemClickListener(position -> {
                 Intent intent = new Intent();
                 intent.setClass(context, PracticeActivity.class);
-                intent.putExtra("practiceID", practicesData.get(position).getID());
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("practiceData", practicesData.get(position));
+                intent.putExtras(bundle);
                 startActivity(intent);
             });
 
@@ -82,12 +84,14 @@ public class PracticeFragment extends Fragment {
             int idIndex = cursor.getColumnIndex("id");
             int nameIndex = cursor.getColumnIndex("name");
             int coverImgPathIndex = cursor.getColumnIndex("coverImgPath");
+            int charIDsIndex = cursor.getColumnIndex("charIDs");
             if (cursor.moveToFirst()) {
                 do {
                     PracticeData practiceData = new PracticeData();
                     practiceData.setID(cursor.getLong(idIndex));
                     practiceData.setName(cursor.getString(nameIndex));
                     practiceData.setCoverImgPath(cursor.getString(coverImgPathIndex));
+                    practiceData.setCharIDs(cursor.getString(charIDsIndex));
                     practicesData.add(practiceData);
                 } while (cursor.moveToNext());
             }

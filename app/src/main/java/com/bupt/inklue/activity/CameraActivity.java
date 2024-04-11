@@ -202,8 +202,6 @@ public class CameraActivity extends AppCompatActivity
                                 //如果保存完最后一张，则启动确认页面
                                 startConfirmActivity();
                             }
-                        } else {
-                            Toast.makeText(context, R.string.camera_error, Toast.LENGTH_SHORT).show();
                         }
                     }
 

@@ -33,9 +33,9 @@ public class DatabaseManager {
         //删除数据库
         context.deleteDatabase("database.db");
         //清空记录目录
-        FileManager.clearDir(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
+        FileManager.clearDirectory(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
                 "/record/char");
-        FileManager.clearDir(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
+        FileManager.clearDirectory(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
                 "/record/cover");
         try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
             SQLiteDatabase db = dbHelper.getWritableDatabase();

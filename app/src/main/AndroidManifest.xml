@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="DiscouragedApi,LockedOrientationActivity">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -23,6 +24,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,27 +32,49 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".activity.PracticeActivity" />
+        <activity
+            android:name=".activity.PracticeActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.ConfirmActivity" />
+        <activity
+            android:name=".activity.ConfirmActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.ResultActivity" />
+        <activity
+            android:name=".activity.ResultActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.RecordActivity" />
+        <activity
+            android:name=".activity.RecordActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.SearchActivity" />
+        <activity
+            android:name=".activity.SearchActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.WritingActivity" />
+        <activity
+            android:name=".activity.WritingActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.CheckActivity" />
+        <activity
+            android:name=".activity.CheckActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.EvaluateActivity" />
+        <activity
+            android:name=".activity.EvaluateActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.CameraActivity" />
+        <activity
+            android:name=".activity.CameraActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.ReshotActivity" />
+        <activity
+            android:name=".activity.ReshotActivity"
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".activity.SettingsActivity" />
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

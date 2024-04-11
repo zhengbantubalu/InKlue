@@ -24,6 +24,7 @@ import com.bupt.inklue.util.BitmapProcessor;
 //确认页面
 public class ConfirmActivity extends AppCompatActivity implements View.OnClickListener {
 
+    public static ConfirmActivity confirmActivity;//用于在图像检查页面中结束此页面
     private CheckCardAdapter adapter;//卡片适配器
     private PracticeData practiceData;//练习数据
     private boolean isFinished = false;//预处理是否完成
@@ -31,6 +32,8 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice);
+
+        confirmActivity = this;
 
         //取得练习数据
         practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
@@ -74,7 +77,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
             if (isFinished) {
                 startResultActivity();
             } else {
-                Toast.makeText(this, R.string.evaluating, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.processing, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -89,7 +92,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    //启动图片检查页面
+    //启动图像检查页面
     private void startCheckActivity(int position) {
         Intent intent = new Intent();
         intent.setClass(this, CheckActivity.class);

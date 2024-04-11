@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.bupt.inklue.R;
 import com.bupt.inklue.data.CharData;
 
-//汉字评价碎片
+//评价查看碎片
 public class EvaluateFragment extends Fragment {
 
     private View root;//根视图

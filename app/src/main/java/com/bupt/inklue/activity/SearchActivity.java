@@ -12,6 +12,7 @@ import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.ViewPagerAdapter;
 import com.bupt.inklue.data.CharData;
 import com.bupt.inklue.fragment.ImageFragment;
+import com.bupt.inklue.util.ResourceDecoder;
 
 import java.util.ArrayList;
 
@@ -54,6 +55,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     //初始化ViewPager
     private void initViewPager() {
         viewpager = findViewById(R.id.viewpager_image);
+        //设置图像向上偏移状态栏高度的一半，以实现图像居中
+        int statusBarHeight = ResourceDecoder.getStatusBarHeight(this);
+        viewpager.setTranslationY((float) -statusBarHeight / 2);
         ArrayList<Fragment> fragments = new ArrayList<>();
         for (CharData charData : charsData) {
             fragments.add(new ImageFragment(charData));

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.icu.text.SimpleDateFormat;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.bupt.inklue.R;
@@ -17,31 +16,10 @@ import java.util.Locale;
 //练习数据管理器
 public class PracticeDataManager {
 
-    //取得练习数据
-    public static PracticeData getPracticeData(Context context, long id) {
-        PracticeData practiceData = new PracticeData();
-        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM Practice WHERE id = " + id, null);
-            int nameIndex = cursor.getColumnIndex("name");
-            int coverImgPathIndex = cursor.getColumnIndex("coverImgPath");
-            int charIDsIndex = cursor.getColumnIndex("charIDs");
-            if (cursor.moveToFirst()) {
-                practiceData.setName(cursor.getString(nameIndex));
-                practiceData.setCoverImgPath(cursor.getString(coverImgPathIndex));
-                practiceData.setCharIDs(cursor.getString(charIDsIndex));
-            }
-            cursor.close();
-        }
-        practiceData.charsData = getStdCharsData(context, practiceData.getCharIDs());
-        return practiceData;
-    }
-
     //取得标准汉字数据
-    private static ArrayList<CharData> getStdCharsData(Context context, String charIDs) {
-        Log.d("appTest", charIDs);
+    public static ArrayList<CharData> getStdCharsData(Context context, PracticeData practiceData) {
         ArrayList<CharData> charsData = new ArrayList<>();
-        String[] idArray = charIDs.split(",");
+        String[] idArray = practiceData.getCharIDs().split(",");
         try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             for (String id : idArray) {
@@ -65,29 +43,10 @@ public class PracticeDataManager {
         return charsData;
     }
 
-    //取得记录数据
-    public static PracticeData getRecordData(Context context, long id) {
-        PracticeData recordData = new PracticeData();
-        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
-            SQLiteDatabase db = dbHelper.getWritableDatabase();
-            Cursor cursor = db.rawQuery("SELECT * FROM Record WHERE id = " + id, null);
-            int nameIndex = cursor.getColumnIndex("name");
-            int charIDsIndex = cursor.getColumnIndex("charIDs");
-            if (cursor.moveToFirst()) {
-                recordData.setName(cursor.getString(nameIndex));
-                recordData.setCharIDs(cursor.getString(charIDsIndex));
-            }
-            cursor.close();
-        }
-        recordData.charsData = getWrittenCharsData(context, recordData.getCharIDs());
-        return recordData;
-    }
-
     //取得书写汉字数据
-    private static ArrayList<CharData> getWrittenCharsData(Context context, String charIDs) {
-        Log.d("appTest", charIDs);
+    public static ArrayList<CharData> getWrittenCharsData(Context context, PracticeData practiceData) {
         ArrayList<CharData> charsData = new ArrayList<>();
-        String[] idArray = charIDs.split(",");
+        String[] idArray = practiceData.getCharIDs().split(",");
         try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             for (String id : idArray) {
@@ -119,7 +78,7 @@ public class PracticeDataManager {
 
     //保存练习记录
     public static void saveRecord(Context context, PracticeData practiceData) {
-        FileManager.moveWrittenImg(context, practiceData);//移动书写图像存储位置
+        boolean fileSuccess = FileManager.moveRecordImg(context, practiceData);//移动记录图片存储位置
         int successNum = 0;
         try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
             StringBuilder CharIDs = new StringBuilder();
@@ -141,7 +100,7 @@ public class PracticeDataManager {
             CharIDs.deleteCharAt(CharIDs.length() - 1);//移除最后一个逗号
             //保存练习
             ContentValues values = new ContentValues();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd  HH:mm", Locale.getDefault());
             String time = sdf.format(new Date());
             values.put("name", practiceData.getName());
             values.put("time", time);
@@ -153,11 +112,34 @@ public class PracticeDataManager {
             }
             db.close();
         }
+        boolean databaseSuccess = successNum == practiceData.charsData.size() + 1;
         //显示反馈信息
-        if (successNum == practiceData.charsData.size() + 1) {
+        if (fileSuccess && databaseSuccess) {
             Toast.makeText(context, R.string.save_success, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(context, R.string.save_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //删除练习记录
+    public static void deleteRecord(Context context, PracticeData practiceData) {
+        boolean fileSuccess = FileManager.deleteRecordImg(practiceData);//删除记录图片
+        int successNum = 0;
+        String[] idArray = practiceData.getCharIDs().split(",");
+        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            for (String id : idArray) {
+                successNum += db.delete("WrittenChar", "id=?", new String[]{id});
+            }
+            successNum += db.delete("Record", "id=?",
+                    new String[]{practiceData.getID() + ""});
+        }
+        boolean databaseSuccess = successNum == practiceData.charsData.size() + 1;
+        //显示反馈信息
+        if (fileSuccess && databaseSuccess) {
+            Toast.makeText(context, R.string.delete_success, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, R.string.delete_error, Toast.LENGTH_SHORT).show();
         }
     }
 }

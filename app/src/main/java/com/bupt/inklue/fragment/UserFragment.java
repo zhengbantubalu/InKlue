@@ -1,6 +1,7 @@
 package com.bupt.inklue.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -55,12 +56,14 @@ public class UserFragment extends Fragment {
             //初始化RecyclerView
             initRecyclerView();
 
-            //RecyclerView中项目的点击监听器
+            //RecyclerView中项目的监听器
             adapter.setOnItemClickListener(position -> {
                 Intent intent = new Intent();
                 intent.setClass(context, RecordActivity.class);
-                intent.putExtra("recordID", recordsData.get(position).getID());
-                startActivity(intent);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("recordData", recordsData.get(position));
+                intent.putExtras(bundle);
+                startActivityForResult(intent, Activity.RESULT_FIRST_USER);
             });
 
             //“设置”按钮的点击监听器
@@ -68,7 +71,7 @@ public class UserFragment extends Fragment {
             button_settings.setOnClickListener(view -> {
                 Intent intent = new Intent();
                 intent.setClass(context, SettingsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, Activity.RESULT_FIRST_USER);
             });
         }
         return root;
@@ -81,6 +84,17 @@ public class UserFragment extends Fragment {
             recordsData.clear();
             getRecordsData();
             adapter.notifyDataSetChanged();
+        }
+    }
+
+    //子页面关闭的回调
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == Activity.RESULT_FIRST_USER) {
+            boolean needUpdate = intent.getBooleanExtra("needUpdate", false);
+            if (needUpdate) {
+                updateData();
+            }
         }
     }
 
@@ -103,6 +117,7 @@ public class UserFragment extends Fragment {
             int nameIndex = cursor.getColumnIndex("name");
             int timeIndex = cursor.getColumnIndex("time");
             int coverImgPathIndex = cursor.getColumnIndex("coverImgPath");
+            int charIDsIndex = cursor.getColumnIndex("charIDs");
             if (cursor.moveToFirst()) {
                 do {
                     PracticeData practiceData = new PracticeData();
@@ -110,6 +125,7 @@ public class UserFragment extends Fragment {
                     practiceData.setName(cursor.getString(nameIndex));
                     practiceData.setTime(cursor.getString(timeIndex));
                     practiceData.setCoverImgPath(cursor.getString(coverImgPathIndex));
+                    practiceData.setCharIDs(cursor.getString(charIDsIndex));
                     recordsData.add(practiceData);
                 } while (cursor.moveToNext());
             }

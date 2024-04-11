@@ -58,8 +58,8 @@ public class Evaluator {
         Imgproc.cvtColor(img, img, Imgproc.COLOR_RGB2GRAY);//灰度化
         Imgproc.threshold(img, img, 127, 255, Imgproc.THRESH_BINARY_INV);//阈值
         Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(9, 9));
-        Imgproc.morphologyEx(img, img, Imgproc.MORPH_CLOSE, kernel);//闭运算
         Imgproc.morphologyEx(img, img, Imgproc.MORPH_OPEN, kernel);//开运算
+        Imgproc.morphologyEx(img, img, Imgproc.MORPH_CLOSE, kernel);//闭运算
         Ximgproc.thinning(img, img, Ximgproc.THINNING_ZHANGSUEN);//细化
     }
 }

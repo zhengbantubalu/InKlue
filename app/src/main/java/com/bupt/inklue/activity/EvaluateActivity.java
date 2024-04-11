@@ -13,10 +13,11 @@ import com.bupt.inklue.adapter.ViewPagerAdapter;
 import com.bupt.inklue.data.CharData;
 import com.bupt.inklue.data.PracticeData;
 import com.bupt.inklue.fragment.EvaluateFragment;
+import com.bupt.inklue.util.ResourceDecoder;
 
 import java.util.ArrayList;
 
-//评价页面
+//评价查看页面
 public class EvaluateActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager2 viewpager;//用于切换图片的类
@@ -54,6 +55,9 @@ public class EvaluateActivity extends AppCompatActivity implements View.OnClickL
     //初始化ViewPager
     private void initViewPager() {
         viewpager = findViewById(R.id.viewpager_image);
+        //设置图像向上偏移状态栏高度的一半，以实现图像居中
+        int statusBarHeight = ResourceDecoder.getStatusBarHeight(this);
+        viewpager.setTranslationY((float) -statusBarHeight / 2);
         ArrayList<Fragment> fragments = new ArrayList<>();
         for (CharData charData : practiceData.charsData) {
             fragments.add(new EvaluateFragment(charData));
