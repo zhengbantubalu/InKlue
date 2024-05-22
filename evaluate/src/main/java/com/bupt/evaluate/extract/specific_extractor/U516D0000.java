@@ -7,8 +7,8 @@ import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;
 import com.bupt.evaluate.extract.SpecificExtractor;
 
-//六
-public class U516D implements SpecificExtractor {
+//六 峄山碑
+public class U516D0000 implements SpecificExtractor {
 
     public static final int strokeNum = 5;
 

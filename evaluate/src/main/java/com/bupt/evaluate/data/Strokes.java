@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class Strokes extends ArrayList<Stroke> {
 
     //调用笔画提取器，根据轮廓和特征点提取汉字笔画
-    public static Strokes extractStrokes(String cnChar, Contours contours, Points points) {
-        return StrokeExtractor.extractStrokes(cnChar, contours, points);
+    public static Strokes extractStrokes(String className, Contours contours, Points points) {
+        return StrokeExtractor.extractStrokes(className, contours, points);
     }
 
     //根据输入笔画和标准笔画取得笔画评价数据，储存在输入笔画的每一个笔画中

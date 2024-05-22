@@ -6,10 +6,10 @@ import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;
 import com.bupt.evaluate.extract.SpecificExtractor;
 
-//之
-public class U4E4B implements SpecificExtractor {
+//下 九成宫醴泉铭
+public class U4E0B0100 implements SpecificExtractor {
 
-    public static final int strokeNum = 4;
+    public static final int strokeNum = 3;
 
     public Strokes extractStrokes(Contours contours, Points points) {
         Strokes strokes = new Strokes();
@@ -17,21 +17,17 @@ public class U4E4B implements SpecificExtractor {
             strokes.add(new Stroke());
         }
         try {
+            //竖
+            strokes.get(1).addList(contours.getMatchContour(
+                    points.end.get(2), points.end.get(-1)), false);
             //从左向右排序
             points.end.sort();
-            //底部横
+            //点
+            strokes.get(2).addList(contours.getMatchContour(
+                    points.end.get(-3), points.end.get(-2)), false);
+            //横
             strokes.get(0).addList(contours.getMatchContour(
                     points.end.get(0), points.end.get(-1)), false);
-            //中间竖
-            strokes.get(1).addList(contours.getMatchContour(
-                    points.end.get(2), points.inter.get(0)), true);
-            strokes.get(1).add(points.inter.get(1));
-            //左边竖
-            strokes.get(2).addList(contours.getMatchContour(
-                    points.end.get(1), points.inter.get(0)), false);
-            //右边竖
-            strokes.get(3).addList(contours.getMatchContour(
-                    points.end.get(3), points.inter.get(0)), false);
         } catch (NullPointerException ignored) {
         }
         return strokes;

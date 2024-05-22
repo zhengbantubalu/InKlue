@@ -7,6 +7,7 @@ public class CharData implements Serializable {
 
     private long id;//主键
     private String name;//名称
+    private String className;//提取器类名
     private String stdImgPath;//标准图像路径
     private String writtenImgPath;//书写图像路径
     private String score;//对书写的评分
@@ -26,6 +27,14 @@ public class CharData implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public String getStdImgPath() {

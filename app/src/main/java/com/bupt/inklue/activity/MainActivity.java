@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
@@ -69,6 +70,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     //初始化App
     private void initApp() {
+        //隐藏底部导航栏，避免点击闪退
+        findViewById(R.id.bottom_bar).setVisibility(View.GONE);
         //初始化目录
         FileManager.initDirectory(this);
         //异步下载资源图片
@@ -86,6 +89,8 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("isFirstLaunch", false);
                 editor.apply();
+                //显示底部导航栏
+                findViewById(R.id.bottom_bar).setVisibility(View.VISIBLE);
             });
         }).start();
     }

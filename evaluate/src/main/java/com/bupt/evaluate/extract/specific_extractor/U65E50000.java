@@ -8,10 +8,10 @@ import com.bupt.evaluate.data.Strokes;
 import com.bupt.evaluate.extract.SpecificExtractor;
 import com.bupt.evaluate.util.Constants;
 
-//四
-public class U56DB implements SpecificExtractor {
+//日 峄山碑
+public class U65E50000 implements SpecificExtractor {
 
-    public static final int strokeNum = 6;
+    public static final int strokeNum = 5;
 
     public Strokes extractStrokes(Contours contours, Points points) {
         Strokes strokes = new Strokes();
@@ -20,7 +20,7 @@ public class U56DB implements SpecificExtractor {
         }
         try {
             //从左向右排序
-            points.inter.sort();
+            points.end.sort();
             //四个角点
             PointEx pointEx1 = contours.getNearestPoint(
                     new PointEx(0, 0));
@@ -38,21 +38,9 @@ public class U56DB implements SpecificExtractor {
             strokes.get(2).addList(contours.getMatchContour(pointEx1, pointEx3), false);
             //右边竖
             strokes.get(3).addList(contours.getMatchContour(pointEx2, pointEx4), false);
-            //左右撇捺的途径点
-            PointEx pointEx5 = contours.getNearestPoint(
-                    new PointEx((int) (Constants.IMAGE_SIZE * 0.4), Constants.IMAGE_SIZE / 2));
-            PointEx pointEx6 = contours.getNearestPoint(
-                    new PointEx((int) (Constants.IMAGE_SIZE * 0.6), Constants.IMAGE_SIZE / 2));
-            //中间撇
+            //中间横
             strokes.get(4).addList(contours.getMatchContour(
-                    points.inter.get(1), pointEx5), false);
-            strokes.get(4).addList(contours.getMatchContour(
-                    pointEx5, points.inter.get(0)));
-            //中间捺
-            strokes.get(5).addList(contours.getMatchContour(
-                    points.inter.get(2), pointEx6), false);
-            strokes.get(5).addList(contours.getMatchContour(
-                    pointEx6, points.inter.get(3)));
+                    points.end.get(0), points.end.get(1)), true);
         } catch (NullPointerException ignored) {
         }
         return strokes;

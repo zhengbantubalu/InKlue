@@ -52,8 +52,10 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             public void onPageSelected(int position) {
                 if (position == practiceData.charsData.size()) {
-                    //滑动到最后一页，则尝试启动相机
-                    checkCameraPermission();
+                    if (practiceData.getID() != 5) {
+                        //滑动到最后一页，则尝试启动相机
+                        checkCameraPermission();
+                    }
                 }
             }
         });

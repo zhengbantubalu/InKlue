@@ -58,7 +58,7 @@ public class CharCardAdapter extends RecyclerView.Adapter<CharCardAdapter.ViewHo
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(
-                R.layout.item_image_card, parent, false);
+                R.layout.item_char_card, parent, false);
         return new ViewHolder(view);
     }
 

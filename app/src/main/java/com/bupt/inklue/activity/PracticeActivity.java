@@ -49,6 +49,9 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         //设置按钮的点击监听器
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.button_start).setOnClickListener(this);
+        if (practiceData.getID() == 5) {
+            findViewById(R.id.button_start).setVisibility(View.GONE);
+        }
     }
 
     //点击事件回调

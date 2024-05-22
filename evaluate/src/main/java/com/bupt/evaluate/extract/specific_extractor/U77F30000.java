@@ -8,8 +8,8 @@ import com.bupt.evaluate.data.Strokes;
 import com.bupt.evaluate.extract.SpecificExtractor;
 import com.bupt.evaluate.util.Constants;
 
-//石
-public class U77F3 implements SpecificExtractor {
+//石 峄山碑
+public class U77F30000 implements SpecificExtractor {
 
     public static final int strokeNum = 5;
 

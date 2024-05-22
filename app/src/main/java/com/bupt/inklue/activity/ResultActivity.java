@@ -74,10 +74,11 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         new Thread(() -> {
             for (int i = 0; i < practiceData.charsData.size(); i++) {
                 CharData charData = practiceData.charsData.get(i);
-                String cnChar = charData.getName();
+                String name = charData.getName();
+                String className = charData.getClassName();
                 Bitmap inputBmp = BitmapFactory.decodeFile(charData.getWrittenImgPath());
                 Bitmap stdBmp = BitmapFactory.decodeFile(charData.getStdImgPath());
-                Evaluation evaluation = Evaluator.evaluate(cnChar, inputBmp, stdBmp);
+                Evaluation evaluation = Evaluator.evaluate(name, className, inputBmp, stdBmp);
                 BitmapProcessor.save(evaluation.outputBmp, charData.getWrittenImgPath());
                 charData.setScore(Integer.toString(evaluation.score));
                 charData.setAdvice(evaluation.advice);

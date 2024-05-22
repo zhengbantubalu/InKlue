@@ -20,8 +20,12 @@ public class FileManager {
     //下载资源图片
     public static void downloadImg(Context context) {
         String dirPath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/practice/char";
-        ArrayList<String> chars = new ArrayList<>(Arrays.asList(
-                "土", "王", "五", "上", "下", "不", "之", "山", "廿", "四", "日", "石", "六", "天"));
+        ArrayList<String> classNames = new ArrayList<>(Arrays.asList(
+                "U571F0000", "U738B0000", "U4E940000", "U4E0A0000", "U4E0B0000",
+                "U4E0D0000", "U4E4B0000", "U5C710000", "U5EFF0000", "U53E40000",
+                "U56DB0000", "U65E50000", "U77F30000", "U516D0000", "U59290000",
+                "U4E0A0100", "U4E0B0100", "U5DE50100", "U5C710100", "U53430100",
+                "U4EBA0100", "U59270100", "U4E5D0100", "U4E4B0100", "U5FC30100"));
         ArrayList<String> urlStrings = new ArrayList<>(Arrays.asList(
                 "https://s21.ax1x.com/2024/04/05/pFqP31P.jpg",
                 "https://s21.ax1x.com/2024/04/05/pFqPMtA.jpg",
@@ -32,14 +36,25 @@ public class FileManager {
                 "https://s21.ax1x.com/2024/04/05/pFqP86f.jpg",
                 "https://s21.ax1x.com/2024/04/05/pFq9FE9.jpg",
                 "https://s21.ax1x.com/2024/04/05/pFq9kNR.jpg",
+                "https://s21.ax1x.com/2024/05/23/pkMOf8e.jpg",
                 "https://s21.ax1x.com/2024/04/05/pFqFiM6.jpg",
                 "https://s21.ax1x.com/2024/04/05/pFq9egK.jpg",
                 "https://s21.ax1x.com/2024/04/05/pFq9mjO.jpg",
                 "https://s21.ax1x.com/2024/04/05/pFq9V9x.jpg",
-                "https://s21.ax1x.com/2024/04/05/pFqFFsK.jpg"));
+                "https://s21.ax1x.com/2024/04/05/pFqFFsK.jpg",
+                "https://s21.ax1x.com/2024/05/23/pkMOzKs.jpg",
+                "https://s21.ax1x.com/2024/05/23/pkMOX8g.jpg",
+                "https://s21.ax1x.com/2024/05/23/pkMOj2Q.jpg",
+                "https://s21.ax1x.com/2024/05/23/pkMOvvj.jpg",
+                "https://s21.ax1x.com/2024/05/23/pkMXSrn.jpg",
+                "https://s21.ax1x.com/2024/05/23/pkMXAGF.jpg",
+                "https://s21.ax1x.com/2024/05/23/pkMXi5T.jpg",
+                "https://s21.ax1x.com/2024/05/23/pkMXGxH.jpg",
+                "https://s21.ax1x.com/2024/05/23/pkMXYMd.jpg",
+                "https://s21.ax1x.com/2024/05/23/pkMXkPU.jpg"));
         for (int i = 0; i < urlStrings.size(); i++) {
             try {
-                String filePath = dirPath + "/" + chars.get(i) + ".jpg";
+                String filePath = dirPath + "/" + classNames.get(i) + ".jpg";
                 URL url = new URL(urlStrings.get(i));
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");

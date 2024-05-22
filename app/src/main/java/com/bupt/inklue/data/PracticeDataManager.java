@@ -26,12 +26,14 @@ public class PracticeDataManager {
                 Cursor cursor = db.rawQuery("SELECT * FROM StdChar WHERE id = " +
                         id, null);
                 int nameIndex = cursor.getColumnIndex("name");
+                int classNameIndex = cursor.getColumnIndex("className");
                 int stdImgPathIndex = cursor.getColumnIndex("stdImgPath");
                 if (cursor.moveToFirst()) {
                     do {
                         CharData charData = new CharData();
                         charData.setID(Long.parseLong(id));
                         charData.setName(cursor.getString(nameIndex));
+                        charData.setClassName(cursor.getString(classNameIndex));
                         charData.setStdImgPath(cursor.getString(stdImgPathIndex));
                         charsData.add(charData);
                     } while (cursor.moveToNext());
