@@ -34,6 +34,7 @@ public class Evaluation {
         }
         if (scoreNum != 0) {
             this.score = scoreSum / scoreNum;
+//            this.score = (int) (Math.sqrt((double) scoreSum / scoreNum) * 10);
         } else {
             this.score = 100;
         }
