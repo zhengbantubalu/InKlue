@@ -37,10 +37,10 @@ public class U59270100 implements SpecificExtractor {
             strokes.get(1).addList(contours.getMatchContour(
                     points.end.get(0), points.inter.get(0)), false);
             strokes.get(1).addList(contours.getMatchContour(
-                    points.inter.get(0), tempList2.get(0)));
+                    points.inter.get(-1), tempList2.get(0)));
             //捺
             strokes.get(2).addList(contours.getMatchContour(
-                    points.inter.get(0), tempList2.get(1)), false);
+                    points.inter.get(-1), tempList2.get(1)), false);
         } catch (NullPointerException ignored) {
         }
         return strokes;

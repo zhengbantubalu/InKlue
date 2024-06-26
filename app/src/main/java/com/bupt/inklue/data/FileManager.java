@@ -26,10 +26,12 @@ public class FileManager {
                 "U56DB0000", "U65E50000", "U77F30000", "U516D0000", "U59290000",
                 "U4E0A0100", "U4E0B0100", "U5DE50100", "U5C710100", "U53430100",
                 "U4EBA0100", "U59270100", "U4E5D0100", "U4E4B0100", "U5FC30100",
-                "U53410200", "U4E030201", "U5E720200", "U738B0200", "U4E3B0200",
-                "U4EBA0200", "U4E4B0200", "U5B500200", "U767D0200", "U53F20200",
+                "U53410200", "U4E030200", "U5DE50200", "U738B0200", "U4E3B0200",
+                "U4EBA0200", "U4E4B0200", "U5B500200", "U767D0200", "U4E2D0200",
                 "U51650300", "U4E4B0300", "U59270300", "U59290300", "U65870300",
-                "U4E010300", "U4E2D0300", "U516C0300", "U4E070300", "U77F30300"));
+                "U4E010300", "U4E2D0300", "U516C0300", "U4E070300", "U77F30300",
+                "U4E8C0400", "U4E090400", "U4E4B0400", "U4EE50400", "U95E80400",
+                "U59290400", "U592A0400", "U4E5F0400", "U53F30400", "U56DB0400"));
         ArrayList<String> urlStrings = new ArrayList<>(Arrays.asList(
                 "https://telegraph-image-6lu.pages.dev/file/a197e98810e32f941799f.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/22295a3ed9da957a411fe.jpg",
@@ -58,14 +60,14 @@ public class FileManager {
                 "https://telegraph-image-6lu.pages.dev/file/f60c33d6ca84bd9842d8f.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/58a581a3931b3d9c55810.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/43c4b1317b7c6c5680f2d.jpg",
-                "https://telegraph-image-6lu.pages.dev/file/9c8a082b0d72100910f06.jpg",
+                "https://telegraph-image-6lu.pages.dev/file/8dbbb73e1944001e9e464.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/63f271268a5fc1e462135.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/ec180917e4bd3e8c9cd84.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/58a2cfa79fc0ff9635886.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/fe881d266c6f7be30801f.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/07ab3586e0b10cc5ba646.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/6ade25d70a9e04c26548a.jpg",
-                "https://telegraph-image-6lu.pages.dev/file/69804da0f6609957bef3a.jpg",
+                "https://telegraph-image-6lu.pages.dev/file/d5819da0371ae489306fa.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/c66baa415bdce0ee441bb.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/313ee911e68dde82500bc.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/2482e1dd85ff858bc3881.jpg",
@@ -75,8 +77,17 @@ public class FileManager {
                 "https://telegraph-image-6lu.pages.dev/file/4600d06a457b1f2de937e.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/2a94652bd35977427c2b1.jpg",
                 "https://telegraph-image-6lu.pages.dev/file/d404ad063b8910bf221f8.jpg",
-                "https://telegraph-image-6lu.pages.dev/file/5cd998f78c54fa3c6953f.jpg"
-        ));
+                "https://telegraph-image-6lu.pages.dev/file/5cd998f78c54fa3c6953f.jpg",
+                "https://telegraph-image-6lu.pages.dev/file/a23f2bccc3178b2a171f0.jpg",
+                "https://telegraph-image-6lu.pages.dev/file/6201cfbb0b271e4b74665.jpg",
+                "https://telegraph-image-6lu.pages.dev/file/2c97060907e13b1fcaf62.jpg",
+                "https://telegraph-image-6lu.pages.dev/file/8524722efc1bef0268d8f.jpg",
+                "https://telegraph-image-6lu.pages.dev/file/00506081fba3262f5fa54.jpg",
+                "https://telegraph-image-6lu.pages.dev/file/1018fa017db8789ae9612.jpg",
+                "https://telegraph-image-6lu.pages.dev/file/29c0ceb66d7b947865355.jpg",
+                "https://telegraph-image-6lu.pages.dev/file/4c6d8378aa4b82412caab.jpg",
+                "https://telegraph-image-6lu.pages.dev/file/8daad98316e20595410f2.jpg",
+                "https://telegraph-image-6lu.pages.dev/file/afa84ebb910e4bc07d817.jpg"));
         for (int i = 0; i < urlStrings.size(); i++) {
             try {
                 String filePath = dirPath + "/" + classNames.get(i) + ".jpg";
