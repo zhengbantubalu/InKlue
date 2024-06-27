@@ -23,7 +23,7 @@ public class InitialData {
             "26,27,28,29,30", "31,32,33,34,35",
             "36,37,38,39,40", "41,42,43,44,45",
             "46,47,48,49,50", "51,52,53,54,55",
-            "21,23,25,51,54"
+            "24"
     ));
 
     //汉字
@@ -81,7 +81,7 @@ public class InitialData {
             "https://telegraph-image-6lu.pages.dev/file/58a2cfa79fc0ff9635886.jpg",
             "https://telegraph-image-6lu.pages.dev/file/fe881d266c6f7be30801f.jpg",
             "https://telegraph-image-6lu.pages.dev/file/07ab3586e0b10cc5ba646.jpg",
-            "https://telegraph-image-6lu.pages.dev/file/6ade25d70a9e04c26548a.jpg",
+            "https://telegraph-image-6lu.pages.dev/file/59beb70c4f9e563403303.jpg",
             "https://telegraph-image-6lu.pages.dev/file/d5819da0371ae489306fa.jpg",
             "https://telegraph-image-6lu.pages.dev/file/4ecbb57c42f273f205f49.jpg",
             "https://telegraph-image-6lu.pages.dev/file/6060dbfa670dda7fd475d.jpg",
