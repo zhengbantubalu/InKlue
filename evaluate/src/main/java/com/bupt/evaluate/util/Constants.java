@@ -15,7 +15,7 @@ public class Constants {
 
     //笔画提取常量
     public static final int IMAGE_SIZE = 512;//汉字图片的边长
-    public static final int MAX_DISTANCE = 8;//可以认为两点是同一点的最大距离
+    public static final int MAX_DISTANCE = 10;//可以认为两点是同一点的最大距离
     public static final int MAX_ANGLE = 5;//可以认为某点是折返点的最大角度
     public static final int STEP_SIZE = 30;//曲线插值的步长
 

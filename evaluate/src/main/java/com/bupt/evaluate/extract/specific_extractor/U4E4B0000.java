@@ -25,7 +25,7 @@ public class U4E4B0000 implements SpecificExtractor {
             //中间竖
             strokes.get(1).addList(contours.getMatchContour(
                     points.end.get(2), points.inter.get(0)), true);
-            strokes.get(1).add(points.inter.get(1));
+            strokes.get(1).add(points.inter.get(-1));
             //左边竖
             strokes.get(2).addList(contours.getMatchContour(
                     points.end.get(1), points.inter.get(0)), false);

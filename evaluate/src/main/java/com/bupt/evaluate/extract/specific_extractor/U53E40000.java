@@ -30,9 +30,9 @@ public class U53E40000 implements SpecificExtractor {
             strokes.get(1).addList(contours.getMatchContour(
                     points.end.get(2), points.inter.get(0)), true);
             //口字上横
-            strokes.get(2).add(points.inter.get(1));
-            strokes.get(2).add(points.inter.get(2));
-            strokes.get(2).add(points.inter.get(3));
+            strokes.get(2).add(points.inter.get(-1));
+            strokes.get(2).add(points.inter.get(-2));
+            strokes.get(2).add(points.inter.get(-3));
             strokes.get(2).sort();
             strokes.get(0).isStraight = true;
             //中间竖下半

@@ -30,8 +30,8 @@ public class Points {
         PointList cloneEnd = (PointList) end.clone();
         end.clear();
         for (PointEx endPoint : cloneEnd) {
-            //如果存在与端点相近(以标准距离的2倍为半径)的交点，则需要去毛刺
-            if (inter.has(endPoint, maxDistance * 2)) {
+            //如果存在与端点相近(以标准距离的1.5倍为半径)的交点，则需要去毛刺
+            if (inter.has(endPoint, maxDistance * 3 / 2)) {
                 inter.remove(inter.getIndex(endPoint, maxDistance * 2));
                 //如果一个交点对应多个端点，说明是笔画末尾的毛刺，保留一个端点
                 if (cloneEnd.getIndexList(endPoint).size() > 1) {
