@@ -2,6 +2,7 @@ package com.bupt.inklue.data;
 
 import android.content.Context;
 import android.os.Environment;
+import android.widget.ProgressBar;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,7 +19,7 @@ import java.util.Arrays;
 public class FileManager {
 
     //下载资源图片
-    public static void downloadImg(Context context) {
+    public static void downloadImg(Context context, ProgressBar progressBar) {
         String dirPath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/practice/char";
         ArrayList<String> classNames = InitialData.getClassNames();
         ArrayList<String> urlStrings = InitialData.getUrlStrings();
@@ -39,6 +40,8 @@ public class FileManager {
                 outputStream.close();
                 inputStream.close();
                 connection.disconnect();
+                //更新进度条
+                progressBar.setProgress((i + 1) * 100 / urlStrings.size());
             } catch (IOException ignored) {
             }
         }

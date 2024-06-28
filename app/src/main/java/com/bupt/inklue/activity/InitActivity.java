@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,8 +26,10 @@ public class InitActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.downloading, Toast.LENGTH_SHORT).show();
         Handler handler = new Handler(Looper.getMainLooper());
         new Thread(() -> {
+            //取得进度条
+            ProgressBar progressBar = findViewById(R.id.progress_bar);
             //下载资源图片
-            FileManager.downloadImg(this);
+            FileManager.downloadImg(this, progressBar);
             handler.post(() -> {
                 //重置数据库
                 DatabaseManager.resetDatabase(this);
