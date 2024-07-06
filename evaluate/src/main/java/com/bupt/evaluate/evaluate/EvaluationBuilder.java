@@ -31,7 +31,7 @@ public class EvaluationBuilder {
         this.isDrawn = false;
     }
 
-    //调用指定的笔画特征评价器
+    //调用指定的笔画特征评价器，评价笔画特征
     public void evaluateFeature(Stroke inputStroke, Stroke stdStroke, int code, int strokeIndex) {
         //创建笔画特征评价器实例
         FeatureEvaluator featureEvaluator = EvaluatorFactory.createInstance(code);
@@ -40,10 +40,12 @@ public class EvaluationBuilder {
         }
         int score = featureEvaluator.getScore(inputStroke, stdStroke);
         scores.add(score);
+        //如果此特征的分数过低，则添加建议并绘制标准笔画
         if (score < Constants.MIN_SCORE) {
             advices.add(featureEvaluator.getAdvice(inputStroke, stdStroke));
             if (!isDrawn) {
-                ImageDrawer.drawStroke(outputMat, stdStroke, new Scalar(Constants.COLOR_GREEN),
+                ImageDrawer.drawStroke(outputMat, stdStroke, new Scalar(Constants.COLOR_GREEN));
+                ImageDrawer.drawStrokeIndex(outputMat, stdStroke,
                         new Scalar(Constants.COLOR_RED), strokeIndex);
                 isDrawn = true;
             }
@@ -71,7 +73,7 @@ public class EvaluationBuilder {
     //取得对笔画的建议
     private String getStrokeAdvice(int strokeIndex) {
         StringBuilder stringBuilder = new StringBuilder();
-//        stringBuilder.append(outputScores());//加入具体分数，用于测试
+        //stringBuilder.append(outputScores());//加入具体分数，用于测试
         if (!advices.isEmpty()) {
             stringBuilder.append("第").append(strokeIndex + 1).append("笔请");
             for (String advice : advices) {

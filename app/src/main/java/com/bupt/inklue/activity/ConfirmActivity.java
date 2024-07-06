@@ -3,12 +3,9 @@ package com.bupt.inklue.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -17,9 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.CharCardDecoration;
 import com.bupt.inklue.adapter.CheckCardAdapter;
-import com.bupt.inklue.data.CharData;
 import com.bupt.inklue.data.PracticeData;
-import com.bupt.inklue.util.BitmapProcessor;
 
 //确认页面
 public class ConfirmActivity extends AppCompatActivity implements View.OnClickListener {
@@ -27,7 +22,6 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     public static ConfirmActivity confirmActivity;//用于在图像检查页面中结束此页面
     private CheckCardAdapter adapter;//卡片适配器
     private PracticeData practiceData;//练习数据
-    private boolean isFinished = false;//预处理是否完成
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,24 +43,12 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         //初始化RecyclerView
         initRecyclerView();
 
-        //RecyclerView中项目的点击监听器
+        //设置RecyclerView中项目的点击监听器
         adapter.setOnItemClickListener(this::startCheckActivity);
 
         //设置按钮的点击监听器
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.button_start).setOnClickListener(this);
-
-        //异步预处理拍摄的图片
-        Handler handler = new Handler(Looper.getMainLooper());
-        new Thread(() -> {
-            for (int i = 0; i < practiceData.charsData.size(); i++) {
-                CharData charData = practiceData.charsData.get(i);
-                BitmapProcessor.preprocess(charData.getWrittenImgPath(), 512);
-                int position = i;
-                handler.post(() -> adapter.update(practiceData.charsData, position));
-            }
-            isFinished = true;
-        }).start();
     }
 
     //点击事件回调
@@ -74,11 +56,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         if (view.getId() == R.id.button_back) {
             finish();
         } else if (view.getId() == R.id.button_start) {
-            if (isFinished) {
-                startResultActivity();
-            } else {
-                Toast.makeText(this, R.string.processing, Toast.LENGTH_SHORT).show();
-            }
+            startResultActivity();
         }
     }
 
@@ -123,6 +101,6 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         CharCardDecoration decoration = new CharCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
         adapter = new CheckCardAdapter(this, practiceData.charsData);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 }

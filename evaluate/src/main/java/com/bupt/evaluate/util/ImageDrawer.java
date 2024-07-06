@@ -34,15 +34,17 @@ public class ImageDrawer {
     }
 
     //绘制笔画
-    public static void drawStroke(Mat img, Stroke stroke,
-                                  Scalar strokeColor, Scalar textColor, int strokeIndex) {
+    public static void drawStroke(Mat img, Stroke stroke, Scalar strokeColor) {
         if (stroke.isStraight) {
             ImageDrawer.drawLine(img, stroke.line, strokeColor, Constants.THICKNESS);
         } else {
             ImageDrawer.drawCurve(img, stroke.curve, strokeColor, Constants.THICKNESS);
         }
-        ImageDrawer.drawText(img, Integer.toString(strokeIndex + 1),
-                stroke.getQuartPoint(), textColor);
+    }
+
+    //绘制笔画序号
+    public static void drawStrokeIndex(Mat img, Stroke stroke, Scalar textColor, int strokeIndex) {
+        ImageDrawer.drawText(img, Integer.toString(strokeIndex + 1), stroke.getQuartPoint(), textColor);
     }
 
     //绘制特征点，用于测试

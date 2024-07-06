@@ -21,7 +21,7 @@ public class InitialData {
             "16,17,18,19,20", "21,22,23,24,25",
             "26,27,28,29,30", "31,32,33,34,35",
             "36,37,38,39,40",
-            "47,49,51,54,55"
+            "46,47,48,49,51,54,55"
     ));
 
     //汉字
@@ -29,7 +29,7 @@ public class InitialData {
             "土", "王", "五", "上", "下",
             "不", "之", "山", "廿", "古",
             "四", "日", "石", "六", "天",
-            "十", "七", "工", "王", "主",
+            "十", "七", "王", "主", "工",
             "人", "之", "子", "白", "中",
             "上", "下", "工", "山", "千",
             "人", "大", "九", "之", "心",
@@ -44,7 +44,7 @@ public class InitialData {
             "U571F0000", "U738B0000", "U4E940000", "U4E0A0000", "U4E0B0000",
             "U4E0D0000", "U4E4B0000", "U5C710000", "U5EFF0000", "U53E40000",
             "U56DB0000", "U65E50000", "U77F30000", "U516D0000", "U59290000",
-            "U53410200", "U4E030200", "U5DE50200", "U738B0200", "U4E3B0200",
+            "U53410200", "U4E030200", "U738B0200", "U4E3B0200", "U5DE50200",
             "U4EBA0200", "U4E4B0200", "U5B500200", "U767D0200", "U4E2D0200",
             "U4E0A0100", "U4E0B0100", "U5DE50100", "U5C710100", "U53430100",
             "U4EBA0100", "U59270100", "U4E5D0100", "U4E4B0100", "U5FC30100",
@@ -73,9 +73,9 @@ public class InitialData {
             "https://telegraph-image-6lu.pages.dev/file/cf432eef815740f72d92c.jpg",
             "https://telegraph-image-6lu.pages.dev/file/58a581a3931b3d9c55810.jpg",
             "https://telegraph-image-6lu.pages.dev/file/43c4b1317b7c6c5680f2d.jpg",
-            "https://telegraph-image-6lu.pages.dev/file/8dbbb73e1944001e9e464.jpg",
             "https://telegraph-image-6lu.pages.dev/file/63f271268a5fc1e462135.jpg",
             "https://telegraph-image-6lu.pages.dev/file/ec180917e4bd3e8c9cd84.jpg",
+            "https://telegraph-image-6lu.pages.dev/file/8dbbb73e1944001e9e464.jpg",
             "https://telegraph-image-6lu.pages.dev/file/58a2cfa79fc0ff9635886.jpg",
             "https://telegraph-image-6lu.pages.dev/file/fe881d266c6f7be30801f.jpg",
             "https://telegraph-image-6lu.pages.dev/file/07ab3586e0b10cc5ba646.jpg",

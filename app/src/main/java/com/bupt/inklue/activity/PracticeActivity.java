@@ -43,7 +43,7 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         //初始化RecyclerView
         initRecyclerView();
 
-        //RecyclerView中项目的点击监听器
+        //设置RecyclerView中项目的点击监听器
         adapter.setOnItemClickListener(this::startWritingActivity);
 
         //设置按钮的点击监听器

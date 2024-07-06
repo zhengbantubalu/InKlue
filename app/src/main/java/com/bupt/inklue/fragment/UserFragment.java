@@ -56,7 +56,7 @@ public class UserFragment extends Fragment {
             //初始化RecyclerView
             initRecyclerView();
 
-            //RecyclerView中项目的监听器
+            //设置RecyclerView中项目的监听器
             adapter.setOnItemClickListener(position -> {
                 Intent intent = new Intent();
                 intent.setClass(context, RecordActivity.class);

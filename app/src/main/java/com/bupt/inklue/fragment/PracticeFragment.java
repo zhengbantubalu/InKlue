@@ -47,7 +47,7 @@ public class PracticeFragment extends Fragment {
             //初始化RecyclerView
             initRecyclerView();
 
-            //RecyclerView中项目的点击监听器
+            //设置RecyclerView中项目的点击监听器
             adapter.setOnItemClickListener(position -> {
                 Intent intent = new Intent();
                 intent.setClass(context, PracticeActivity.class);

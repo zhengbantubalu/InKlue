@@ -46,7 +46,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         //初始化RecyclerView
         initRecyclerView();
 
-        //RecyclerView中项目的点击监听器
+        //设置RecyclerView中项目的点击监听器
         adapter.setOnItemClickListener(this::startEvaluateActivity);
 
         //设置按钮的点击监听器

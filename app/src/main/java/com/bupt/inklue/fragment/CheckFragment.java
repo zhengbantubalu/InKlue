@@ -31,7 +31,7 @@ public class CheckFragment extends Fragment {
 
             //设置图像
             ImageView imageView = root.findViewById(R.id.imageview_image);
-            Bitmap bitmap = BitmapFactory.decodeFile(charData.getWrittenImgPath());
+            Bitmap bitmap = BitmapFactory.decodeFile(charData.getExtractImgPath());
             imageView.setImageBitmap(bitmap);
         }
         return root;
@@ -41,7 +41,7 @@ public class CheckFragment extends Fragment {
     public void update(CharData charData) {
         this.charData = charData;
         ImageView imageView = root.findViewById(R.id.imageview_image);
-        Bitmap bitmap = BitmapFactory.decodeFile(charData.getWrittenImgPath());
+        Bitmap bitmap = BitmapFactory.decodeFile(charData.getExtractImgPath());
         imageView.setImageBitmap(bitmap);
     }
 }

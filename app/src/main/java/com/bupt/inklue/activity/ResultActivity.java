@@ -3,7 +3,6 @@ package com.bupt.inklue.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -25,9 +24,7 @@ import com.bupt.inklue.data.CharData;
 import com.bupt.inklue.data.PracticeData;
 import com.bupt.inklue.data.PracticeDataManager;
 import com.bupt.inklue.util.BitmapProcessor;
-
-import java.util.Date;
-import java.util.Locale;
+import com.bupt.inklue.util.FilePathGenerator;
 
 //评价结果页面
 public class ResultActivity extends AppCompatActivity implements View.OnClickListener {
@@ -44,10 +41,9 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
 
         //创建记录封面
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault());
-        String time = sdf.format(new Date());
+        String coverImgPath = FilePathGenerator.generateCacheJPG(this);
         if (practiceData != null) {
-            practiceData.setCoverImgPath(this.getExternalCacheDir() + "/" + time + ".jpg");
+            practiceData.setCoverImgPath(coverImgPath);
             BitmapProcessor.createCover(practiceData, practiceData.getCoverImgPath(), false);
         }
 
@@ -62,8 +58,9 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         //初始化RecyclerView
         initRecyclerView();
 
-        //RecyclerView中项目的点击监听器
-        adapter.setOnItemClickListener(this::startEvaluateActivity);
+        //设置RecyclerView中项目的点击监听器为处理中提示
+        adapter.setOnItemClickListener(position ->
+                Toast.makeText(this, R.string.processing, Toast.LENGTH_SHORT).show());
 
         //设置按钮的点击监听器
         findViewById(R.id.button_back).setOnClickListener(this);
@@ -86,6 +83,8 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 handler.post(() -> adapter.update(practiceData.charsData, position));
             }
             isFinished = true;
+            //设置RecyclerView中项目的点击监听器为启动评价查看页面
+            adapter.setOnItemClickListener(this::startEvaluateActivity);
         }).start();
     }
 
@@ -133,6 +132,6 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         CharCardDecoration decoration = new CharCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
         adapter = new EvaluateCardAdapter(this, practiceData.charsData);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 }

@@ -18,21 +18,23 @@ public class U5DE50200 implements SpecificExtractor {
             strokes.add(new Stroke());
         }
         try {
+            //从左向右排序
+            points.end.sort();
             //第一横
-            PointList tempList1 = new PointList();
-            tempList1.add(points.end.get(1));
-            tempList1.add(points.end.get(0));
-            tempList1.sort(0,true);
             strokes.get(0).addList(contours.getMatchContour(
-                    tempList1.get(0), tempList1.get(1)), false);
-            //第二撇
+                    points.end.get(1), points.end.get(-2)), false);
+            //分辨撇和竖的起点
+            PointList tempList = new PointList();
+            tempList.add(points.end.get(3));
+            tempList.add(points.end.get(4));
+            tempList.sort(1, true);
+            //撇
             strokes.get(1).addList(contours.getMatchContour(
-                    points.end.get(2), points.end.get(4)), true);
-            //第三笔
+                    tempList.get(0), points.end.get(2)), true);
+            //竖
             strokes.get(2).addList(contours.getMatchContour(
-                    points.end.get(3), points.inter.get(0)), false);
+                    tempList.get(1), points.inter.get(0)), false);
             //最后一横
-            points.end.sort(0,true);
             strokes.get(3).addList(contours.getMatchContour(
                     points.end.get(0), points.end.get(-1)), false);
         } catch (NullPointerException ignored) {
@@ -40,4 +42,3 @@ public class U5DE50200 implements SpecificExtractor {
         return strokes;
     }
 }
-
