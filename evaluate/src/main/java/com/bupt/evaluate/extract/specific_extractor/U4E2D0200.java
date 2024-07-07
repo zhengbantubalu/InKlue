@@ -20,52 +20,50 @@ public class U4E2D0200 implements SpecificExtractor {
             strokes.add(new Stroke());
         }
         try {
-            //第一竖
+            //四个角点
             PointEx pointEx1 = contours.getNearestPoint(
-                    new PointEx(0,0 ));
+                    new PointEx(0, 0));
             PointEx pointEx2 = contours.getNearestPoint(
-                    new PointEx(0,Constants.IMAGE_SIZE ));
+                    new PointEx(0, Constants.IMAGE_SIZE));
             PointEx pointEx3 = contours.getNearestPoint(
-                    new PointEx(Constants.IMAGE_SIZE,0 ));
+                    new PointEx(Constants.IMAGE_SIZE, 0));
             PointEx pointEx4 = contours.getNearestPoint(
-                    new PointEx(Constants.IMAGE_SIZE,Constants.IMAGE_SIZE ));
-            PointList tempList1 = new PointList();
-            tempList1.add(points.end.get(2));
-            tempList1.add(points.end.get(1));
-            tempList1.sort(0,true);
+                    new PointEx(Constants.IMAGE_SIZE, Constants.IMAGE_SIZE));
+            //左边竖
             strokes.get(0).addList(contours.getMatchContour(
                     pointEx1, pointEx2), true);
-            //第二横
+            //右边竖
+            strokes.get(1).addList(contours.getMatchContour(
+                    pointEx3, pointEx4), true);
+            //分辨交点
             PointList tempList_inter_up = new PointList();
             tempList_inter_up.add(points.inter.get(0));
             tempList_inter_up.add(points.inter.get(1));
             tempList_inter_up.add(points.inter.get(2));
-            tempList_inter_up.sort(0,true);
-            strokes.get(1).addList(contours.getMatchContour(
-                    tempList_inter_up.get(0), tempList_inter_up.get(1)), true);
-            strokes.get(1).addList(contours.getMatchContour(
-                    tempList_inter_up.get(1), tempList_inter_up.get(2)));
-            //第三竖
+            tempList_inter_up.sort();
             PointList tempList_inter_low = new PointList();
             tempList_inter_low.add(points.inter.get(-1));
             tempList_inter_low.add(points.inter.get(-2));
             tempList_inter_low.add(points.inter.get(-3));
-            tempList_inter_low.sort(0,true);
+            tempList_inter_low.sort();
+            //上边横
             strokes.get(2).addList(contours.getMatchContour(
-                    pointEx3, pointEx4), true);
-            //第四横
+                    tempList_inter_up.get(0), tempList_inter_up.get(1)), true);
+            strokes.get(2).addList(contours.getMatchContour(
+                    tempList_inter_up.get(1), tempList_inter_up.get(2)));
+            //下边横
             strokes.get(3).addList(contours.getMatchContour(
-                    tempList_inter_low.get(0), tempList_inter_low.get(1)), true);
+                    pointEx2, tempList_inter_low.get(1)), true);
             strokes.get(3).addList(contours.getMatchContour(
-                    tempList_inter_low.get(1),pointEx4));
-            //最后一竖
+                    tempList_inter_low.get(1), pointEx4));
+            //中间竖
             strokes.get(4).add(points.end.get(0));
             strokes.get(4).add(tempList_inter_up.get(1));
             strokes.get(4).add(tempList_inter_low.get(1));
             strokes.get(4).add(points.end.get(-1));
+            strokes.get(4).isStraight = true;
         } catch (NullPointerException ignored) {
         }
         return strokes;
     }
 }
-

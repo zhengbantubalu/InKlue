@@ -15,25 +15,53 @@ public class Contours extends ArrayList<PointList> {
         return ContourExtractor.mat2Contours(img, points);
     }
 
+    //搜索当前汉字的轮廓列表是否已经含有某个点
+    //两点横纵坐标差值均小于等于maxDistance则认为是同一点
+    public boolean has(PointEx pointEx, int maxDistance) {
+        for (PointList contour : this) {
+            if (contour.has(pointEx, maxDistance)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     //寻找轮廓中距离该点最近的一个点
     //如果产生错误，则返回(0,0)点
     public PointEx getNearestPoint(PointEx pointEx) {
-        try {
-            PointEx retPoint = this.get(0).get(0);
-            int minDistance = pointEx.getDistance(this.get(0).get(0));
-            for (PointList contour : this) {
-                for (PointEx p : contour) {
-                    int distance = pointEx.getDistance(p);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        retPoint = p;
-                    }
-                }
-            }
-            return retPoint;
-        } catch (IndexOutOfBoundsException ignored) {
+        if (this.isEmpty() || this.get(0).isEmpty()) {
             return new PointEx(0, 0);
         }
+        PointEx retPoint = this.get(0).get(0);
+        int minDistance = pointEx.getDistance(this.get(0).get(0));
+        for (PointList contour : this) {
+            for (PointEx p : contour) {
+                int distance = pointEx.getDistance(p);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    retPoint = p;
+                }
+            }
+        }
+        return retPoint;
+    }
+
+    //寻找轮廓中距离该点较近的几个点的索引
+    public ArrayList<int[]> getNearPointIndexes(PointEx pointEx, int maxDistance) {
+        ArrayList<int[]> indexes = new ArrayList<>();
+        int[] index = {0, 0};
+        for (int i = 0; i < this.size(); i++) {
+            PointList contour = this.get(i);
+            for (int j = 0; j < contour.size(); j++) {
+                PointEx p = contour.get(j);
+                if (pointEx.equals(p)) {
+                    index[0] = i;
+                    index[1] = j;
+                    indexes.add(index);
+                }
+            }
+        }
+        return indexes;
     }
 
     //根据起止点查找匹配轮廓，返回匹配的轮廓段，并正序排列，无匹配则返回空列表

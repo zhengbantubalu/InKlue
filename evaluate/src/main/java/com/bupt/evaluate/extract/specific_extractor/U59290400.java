@@ -19,33 +19,33 @@ public class U59290400 implements SpecificExtractor {
         }
         try {
             //第一横
-            PointList tempList1 = new PointList();
-            tempList1.add(points.end.get(0));
-            tempList1.add(points.end.get(1));
-            tempList1.sort();
             strokes.get(0).addList(contours.getMatchContour(
-                    tempList1.get(0), tempList1.get(1)), true);
+                    points.end.get(0), points.end.get(1)), true);
+            //分辨撇捺的端点
             PointList tempList2 = new PointList();
-            tempList2.add(points.end.get(3));
-            tempList2.add(points.end.get(4));
+            tempList2.add(points.end.get(5));
+            tempList2.add(points.end.get(6));
             tempList2.sort();
-            //第二横
-            strokes.get(1).addList(contours.getMatchContour(
-                    tempList2.get(0), points.inter.get(0)), true);
-            strokes.get(1).addList(contours.getMatchContour(
-                    points.inter.get(0), tempList2.get(1)), true);
             //撇
+            strokes.get(2).add(points.end.get(2));
+            strokes.get(2).add(points.inter.get(0));
             strokes.get(2).addList(contours.getMatchContour(
-                    points.end.get(2), points.inter.get(1)), false);
-            PointList tempList3 = new PointList();
-            tempList3.add(points.end.get(5));
-            tempList3.add(points.end.get(6));
-            tempList3.sort();
-            strokes.get(2).addList(contours.getMatchContour(
-                    points.inter.get(1), tempList3.get(0)));
+                    points.inter.get(-1), tempList2.get(0)), false);
             //捺
             strokes.get(3).addList(contours.getMatchContour(
-                    points.inter.get(1), tempList3.get(1)), false);
+                    points.inter.get(-1), tempList2.get(1)), false);
+            //从左向右排序
+            points.inter.sort();
+            //分辨第二横的左右端点
+            PointList tempList1 = new PointList();
+            tempList1.add(points.end.get(3));
+            tempList1.add(points.end.get(4));
+            tempList1.sort();
+            //第二横
+            strokes.get(1).addList(contours.getMatchContour(
+                    tempList1.get(0), points.inter.get(0)), true);
+            strokes.get(1).addList(contours.getMatchContour(
+                    points.inter.get(-1), tempList1.get(1)));
         } catch (NullPointerException ignored) {
         }
         return strokes;

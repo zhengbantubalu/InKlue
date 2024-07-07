@@ -20,33 +20,37 @@ public class U4E5F0400 implements SpecificExtractor {
             strokes.add(new Stroke());
         }
         try {
-            //横
+            //分辨两个竖的端点
+            PointList tempList = new PointList();
+            tempList.add(points.end.get(-2));
+            tempList.add(points.end.get(-3));
+            tempList.sort();
+            //从左向右排序
             points.end.sort();
-            strokes.get(0).addList(contours.getMatchContour(
-                    points.end.get(0), points.inter.get(1)), true);
-            strokes.get(0).addList(contours.getMatchContour(
-                    points.inter.get(1), points.inter.get(0)), true);
-            strokes.get(0).addList(contours.getMatchContour(
-                    points.inter.get(0), points.end.get(5)), true);
-            //折
-            strokes.get(1).addList(contours.getMatchContour(
-                    points.end.get(5), points.end.get(4)), true);
-            //竖
-            points.end.sort(1,true);
-            strokes.get(2).addList(contours.getMatchContour(
-                    points.end.get(0), points.inter.get(0)), true);
-            PointList tempList1 = new PointList();
-            tempList1.add(points.end.get(4));
-            tempList1.add(points.end.get(5));
-            tempList1.sort();
-            strokes.get(2).addList(contours.getMatchContour(
-                    points.inter.get(0), tempList1.get(0)), true);
-            //竖折
             points.inter.sort();
-            strokes.get(3).add(points.end.get(2));
+            //横折拐点
+            PointEx pointEx = contours.getNearestPoint(new PointEx(Constants.IMAGE_SIZE, 0));
+            //横折的横
+            strokes.get(0).add(points.end.get(0));
+            strokes.get(0).add(points.inter.get(0));
+            strokes.get(0).add(points.inter.get(1));
+            strokes.get(0).add(pointEx);
+            strokes.get(0).isStraight = true;
+            //横折的竖
+            strokes.get(1).add(pointEx);
+            strokes.get(1).add(tempList.get(1));
+            strokes.get(1).isStraight = true;
+            //竖弯钩
+            strokes.get(3).add(points.end.get(1));
             strokes.get(3).addList(contours.getMatchContour(
                     points.inter.get(0), points.end.get(-1)), false);
-
+            //从上向下排序
+            points.end.sort(1, true);
+            //中间竖
+            strokes.get(2).add(points.end.get(0));
+            strokes.get(2).add(points.inter.get(1));
+            strokes.get(2).add(tempList.get(0));
+            strokes.get(2).isStraight = true;
         } catch (NullPointerException ignored) {
         }
         return strokes;

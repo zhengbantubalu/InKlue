@@ -32,7 +32,7 @@ public class U95E80400 implements SpecificExtractor {
             tempList2.add(points.end.get(2));
             tempList2.add(points.end.get(3));
             strokes.get(1).addList(contours.getMatchContour(
-                    tempList2.get(0), tempList2.get(1)), false);
+                    tempList2.get(0), tempList2.get(1)), true);
             //横折
             PointEx pointEx2 = contours.getNearestPoint(
                     new PointEx(Constants.IMAGE_SIZE, 0));
@@ -41,7 +41,7 @@ public class U95E80400 implements SpecificExtractor {
             strokes.get(2).addList(contours.getMatchContour(
                     points.end.get(4), pointEx2), true);
             strokes.get(3).addList(contours.getMatchContour(
-                    pointEx2, pointEx4), false);
+                    pointEx2, pointEx4), true);
         } catch (NullPointerException ignored) {
         }
         return strokes;
