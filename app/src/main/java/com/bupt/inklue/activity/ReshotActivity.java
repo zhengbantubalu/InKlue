@@ -34,6 +34,7 @@ import com.bupt.inklue.data.CharData;
 import com.bupt.inklue.util.BitmapProcessor;
 import com.bupt.inklue.util.FilePathGenerator;
 import com.bupt.inklue.util.ResourceDecoder;
+import com.bupt.preprocess.Preprocessor;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.opencv.core.Scalar;
@@ -79,9 +80,6 @@ public class ReshotActivity extends AppCompatActivity
 
         //隐藏上一张预览和返回上一张图标
         findViewById(R.id.layout_previous).setVisibility(View.GONE);
-
-        //加载OpenCV
-        System.loadLibrary("opencv_java3");
 
         //取得汉字数据
         charData = (CharData) getIntent().getSerializableExtra("charData");
@@ -208,11 +206,13 @@ public class ReshotActivity extends AppCompatActivity
                 new ImageCapture.OnImageSavedCallback() {
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                         charData.setWrittenImgPath(writtenImgPath);
-                        //预处理图像
-                        BitmapProcessor.preprocess(writtenImgPath, 512);
-                        //绘制笔画提取结果并保存
+                        //预处理图像并保存
                         Bitmap bitmapWritten = BitmapFactory.decodeFile(writtenImgPath);
-                        Bitmap bitmapExtract = Extractor.drawStrokes(charData.getClassName(), bitmapWritten);
+                        Bitmap bitmapStd = BitmapFactory.decodeFile(charData.getStdImgPath());
+                        Bitmap bitmapProc = Preprocessor.preprocess(bitmapWritten, bitmapStd);
+                        BitmapProcessor.save(bitmapProc, writtenImgPath);
+                        //绘制笔画提取结果并保存
+                        Bitmap bitmapExtract = Extractor.drawStrokes(charData.getClassName(), bitmapProc);
                         String extractImgPath = FilePathGenerator.generateCacheJPG(context);
                         BitmapProcessor.save(bitmapExtract, extractImgPath);
                         charData.setExtractImgPath(extractImgPath);

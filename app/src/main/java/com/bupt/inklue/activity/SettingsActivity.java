@@ -26,6 +26,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.button_clear_cache).setOnClickListener(this);
         findViewById(R.id.button_reset_database).setOnClickListener(this);
+        findViewById(R.id.button_download_resource).setOnClickListener(this);
     }
 
     //点击事件回调
@@ -52,6 +53,21 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
                 DatabaseManager.resetDatabase(this);
                 needUpdate = true;//标记需要更新练习记录
+            });
+            builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+            });
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+        } else if (view.getId() == R.id.button_download_resource) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(R.string.download_resource);
+            builder.setMessage(R.string.download_resource_warning);
+            builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+                //启动初始化页面，并关闭当前页面
+                Intent intent = new Intent();
+                intent.setClass(this, InitActivity.class);
+                startActivity(intent);
+                finish();
             });
             builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
             });

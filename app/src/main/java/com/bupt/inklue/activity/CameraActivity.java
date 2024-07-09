@@ -34,6 +34,7 @@ import com.bupt.inklue.data.PracticeData;
 import com.bupt.inklue.util.BitmapProcessor;
 import com.bupt.inklue.util.FilePathGenerator;
 import com.bupt.inklue.util.ResourceDecoder;
+import com.bupt.preprocess.Preprocessor;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.opencv.core.Scalar;
@@ -78,9 +79,6 @@ public class CameraActivity extends AppCompatActivity
         imageview_top = findViewById(R.id.imageview_top);
         imageview_previous = findViewById(R.id.imageview_previous);
 
-        //加载OpenCV
-        System.loadLibrary("opencv_java3");
-
         //取得练习数据
         practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
 
@@ -111,6 +109,9 @@ public class CameraActivity extends AppCompatActivity
                 takePhoto();//拍照
                 position++;
                 updateTop();//更新预览上层视图
+            } else if (position - savedNum >= 3) {
+                //如果正在保存的图片数量过多，显示保存中提示
+                Toast.makeText(context, R.string.camera_saving, Toast.LENGTH_SHORT).show();
             }
         } else if (view.getId() == R.id.button_confirm) {
             startConfirmActivity();//启动确认页面
@@ -264,7 +265,10 @@ public class CameraActivity extends AppCompatActivity
                             //设置书写图片路径
                             charData.setWrittenImgPath(writtenImgPath);
                             //预处理书写图片
-                            BitmapProcessor.preprocess(writtenImgPath, 512);
+                            Bitmap bitmapWritten = BitmapFactory.decodeFile(writtenImgPath);
+                            Bitmap bitmapStd = BitmapFactory.decodeFile(charData.getStdImgPath());
+                            Bitmap bitmapProc = Preprocessor.preprocess(bitmapWritten, bitmapStd);
+                            BitmapProcessor.save(bitmapProc, writtenImgPath);
                             //更新上一张图片预览
                             updatePrevious();
                             savedNum++;

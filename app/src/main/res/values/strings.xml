@@ -15,6 +15,7 @@
     <string name="settings">设置</string>
     <string name="clear_cache">清空缓存</string>
     <string name="reset_database">重置数据</string>
+    <string name="download_resource">下载资源</string>
 
     <string name="downloading">资源下载中，请稍候</string>
     <string name="camera_saving">保存中，请稍候</string>
@@ -31,4 +32,5 @@
     <string name="delete_warning">此练习记录将被删除</string>
     <string name="clear_cache_warning">所有未保存的图片将被清空</string>
     <string name="reset_database_warning">所有练习记录将被清空</string>
+    <string name="download_resource_warning">所有图片将重新下载\n所有练习记录将被清空</string>
 </resources>

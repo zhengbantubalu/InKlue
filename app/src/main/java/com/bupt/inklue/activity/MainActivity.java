@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //加载OpenCV
+        System.loadLibrary("opencv_java3");
+
         //判断App是否为首次启动
         SharedPreferences preferences = getSharedPreferences("app", MODE_PRIVATE);
         boolean isFirstLaunch = preferences.getBoolean("isFirstLaunch", true);

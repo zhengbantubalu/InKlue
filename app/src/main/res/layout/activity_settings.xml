@@ -56,6 +56,17 @@
             android:text="@string/reset_database"
             android:textSize="@dimen/title_size" />
 
+        <Button
+            android:id="@+id/button_download_resource"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/double_spacing"
+            android:layout_marginTop="@dimen/double_spacing"
+            android:layout_marginRight="@dimen/double_spacing"
+            android:background="@drawable/shape_card"
+            android:text="@string/download_resource"
+            android:textSize="@dimen/title_size" />
+
     </LinearLayout>
 
 </RelativeLayout>

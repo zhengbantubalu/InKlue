@@ -13,8 +13,6 @@ public class Evaluator {
 
     //根据汉字名称、输入图像和标准图像取得评价
     public static Evaluation evaluate(String cnChar, String className, Bitmap inputBmp, Bitmap stdBmp) {
-        //加载OpenCV
-        System.loadLibrary("opencv_java3");
         //转换图像格式
         Mat inputMat = new Mat();
         Utils.bitmapToMat(inputBmp, inputMat, true);

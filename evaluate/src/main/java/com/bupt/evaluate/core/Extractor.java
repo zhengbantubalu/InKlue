@@ -31,8 +31,6 @@ public class Extractor {
         //此方法设置了超时时间
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Future<Bitmap> future = executor.submit(() -> {
-            //加载OpenCV
-            System.loadLibrary("opencv_java3");
             //转换图像格式
             Mat img = new Mat();
             Utils.bitmapToMat(inputBmp, img, true);

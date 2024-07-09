@@ -1,21 +1,16 @@
 plugins {
-    alias(libs.plugins.androidApplication)
+    alias(libs.plugins.androidLibrary)
 }
 
 android {
-    namespace = "com.bupt.inklue"
+    namespace = "com.bupt.preprocess"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.bupt.inklue"
         minSdk = 29
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
-        ndk {
-            abiFilters.add("arm64-v8a") //只生成arm64-v8a架构的apk
-        }
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     buildTypes {
@@ -32,10 +27,4 @@ android {
 
 dependencies {
     implementation(project(":opencv"))
-    implementation(project(":evaluate"))
-    implementation(project(":preprocess"))
-    implementation(libs.material)
-    implementation(libs.camera.camera2)
-    implementation(libs.camera.lifecycle)
-    implementation(libs.camera.view)
 }
