@@ -33,4 +33,37 @@
     <string name="clear_cache_warning">所有未保存的图片将被清空</string>
     <string name="reset_database_warning">所有练习记录将被清空</string>
     <string name="download_resource_warning">所有图片将重新下载\n所有练习记录将被清空</string>
+
+    <string-array name="filter_style">
+        <item>书体</item>
+        <item>篆书</item>
+        <item>隶书</item>
+        <item>楷书</item>
+        <item>行书</item>
+    </string-array>
+    <string-array name="filter_era">
+        <item>年代</item>
+        <item>先秦</item>
+        <item>秦汉</item>
+        <item>魏晋</item>
+        <item>南北朝</item>
+        <item>隋唐</item>
+        <item>宋元</item>
+        <item>明清</item>
+        <item>现代</item>
+    </string-array>
+    <string-array name="filter_author">
+        <item>书法家</item>
+        <item>李斯</item>
+        <item>王羲之</item>
+        <item>欧阳询</item>
+    </string-array>
+    <string-array name="filter_copybook">
+        <item>碑帖</item>
+        <item>峄山碑</item>
+        <item>曹全碑</item>
+        <item>九成宫醴泉铭</item>
+        <item>张猛龙碑</item>
+        <item>集字圣教序</item>
+    </string-array>
 </resources>

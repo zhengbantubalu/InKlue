@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    android:background="@drawable/shape_card">
+
+    <ImageView
+        android:id="@+id/imageview_card_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/double_spacing" />
+
+    <TextView
+        android:id="@+id/textview_center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/imageview_card_image"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_toStartOf="@id/layout_right"
+        android:layout_toEndOf="@id/layout_left"
+        android:gravity="center"
+        android:textSize="@dimen/small_size" />
+
+    <LinearLayout
+        android:id="@+id/layout_left"
+        android:layout_width="25dp"
+        android:layout_height="match_parent"
+        android:layout_below="@id/imageview_card_image"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="@dimen/spacing"
+        android:layout_marginTop="@dimen/spacing"
+        android:layout_marginBottom="@dimen/spacing"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textview_left_top"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|start"
+            android:textSize="@dimen/mini_size" />
+
+        <TextView
+            android:id="@+id/textview_left_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|start"
+            android:textSize="@dimen/mini_size" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_right"
+        android:layout_width="25dp"
+        android:layout_height="match_parent"
+        android:layout_below="@id/imageview_card_image"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="@dimen/spacing"
+        android:layout_marginEnd="@dimen/spacing"
+        android:layout_marginBottom="@dimen/spacing"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textview_right_top"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
+            android:textSize="@dimen/mini_size" />
+
+        <TextView
+            android:id="@+id/textview_right_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
+            android:textSize="@dimen/mini_size" />
+
+    </LinearLayout>
+
+</RelativeLayout>

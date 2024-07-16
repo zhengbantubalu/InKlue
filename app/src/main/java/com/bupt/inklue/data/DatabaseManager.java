@@ -17,7 +17,8 @@ public class DatabaseManager {
     //初始化数据库
     public static void initDatabase(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS StdChar " +
-                "(id INTEGER PRIMARY KEY, name TEXT, className TEXT, stdImgPath TEXT)");
+                "(id INTEGER PRIMARY KEY, name TEXT, style TEXT, era TEXT, author TEXT, copybook TEXT, " +
+                "className TEXT, stdImgPath TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS WrittenChar " +
                 "(id INTEGER PRIMARY KEY, name TEXT, className TEXT, stdImgPath TEXT, " +
                 "writtenImgPath TEXT, score TEXT, advice TEXT)");
@@ -58,15 +59,20 @@ public class DatabaseManager {
     private static void putCharData(SQLiteDatabase db, String dirPath) {
         ArrayList<String> cnChars = InitialData.getCnChars();
         ArrayList<String> classNames = InitialData.getClassNames();
+        ArrayList<String> styles = InitialData.getStyles();
+        ArrayList<String> eras = InitialData.getEras();
+        ArrayList<String> authors = InitialData.getAuthors();
+        ArrayList<String> copybooks = InitialData.getCopybooks();
         for (int i = 0; i < cnChars.size(); i++) {
-            String cnChar = cnChars.get(i);
             String className = classNames.get(i);
             String stdImgPath = dirPath + "/char/" + className + ".jpg";
-            CharData charData = new CharData();
-            charData.setStdImgPath(stdImgPath);
             ContentValues values = new ContentValues();
-            values.put("name", cnChar);
+            values.put("name", cnChars.get(i));
             values.put("className", className);
+            values.put("style", styles.get(i));
+            values.put("era", eras.get(i));
+            values.put("author", authors.get(i));
+            values.put("copybook", copybooks.get(i));
             values.put("stdImgPath", stdImgPath);
             db.insert("StdChar", null, values);
         }
@@ -82,7 +88,6 @@ public class DatabaseManager {
             String name = practiceNames.get(i);
             String coverImgPath = dirPath + "/cover/" + name + ".jpg";
             PracticeData practiceData = new PracticeData();
-            practiceData.charsData = new ArrayList<>();
             String[] idArray = practiceCharIDs.get(i).split(",");
             for (String id : idArray) {
                 CharData charData = new CharData();

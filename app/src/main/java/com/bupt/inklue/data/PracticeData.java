@@ -13,6 +13,14 @@ public class PracticeData implements Serializable {
     private String coverImgPath;//封面图像路径
     private String charIDs;//汉字ID字符串
 
+    public PracticeData() {
+        this.charsData = new ArrayList<>();
+        this.name = "";
+        this.time = "";
+        this.coverImgPath = "";
+        this.charIDs = "";
+    }
+
     public long getID() {
         return id;
     }

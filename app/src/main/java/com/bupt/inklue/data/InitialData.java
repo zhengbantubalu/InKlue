@@ -54,6 +54,66 @@ public class InitialData {
             "U59290400", "U592A0400", "U4E0D0400", "U4E5F0400", "U95E80400"
     ));
 
+    //书体
+    private static final ArrayList<String> styles = new ArrayList<>(Arrays.asList(
+            "篆书", "篆书", "篆书", "篆书", "篆书",
+            "篆书", "篆书", "篆书", "篆书", "篆书",
+            "篆书", "篆书", "篆书", "篆书", "篆书",
+            "隶书", "隶书", "隶书", "隶书", "隶书",
+            "隶书", "隶书", "隶书", "隶书", "隶书",
+            "楷书", "楷书", "楷书", "楷书", "楷书",
+            "楷书", "楷书", "楷书", "楷书", "楷书",
+            "楷书", "楷书", "楷书", "楷书", "楷书",
+            "楷书", "楷书", "楷书", "楷书", "楷书",
+            "行书", "行书", "行书", "行书", "行书",
+            "行书", "行书", "行书", "行书", "行书"
+    ));
+
+    //年代
+    private static final ArrayList<String> eras = new ArrayList<>(Arrays.asList(
+            "秦汉", "秦汉", "秦汉", "秦汉", "秦汉",
+            "秦汉", "秦汉", "秦汉", "秦汉", "秦汉",
+            "秦汉", "秦汉", "秦汉", "秦汉", "秦汉",
+            "秦汉", "秦汉", "秦汉", "秦汉", "秦汉",
+            "秦汉", "秦汉", "秦汉", "秦汉", "秦汉",
+            "隋唐", "隋唐", "隋唐", "隋唐", "隋唐",
+            "隋唐", "隋唐", "隋唐", "隋唐", "隋唐",
+            "南北朝", "南北朝", "南北朝", "南北朝", "南北朝",
+            "南北朝", "南北朝", "南北朝", "南北朝", "南北朝",
+            "魏晋", "魏晋", "魏晋", "魏晋", "魏晋",
+            "魏晋", "魏晋", "魏晋", "魏晋", "魏晋"
+    ));
+
+    //作者
+    private static final ArrayList<String> authors = new ArrayList<>(Arrays.asList(
+            "李斯", "李斯", "李斯", "李斯", "李斯",
+            "李斯", "李斯", "李斯", "李斯", "李斯",
+            "李斯", "李斯", "李斯", "李斯", "李斯",
+            "", "", "", "", "",
+            "", "", "", "", "",
+            "欧阳询", "欧阳询", "欧阳询", "欧阳询", "欧阳询",
+            "欧阳询", "欧阳询", "欧阳询", "欧阳询", "欧阳询",
+            "", "", "", "", "",
+            "", "", "", "", "",
+            "王羲之", "王羲之", "王羲之", "王羲之", "王羲之",
+            "王羲之", "王羲之", "王羲之", "王羲之", "王羲之"
+    ));
+
+    //碑帖
+    private static final ArrayList<String> copybooks = new ArrayList<>(Arrays.asList(
+            "峄山碑", "峄山碑", "峄山碑", "峄山碑", "峄山碑",
+            "峄山碑", "峄山碑", "峄山碑", "峄山碑", "峄山碑",
+            "峄山碑", "峄山碑", "峄山碑", "峄山碑", "峄山碑",
+            "曹全碑", "曹全碑", "曹全碑", "曹全碑", "曹全碑",
+            "曹全碑", "曹全碑", "曹全碑", "曹全碑", "曹全碑",
+            "九成宫醴泉铭", "九成宫醴泉铭", "九成宫醴泉铭", "九成宫醴泉铭", "九成宫醴泉铭",
+            "九成宫醴泉铭", "九成宫醴泉铭", "九成宫醴泉铭", "九成宫醴泉铭", "九成宫醴泉铭",
+            "张猛龙碑", "张猛龙碑", "张猛龙碑", "张猛龙碑", "张猛龙碑",
+            "张猛龙碑", "张猛龙碑", "张猛龙碑", "张猛龙碑", "张猛龙碑",
+            "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序",
+            "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序"
+    ));
+
     //图片网址字符串
     private static final ArrayList<String> urlStrings = new ArrayList<>(Arrays.asList(
             "https://telegraph-image-6lu.pages.dev/file/a197e98810e32f941799f.jpg",
@@ -119,6 +179,22 @@ public class InitialData {
 
     public static ArrayList<String> getClassNames() {
         return classNames;
+    }
+
+    public static ArrayList<String> getStyles() {
+        return styles;
+    }
+
+    public static ArrayList<String> getEras() {
+        return eras;
+    }
+
+    public static ArrayList<String> getAuthors() {
+        return authors;
+    }
+
+    public static ArrayList<String> getCopybooks() {
+        return copybooks;
     }
 
     public static ArrayList<String> getUrlStrings() {

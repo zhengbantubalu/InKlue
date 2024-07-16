@@ -6,6 +6,8 @@
     <dimen name="bottom_bar">50dp</dimen>
     <dimen name="camera_bottom_bar">150dp</dimen>
     <dimen name="top_bar_button">60dp</dimen>
-    <dimen name="text_size">14sp</dimen>
     <dimen name="title_size">18sp</dimen>
+    <dimen name="text_size">14sp</dimen>
+    <dimen name="small_size">10sp</dimen>
+    <dimen name="mini_size">8sp</dimen>
 </resources>

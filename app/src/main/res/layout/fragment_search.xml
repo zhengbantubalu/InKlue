@@ -6,29 +6,98 @@
     <RelativeLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/top_bar"
+        android:layout_height="85dp"
         android:background="?attr/colorBar">
 
         <EditText
+            android:id="@+id/editText_search"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="35dp"
             android:layout_marginStart="@dimen/double_spacing"
             android:layout_marginTop="@dimen/spacing"
-            android:layout_marginBottom="@dimen/spacing"
-            android:layout_toStartOf="@id/button_search_submit"
+            android:layout_toStartOf="@id/layout_button"
             android:background="@drawable/shape_search_bar"
             android:gravity="center"
             android:maxLength="10"
             android:paddingStart="@dimen/double_spacing"
-            android:paddingEnd="@dimen/double_spacing" />
+            android:paddingEnd="@dimen/double_spacing"
+            android:singleLine="true" />
 
-        <ImageButton
-            android:id="@+id/button_search_submit"
+        <LinearLayout
+            android:id="@+id/filter_bar"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_below="@id/editText_search"
+            android:layout_marginStart="@dimen/double_spacing"
+            android:layout_marginTop="@dimen/spacing"
+            android:layout_toStartOf="@id/layout_button"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinner_style"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/shape_filter_unselected"
+                android:entries="@array/filter_style"
+                android:textAlignment="center" />
+
+            <Spinner
+                android:id="@+id/spinner_era"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/spacing"
+                android:layout_weight="1"
+                android:background="@drawable/shape_filter_unselected"
+                android:entries="@array/filter_era"
+                android:textAlignment="center" />
+
+            <Spinner
+                android:id="@+id/spinner_author"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/spacing"
+                android:layout_weight="1"
+                android:background="@drawable/shape_filter_unselected"
+                android:entries="@array/filter_author"
+                android:textAlignment="center" />
+
+            <Spinner
+                android:id="@+id/spinner_copybook"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/spacing"
+                android:layout_weight="1"
+                android:background="@drawable/shape_filter_unselected"
+                android:entries="@array/filter_copybook"
+                android:textAlignment="center" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_button"
             android:layout_width="@dimen/top_bar_button"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_search_submit" />
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/button_search_submit"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/ic_search_submit" />
+
+            <ImageButton
+                android:id="@+id/button_filter"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/ic_filter" />
+
+        </LinearLayout>
 
     </RelativeLayout>
 
