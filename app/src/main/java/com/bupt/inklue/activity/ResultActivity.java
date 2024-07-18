@@ -21,6 +21,7 @@ import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.CharCardDecoration;
 import com.bupt.inklue.adapter.EvaluateCardAdapter;
 import com.bupt.inklue.data.CharData;
+import com.bupt.inklue.data.FileManager;
 import com.bupt.inklue.data.PracticeData;
 import com.bupt.inklue.data.PracticeDataManager;
 import com.bupt.inklue.util.BitmapProcessor;
@@ -44,7 +45,8 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         String coverImgPath = FilePathGenerator.generateCacheJPG(this);
         if (practiceData != null) {
             practiceData.setCoverImgPath(coverImgPath);
-            BitmapProcessor.createCover(practiceData, practiceData.getCoverImgPath(), false);
+            Bitmap coverBitmap = BitmapProcessor.createCover(practiceData, false);
+            FileManager.saveBitmap(coverBitmap, practiceData.getCoverImgPath());
         }
 
         //设置练习标题
@@ -76,7 +78,7 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
                 Bitmap inputBmp = BitmapFactory.decodeFile(charData.getWrittenImgPath());
                 Bitmap stdBmp = BitmapFactory.decodeFile(charData.getStdImgPath());
                 Evaluation evaluation = Evaluator.evaluate(name, className, inputBmp, stdBmp);
-                BitmapProcessor.save(evaluation.outputBmp, charData.getWrittenImgPath());
+                FileManager.saveBitmap(evaluation.outputBmp, charData.getWrittenImgPath());
                 charData.setScore(Integer.toString(evaluation.score));
                 charData.setAdvice(evaluation.advice);
                 int position = i;

@@ -2,6 +2,7 @@ package com.bupt.inklue.util;
 
 import android.content.Context;
 import android.icu.text.SimpleDateFormat;
+import android.os.Environment;
 
 import java.util.Date;
 import java.util.Locale;
@@ -14,5 +15,13 @@ public class FilePathGenerator {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault());
         String time = sdf.format(new Date());
         return context.getExternalCacheDir() + "/" + time + ".jpg";
+    }
+
+    //生成练习封面JPG图片路径
+    public static String generatePracticeCoverJPG(Context context) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault());
+        String time = sdf.format(new Date());
+        return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
+                "/practice/cover/" + time + ".jpg";
     }
 }

@@ -1,5 +1,7 @@
 package com.bupt.inklue.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,6 +23,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     private ViewPager2 viewpager;//用于切换图片的类
     private ArrayList<CharData> charsData;//汉字数据列表
+    private boolean needUpdate = false;//是否需要更新练习列表
 
     @SuppressWarnings("unchecked")//忽略取得汉字数据时类型转换产生的警告
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,9 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_image);
+
+        //设置视图可见性
+        findViewById(R.id.button_add).setVisibility(View.VISIBLE);
 
         //取得汉字数据列表
         charsData = (ArrayList<CharData>) getIntent().getSerializableExtra("charsData");
@@ -43,13 +49,50 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         //设置按钮的点击监听器
         findViewById(R.id.button_back).setOnClickListener(this);
+        findViewById(R.id.button_add).setOnClickListener(this);
     }
 
     //点击事件回调
     public void onClick(View view) {
         if (view.getId() == R.id.button_back) {
             finish();
+        } else if (view.getId() == R.id.button_add) {
+            startSelectActivity();
         }
+    }
+
+    //关闭页面
+    public void finish() {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("needUpdate", needUpdate);
+        intent.putExtras(bundle);
+        setResult(Activity.RESULT_FIRST_USER, intent);
+        super.finish();
+    }
+
+    //子页面关闭的回调
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == Activity.RESULT_FIRST_USER) {
+            needUpdate = intent.getBooleanExtra("needUpdate", false);
+            if (needUpdate) {
+                //关闭页面，提高操作流畅度
+                finish();
+            }
+        }
+    }
+
+    //启动选择页面
+    private void startSelectActivity() {
+        Intent intent = new Intent();
+        intent.setClass(this, SelectActivity.class);
+        Bundle bundle = new Bundle();
+        CharData charData = charsData.get(viewpager.getCurrentItem());
+        bundle.putLong("charID", charData.getID());
+        bundle.putString("charImgPath", charData.getStdImgPath());
+        intent.putExtras(bundle);
+        startActivityForResult(intent, Activity.RESULT_FIRST_USER);
     }
 
     //初始化ViewPager

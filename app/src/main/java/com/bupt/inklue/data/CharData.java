@@ -39,12 +39,7 @@ public class CharData implements Serializable {
         String era = filterCondition.getEra();
         String author = filterCondition.getAuthor();
         String copybook = filterCondition.getCopybook();
-        return (name.isEmpty() ||
-                name.equals(this.name) ||
-                name.equals(this.style) ||
-                name.equals(this.era) ||
-                name.equals(this.author) ||
-                name.equals(this.copybook)) &&
+        return (name.isEmpty() || name.equals(this.name)) &&
                 (style.isEmpty() || style.equals(this.style)) &&
                 (era.isEmpty() || era.equals(this.era)) &&
                 (author.isEmpty() || author.equals(this.author)) &&

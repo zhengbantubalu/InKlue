@@ -22,8 +22,6 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
     private ViewPager2 viewpager;//用于切换页面的类
-    private ViewPagerAdapter adapter;//页面适配器
-    private SearchFragment searchFragment;//“搜索”碎片
     private PracticeFragment practiceFragment;//“练习”碎片
     private UserFragment userFragment;//“我的”碎片
 
@@ -57,28 +55,23 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         int pageNum = intent.getIntExtra("pageNum", 1);
-        if (pageNum == 0) {
-            searchFragment.updateData();
-        } else if (pageNum == 2) {
-            userFragment.updateData();
-        } else {
-            practiceFragment.updateData();
-        }
-        adapter.notifyItemChanged(pageNum);
+        practiceFragment.updateData();
+        userFragment.updateData();
         viewpager.setCurrentItem(pageNum, true);
     }
 
     //初始化ViewPager
     private void initViewPager() {
         viewpager = findViewById(R.id.viewpager_homepage);
-        searchFragment = new SearchFragment();
         practiceFragment = new PracticeFragment();
-        userFragment = new UserFragment();
+        SearchFragment searchFragment = new SearchFragment(practiceFragment);
+        userFragment = new UserFragment(practiceFragment);
         ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(searchFragment);
         fragments.add(practiceFragment);
         fragments.add(userFragment);
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(
+                getSupportFragmentManager(), getLifecycle(), fragments);
         viewpager.setAdapter(adapter);
         //ViewPager监听到页面切换后将对应的RadioButton设为选中状态
         //用于解决滑动页面后底部导航栏的RadioButton的选中反馈问题

@@ -3,6 +3,7 @@ package com.bupt.inklue.data;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.widget.Toast;
 
@@ -51,12 +52,12 @@ public class DatabaseManager {
 
     //置入初始数据
     private static void putInitialData(SQLiteDatabase db, String dirPath) {
-        putCharData(db, dirPath);//置入汉字数据
-        putPracticeData(db, dirPath);//置入练习数据
+        putInitialCharData(db, dirPath);//置入初始汉字数据
+        putInitialPracticeData(db, dirPath);//置入初始练习数据
     }
 
-    //置入汉字数据
-    private static void putCharData(SQLiteDatabase db, String dirPath) {
+    //置入初始汉字数据
+    private static void putInitialCharData(SQLiteDatabase db, String dirPath) {
         ArrayList<String> cnChars = InitialData.getCnChars();
         ArrayList<String> classNames = InitialData.getClassNames();
         ArrayList<String> styles = InitialData.getStyles();
@@ -78,13 +79,12 @@ public class DatabaseManager {
         }
     }
 
-    //置入练习数据
-    private static void putPracticeData(SQLiteDatabase db, String dirPath) {
+    //置入初始练习数据
+    private static void putInitialPracticeData(SQLiteDatabase db, String dirPath) {
         ArrayList<String> practiceNames = InitialData.getPracticeNames();
         ArrayList<String> practiceCharIDs = InitialData.getPracticeCharIDs();
         ArrayList<String> classNames = InitialData.getClassNames();
-        for (int i = 0; i < practiceNames.size(); i++) {
-            ContentValues values = new ContentValues();
+        for (int i = practiceNames.size() - 1; i >= 0; i--) {
             String name = practiceNames.get(i);
             String coverImgPath = dirPath + "/cover/" + name + ".jpg";
             PracticeData practiceData = new PracticeData();
@@ -96,7 +96,9 @@ public class DatabaseManager {
                 charData.setStdImgPath(stdImgPath);
                 practiceData.charsData.add(charData);
             }
-            BitmapProcessor.createCover(practiceData, coverImgPath, true);
+            Bitmap coverBitmap = BitmapProcessor.createCover(practiceData, true);
+            FileManager.saveBitmap(coverBitmap, coverImgPath);
+            ContentValues values = new ContentValues();
             values.put("name", name);
             values.put("coverImgPath", coverImgPath);
             values.put("charIDs", practiceCharIDs.get(i));

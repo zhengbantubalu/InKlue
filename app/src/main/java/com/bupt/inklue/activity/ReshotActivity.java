@@ -31,6 +31,7 @@ import androidx.core.content.ContextCompat;
 import com.bupt.evaluate.core.Extractor;
 import com.bupt.inklue.R;
 import com.bupt.inklue.data.CharData;
+import com.bupt.inklue.data.FileManager;
 import com.bupt.inklue.util.BitmapProcessor;
 import com.bupt.inklue.util.FilePathGenerator;
 import com.bupt.inklue.util.ResourceDecoder;
@@ -210,11 +211,11 @@ public class ReshotActivity extends AppCompatActivity
                         Bitmap bitmapWritten = BitmapFactory.decodeFile(writtenImgPath);
                         Bitmap bitmapStd = BitmapFactory.decodeFile(charData.getStdImgPath());
                         Bitmap bitmapProc = Preprocessor.preprocess(bitmapWritten, bitmapStd);
-                        BitmapProcessor.save(bitmapProc, writtenImgPath);
+                        FileManager.saveBitmap(bitmapProc, writtenImgPath);
                         //绘制笔画提取结果并保存
                         Bitmap bitmapExtract = Extractor.drawStrokes(charData.getClassName(), bitmapProc);
                         String extractImgPath = FilePathGenerator.generateCacheJPG(context);
-                        BitmapProcessor.save(bitmapExtract, extractImgPath);
+                        FileManager.saveBitmap(bitmapExtract, extractImgPath);
                         charData.setExtractImgPath(extractImgPath);
                         //设置预览上层视图，用于预览提取效果
                         imageview_top.setImageBitmap(BitmapFactory.decodeFile(extractImgPath));

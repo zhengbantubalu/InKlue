@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/colorBackground">
 
     <RelativeLayout
         android:id="@+id/top_bar"
@@ -14,33 +15,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/app_title"
-            android:textSize="@dimen/title_size"
-            android:textStyle="bold" />
+            android:text="@string/select_practice_hint"
+            android:textSize="@dimen/title_size" />
 
         <ImageButton
-            android:id="@+id/button_add"
+            android:id="@+id/button_back"
             android:layout_width="@dimen/top_bar_button"
             android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_add" />
+            android:src="@drawable/ic_back" />
 
     </RelativeLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview_practice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/top_bar"
         android:paddingStart="@dimen/double_spacing"
-        android:paddingEnd="@dimen/double_spacing">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_practice"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:paddingEnd="@dimen/double_spacing" />
 
 </RelativeLayout>

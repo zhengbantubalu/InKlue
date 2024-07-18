@@ -101,6 +101,8 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
                 fragment.update(charData);
                 adapter.notifyItemChanged(position);
                 practiceData.charsData.set(position, charData);
+                //关闭页面，提高操作流畅度
+                finish();
             }
         }
     }

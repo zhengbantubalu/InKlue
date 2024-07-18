@@ -23,7 +23,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
 
     private ResultCardAdapter adapter;//卡片适配器
     private PracticeData recordData;//记录数据
-    private boolean needUpdate = false;//是否需要更新练习记录
+    private boolean needUpdate = false;//是否需要更新记录列表
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,7 +39,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
             recordData.charsData = PracticeDataManager.getWrittenCharsData(this, recordData);
         }
 
-        //设置练习标题
+        //设置记录标题
         TextView textView = findViewById(R.id.textview_title);
         textView.setText(recordData.getName());
 
@@ -59,27 +59,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         if (view.getId() == R.id.button_back) {
             finish();
         } else if (view.getId() == R.id.button_more) {
-            PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.button_more));
-            popupMenu.getMenuInflater().inflate(R.menu.menu_record, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(item -> {
-                if (item.getItemId() == R.id.menu_item_delete) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(R.string.delete);
-                    builder.setMessage(R.string.delete_warning);
-                    builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
-                        PracticeDataManager.deleteRecord(this, recordData);
-                        needUpdate = true;
-                        finish();
-                    });
-                    builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    });
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    return true;
-                }
-                return false;
-            });
-            popupMenu.show();
+            openMenu();
         }
     }
 
@@ -102,6 +82,31 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         bundle.putInt("position", position);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    //打开菜单
+    private void openMenu() {
+        PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.button_more));
+        popupMenu.getMenuInflater().inflate(R.menu.menu_record, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menu_item_delete) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.delete);
+                builder.setMessage(R.string.delete_record_warning);
+                builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+                    PracticeDataManager.deleteRecord(this, recordData);
+                    needUpdate = true;
+                    finish();
+                });
+                builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return true;
+            }
+            return false;
+        });
+        popupMenu.show();
     }
 
     //初始化RecyclerView

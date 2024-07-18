@@ -12,6 +12,8 @@
     <string name="reshot">重拍</string>
     <string name="save">保存</string>
     <string name="delete">删除</string>
+    <string name="create">创建练习</string>
+    <string name="rename">重命名</string>
     <string name="settings">设置</string>
     <string name="clear_cache">清空缓存</string>
     <string name="reset_database">重置数据</string>
@@ -25,14 +27,24 @@
     <string name="save_error">保存失败</string>
     <string name="delete_success">删除成功</string>
     <string name="delete_error">删除失败</string>
+    <string name="create_success">创建成功</string>
+    <string name="create_error">创建失败</string>
+    <string name="rename_success">重命名成功</string>
+    <string name="rename_error">重命名失败</string>
+    <string name="add_success">添加成功</string>
+    <string name="add_error">添加失败</string>
     <string name="cache_cleared">缓存已清空</string>
     <string name="database_reset">数据已重置</string>
     <string name="developing">开发中，敬请期待</string>
 
-    <string name="delete_warning">此练习记录将被删除</string>
+    <string name="input_name_hint">请输入名称</string>
+    <string name="select_practice_hint">请选择添加到的练习</string>
+
+    <string name="delete_practice_warning">此练习将被删除</string>
+    <string name="delete_record_warning">此记录将被删除</string>
     <string name="clear_cache_warning">所有未保存的图片将被清空</string>
-    <string name="reset_database_warning">所有练习记录将被清空</string>
-    <string name="download_resource_warning">所有图片将重新下载\n所有练习记录将被清空</string>
+    <string name="reset_database_warning">所有练习记录将被清空\n所有练习将恢复初始状态</string>
+    <string name="download_resource_warning">所有图片将重新下载\n所有数据将被重置</string>
 
     <string-array name="filter_style">
         <item>书体</item>

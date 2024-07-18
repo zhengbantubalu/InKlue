@@ -1,12 +1,14 @@
 package com.bupt.inklue.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.activity.SearchActivity;
@@ -28,6 +31,7 @@ import com.bupt.inklue.adapter.SearchCardAdapter;
 import com.bupt.inklue.data.CharData;
 import com.bupt.inklue.data.DatabaseHelper;
 import com.bupt.inklue.data.FilterCondition;
+import com.bupt.inklue.util.ResourceDecoder;
 
 import java.util.ArrayList;
 
@@ -39,11 +43,17 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private SearchCardAdapter adapter;//卡片适配器
     private ArrayList<CharData> resultCharsData;//搜索结果汉字数据列表
     private FilterCondition filterCondition;//筛选条件
-    private EditText searchEditText;//搜索框
-    private Spinner styleSpinner;//书体筛选框
-    private Spinner eraSpinner;//年代筛选框
-    private Spinner authorSpinner;//作者筛选框
-    private Spinner copybookSpinner;//碑帖筛选框
+    private EditText editText_search;//搜索框
+    private Spinner spinner_style;//书体筛选框
+    private Spinner spinner_era;//年代筛选框
+    private Spinner spinner_author;//作者筛选框
+    private Spinner spinner_copybook;//碑帖筛选框
+    private final PracticeFragment practiceFragment;//“练习”碎片
+    private SwipeRefreshLayout swipe_refresh_layout;//下拉刷新控件
+
+    public SearchFragment(PracticeFragment practiceFragment) {
+        this.practiceFragment = practiceFragment;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,11 +62,18 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             context = getContext();
 
             //取得视图
-            searchEditText = root.findViewById(R.id.editText_search);
-            styleSpinner = root.findViewById(R.id.spinner_style);
-            eraSpinner = root.findViewById(R.id.spinner_era);
-            authorSpinner = root.findViewById(R.id.spinner_author);
-            copybookSpinner = root.findViewById(R.id.spinner_copybook);
+            editText_search = root.findViewById(R.id.editText_search);
+            spinner_style = root.findViewById(R.id.spinner_style);
+            spinner_era = root.findViewById(R.id.spinner_era);
+            spinner_author = root.findViewById(R.id.spinner_author);
+            spinner_copybook = root.findViewById(R.id.spinner_copybook);
+            swipe_refresh_layout = root.findViewById(R.id.swipe_refresh_layout);
+
+            //设置刷新控件颜色
+            if (context != null) {
+                swipe_refresh_layout.setColorSchemeColors(
+                        ResourceDecoder.getColorInt(context, R.attr.colorTheme));
+            }
 
             //初始化筛选条件
             filterCondition = new FilterCondition();
@@ -69,24 +86,20 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             initRecyclerView();
 
             //设置RecyclerView中项目的点击监听器
-            adapter.setOnItemClickListener(position -> {
-                Intent intent = new Intent();
-                intent.setClass(context, SearchActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("charsData", resultCharsData);
-                bundle.putInt("position", position);
-                intent.putExtras(bundle);
-                startActivity(intent);
-            });
+            adapter.setOnItemClickListener(this::startSearchActivity);
+
+            //设置下拉刷新监听器
+            swipe_refresh_layout.setOnRefreshListener(this::refresh);
+
+            //设置Spinner的选择监听器
+            spinner_style.setOnItemSelectedListener(new Listener(spinner_style, context));
+            spinner_era.setOnItemSelectedListener(new Listener(spinner_era, context));
+            spinner_author.setOnItemSelectedListener(new Listener(spinner_author, context));
+            spinner_copybook.setOnItemSelectedListener(new Listener(spinner_copybook, context));
 
             //设置按钮的点击监听器
             root.findViewById(R.id.button_search_submit).setOnClickListener(this);
             root.findViewById(R.id.button_filter).setOnClickListener(this);
-            //设置Spinner的选择监听器
-            styleSpinner.setOnItemSelectedListener(new Listener(styleSpinner, context));
-            eraSpinner.setOnItemSelectedListener(new Listener(eraSpinner, context));
-            authorSpinner.setOnItemSelectedListener(new Listener(authorSpinner, context));
-            copybookSpinner.setOnItemSelectedListener(new Listener(copybookSpinner, context));
         }
         return root;
     }
@@ -126,26 +139,56 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    //子页面关闭的回调
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (resultCode == Activity.RESULT_FIRST_USER) {
+            boolean needUpdate = intent.getBooleanExtra("needUpdate", false);
+            if (needUpdate) {
+                practiceFragment.updateData();
+            }
+        }
+    }
+
+    //启动搜索结果查看页面
+    private void startSearchActivity(int position) {
+        Intent intent = new Intent();
+        intent.setClass(context, SearchActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("charsData", resultCharsData);
+        bundle.putInt("position", position);
+        intent.putExtras(bundle);
+        startActivityForResult(intent, Activity.RESULT_FIRST_USER);
+    }
+
+    //刷新
+    private void refresh() {
+        updateFilterCondition();//更新筛选条件
+        updateData();//更新数据
+        //关闭刷新控件，延迟500ms
+        new Handler().postDelayed(() -> swipe_refresh_layout.setRefreshing(false), 500);
+    }
+
     //更新筛选条件
     private void updateFilterCondition() {
-        filterCondition.setName(searchEditText.getText().toString());
-        if (styleSpinner.getSelectedItemPosition() != 0) {
-            filterCondition.setStyle(styleSpinner.getSelectedItem().toString());
+        filterCondition.setName(editText_search.getText().toString());
+        if (spinner_style.getSelectedItemPosition() != 0) {
+            filterCondition.setStyle(spinner_style.getSelectedItem().toString());
         } else {
             filterCondition.setStyle("");
         }
-        if (eraSpinner.getSelectedItemPosition() != 0) {
-            filterCondition.setEra(eraSpinner.getSelectedItem().toString());
+        if (spinner_era.getSelectedItemPosition() != 0) {
+            filterCondition.setEra(spinner_era.getSelectedItem().toString());
         } else {
             filterCondition.setEra("");
         }
-        if (authorSpinner.getSelectedItemPosition() != 0) {
-            filterCondition.setAuthor(authorSpinner.getSelectedItem().toString());
+        if (spinner_author.getSelectedItemPosition() != 0) {
+            filterCondition.setAuthor(spinner_author.getSelectedItem().toString());
         } else {
             filterCondition.setAuthor("");
         }
-        if (copybookSpinner.getSelectedItemPosition() != 0) {
-            filterCondition.setCopybook(copybookSpinner.getSelectedItem().toString());
+        if (spinner_copybook.getSelectedItemPosition() != 0) {
+            filterCondition.setCopybook(spinner_copybook.getSelectedItem().toString());
         } else {
             filterCondition.setCopybook("");
         }

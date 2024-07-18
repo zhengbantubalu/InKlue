@@ -17,6 +17,15 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_back" />
 
+    <ImageButton
+        android:id="@+id/button_add"
+        android:layout_width="@dimen/top_bar_button"
+        android:layout_height="@dimen/top_bar"
+        android:layout_alignParentEnd="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_add"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/button_reshot"
         android:layout_width="match_parent"

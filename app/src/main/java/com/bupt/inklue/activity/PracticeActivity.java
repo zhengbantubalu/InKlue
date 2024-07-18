@@ -1,10 +1,14 @@
 package com.bupt.inklue.activity;
 
 import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,10 +29,15 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
 
     private CharCardAdapter adapter;//卡片适配器
     private PracticeData practiceData;//练习数据
+    private TextView textview_title;//练习标题
+    private boolean needUpdate = false;//是否需要更新练习列表
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_practice);
+
+        //设置视图可见性
+        findViewById(R.id.button_more).setVisibility(View.VISIBLE);
 
         //取得练习数据
         practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
@@ -37,8 +46,13 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         }
 
         //设置练习标题
-        TextView textView = findViewById(R.id.textview_title);
-        textView.setText(practiceData.getName());
+        textview_title = findViewById(R.id.textview_title);
+        textview_title.setText(practiceData.getName());
+
+        //如果练习为空，隐藏底部栏
+        if (practiceData.charsData.isEmpty()) {
+            findViewById(R.id.bottom_bar).setVisibility(View.GONE);
+        }
 
         //初始化RecyclerView
         initRecyclerView();
@@ -49,6 +63,7 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         //设置按钮的点击监听器
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.button_start).setOnClickListener(this);
+        findViewById(R.id.button_more).setOnClickListener(this);
     }
 
     //点击事件回调
@@ -57,7 +72,19 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
             finish();
         } else if (view.getId() == R.id.button_start) {
             checkCameraPermission();
+        } else if (view.getId() == R.id.button_more) {
+            openMenu();
         }
+    }
+
+    //关闭页面
+    public void finish() {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putBoolean("needUpdate", needUpdate);
+        intent.putExtras(bundle);
+        setResult(Activity.RESULT_FIRST_USER, intent);
+        super.finish();
     }
 
     //权限申请的回调，用于在获取权限后继续刚才中断的操作
@@ -90,6 +117,48 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         bundle.putSerializable("practiceData", practiceData);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    //打开菜单
+    private void openMenu() {
+        PopupMenu popupMenu = new PopupMenu(this, findViewById(R.id.button_more));
+        popupMenu.getMenuInflater().inflate(R.menu.menu_practice, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menu_item_rename) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.rename);
+                final EditText input = new EditText(this);
+                builder.setView(input);
+                builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+                    practiceData.setName(input.getText().toString());
+                    PracticeDataManager.renamePractice(
+                            this, practiceData, practiceData.getName());
+                    textview_title.setText(practiceData.getName());//设置练习标题
+                    needUpdate = true;
+                });
+                builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return true;
+            } else if (item.getItemId() == R.id.menu_item_delete) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.delete);
+                builder.setMessage(R.string.delete_practice_warning);
+                builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+                    PracticeDataManager.deletePractice(this, practiceData);
+                    needUpdate = true;
+                    finish();
+                });
+                builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return true;
+            }
+            return false;
+        });
+        popupMenu.show();
     }
 
     //检查相机权限

@@ -1,10 +1,12 @@
 package com.bupt.inklue.data;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.widget.ProgressBar;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -110,16 +112,22 @@ public class FileManager {
         return true;
     }
 
-    //删除记录图片
-    public static boolean deleteRecordImg(PracticeData practiceData) {
-        //删除封面
+    //删除练习封面
+    public static boolean deletePracticeCover(PracticeData practiceData) {
         File cover = new File(practiceData.getCoverImgPath());
+        return cover.delete();
+    }
+
+    //删除记录图片
+    public static boolean deleteRecordImg(PracticeData recordData) {
+        //删除封面
+        File cover = new File(recordData.getCoverImgPath());
         //删除失败则返回
         if (!cover.delete()) {
             return false;
         }
         //删除书写图像
-        for (CharData charData : practiceData.charsData) {
+        for (CharData charData : recordData.charsData) {
             File writtenImg = new File(charData.getWrittenImgPath());
             //删除失败则返回
             if (!writtenImg.delete()) {
@@ -127,5 +135,15 @@ public class FileManager {
             }
         }
         return true;
+    }
+
+    //保存Bitmap
+    public static void saveBitmap(Bitmap bitmap, String filePath) {
+        try {
+            FileOutputStream fos = new FileOutputStream(filePath);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+        } catch (IOException ignored) {
+        }
     }
 }

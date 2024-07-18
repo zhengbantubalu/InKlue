@@ -4,10 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
 import android.icu.text.SimpleDateFormat;
 import android.widget.Toast;
 
 import com.bupt.inklue.R;
+import com.bupt.inklue.util.BitmapProcessor;
+import com.bupt.inklue.util.FilePathGenerator;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,6 +23,9 @@ public class PracticeDataManager {
     public static ArrayList<CharData> getStdCharsData(Context context, PracticeData practiceData) {
         ArrayList<CharData> charsData = new ArrayList<>();
         String[] idArray = practiceData.getCharIDs().split(",");
+        if (idArray[0].isEmpty()) {
+            return charsData;
+        }
         try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             for (String id : idArray) {
@@ -78,6 +84,97 @@ public class PracticeDataManager {
         return charsData;
     }
 
+    //创建练习
+    public static void createPractice(Context context, String name) {
+        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            String coverImgPath = FilePathGenerator.generatePracticeCoverJPG(context);
+            Bitmap coverBitmap = BitmapProcessor.createCover(new PracticeData(), true);
+            FileManager.saveBitmap(coverBitmap, coverImgPath);
+            ContentValues values = new ContentValues();
+            values.put("name", name);
+            values.put("coverImgPath", coverImgPath);
+            values.put("charIDs", "");
+            long newID = db.insert("Practice", null, values);
+            //显示反馈信息
+            if (newID != -1) {
+                Toast.makeText(context, R.string.create_success, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, R.string.create_error, Toast.LENGTH_SHORT).show();
+            }
+            db.close();
+        }
+    }
+
+    //重命名练习
+    public static void renamePractice(Context context, PracticeData practiceData, String name) {
+        boolean success;
+        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("name", name);
+            success = db.update("Practice", values, "id = ?",
+                    new String[]{practiceData.getID() + ""}) == 1;
+            db.close();
+        }
+        //显示反馈信息
+        if (success) {
+            Toast.makeText(context, R.string.rename_success, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, R.string.rename_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //向练习中添加汉字
+    public static void addCharIntoPractice(Context context, PracticeData practiceData,
+                                           long charID, String charImgPath) {
+        //创建新的练习封面
+        CharData charData = new CharData();
+        charData.setStdImgPath(charImgPath);
+        practiceData.charsData = getStdCharsData(context, practiceData);
+        practiceData.charsData.add(charData);
+        Bitmap coverBitmap = BitmapProcessor.createCover(practiceData, true);
+        FileManager.saveBitmap(coverBitmap, practiceData.getCoverImgPath());
+        //将汉字ID插入数据库
+        boolean success;
+        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            if (practiceData.getCharIDs().isEmpty()) {
+                values.put("charIDs", charID);
+            } else {
+                values.put("charIDs", practiceData.getCharIDs() + "," + charID);
+            }
+            success = db.update("Practice", values, "id = ?",
+                    new String[]{practiceData.getID() + ""}) == 1;
+            db.close();
+        }
+        //显示反馈信息
+        if (success) {
+            Toast.makeText(context, R.string.add_success, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, R.string.add_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //删除练习
+    public static void deletePractice(Context context, PracticeData practiceData) {
+        boolean fileSuccess = FileManager.deletePracticeCover(practiceData);//删除练习封面
+        boolean databaseSuccess;
+        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            databaseSuccess = db.delete("Practice", "id=?",
+                    new String[]{practiceData.getID() + ""}) == 1;
+            db.close();
+        }
+        //显示反馈信息
+        if (fileSuccess && databaseSuccess) {
+            Toast.makeText(context, R.string.delete_success, Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(context, R.string.delete_error, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     //保存练习记录
     public static void saveRecord(Context context, PracticeData practiceData) {
         boolean fileSuccess = FileManager.moveRecordImg(context, practiceData);//移动记录图片存储位置
@@ -124,19 +221,20 @@ public class PracticeDataManager {
     }
 
     //删除练习记录
-    public static void deleteRecord(Context context, PracticeData practiceData) {
-        boolean fileSuccess = FileManager.deleteRecordImg(practiceData);//删除记录图片
+    public static void deleteRecord(Context context, PracticeData recordData) {
+        boolean fileSuccess = FileManager.deleteRecordImg(recordData);//删除记录图片
         int successNum = 0;
-        String[] idArray = practiceData.getCharIDs().split(",");
+        String[] idArray = recordData.getCharIDs().split(",");
         try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
             SQLiteDatabase db = dbHelper.getWritableDatabase();
             for (String id : idArray) {
                 successNum += db.delete("WrittenChar", "id=?", new String[]{id});
             }
             successNum += db.delete("Record", "id=?",
-                    new String[]{practiceData.getID() + ""});
+                    new String[]{recordData.getID() + ""});
+            db.close();
         }
-        boolean databaseSuccess = successNum == practiceData.charsData.size() + 1;
+        boolean databaseSuccess = successNum == recordData.charsData.size() + 1;
         //显示反馈信息
         if (fileSuccess && databaseSuccess) {
             Toast.makeText(context, R.string.delete_success, Toast.LENGTH_SHORT).show();

@@ -30,6 +30,7 @@ import androidx.core.content.ContextCompat;
 import com.bupt.evaluate.core.Extractor;
 import com.bupt.inklue.R;
 import com.bupt.inklue.data.CharData;
+import com.bupt.inklue.data.FileManager;
 import com.bupt.inklue.data.PracticeData;
 import com.bupt.inklue.util.BitmapProcessor;
 import com.bupt.inklue.util.FilePathGenerator;
@@ -199,7 +200,7 @@ public class CameraActivity extends AppCompatActivity
         imageview_previous.setImageBitmap(bitmapExtract);
         //保存提取结果图片，以备后续使用
         String extractImgPath = FilePathGenerator.generateCacheJPG(context);
-        BitmapProcessor.save(bitmapExtract, extractImgPath);
+        FileManager.saveBitmap(bitmapExtract, extractImgPath);
         charData.setExtractImgPath(extractImgPath);
     }
 
@@ -268,7 +269,7 @@ public class CameraActivity extends AppCompatActivity
                             Bitmap bitmapWritten = BitmapFactory.decodeFile(writtenImgPath);
                             Bitmap bitmapStd = BitmapFactory.decodeFile(charData.getStdImgPath());
                             Bitmap bitmapProc = Preprocessor.preprocess(bitmapWritten, bitmapStd);
-                            BitmapProcessor.save(bitmapProc, writtenImgPath);
+                            FileManager.saveBitmap(bitmapProc, writtenImgPath);
                             //更新上一张图片预览
                             updatePrevious();
                             savedNum++;

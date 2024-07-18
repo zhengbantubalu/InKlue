@@ -20,8 +20,10 @@ public class InitialData {
             "1,2,3,4,5", "6,7,8,9,10", "11,12,13,14,15",
             "16,17,18,19,20", "21,22,23,24,25",
             "26,27,28,29,30", "31,32,33,34,35",
+//            "36,37,38,39,40",
+//            "46,47,48,49,51,54,55"
             "36,37,38,39,40",
-            "46,47,48,49,51,54,55"
+            "41,42,43,44,45,46,47"
     ));
 
     //汉字
@@ -34,9 +36,10 @@ public class InitialData {
             "上", "下", "工", "山", "千",
             "人", "大", "九", "之", "心",
             "入", "之", "大", "天", "文",
-            "丁", "中", "公", "万", "石",
-            "二", "三", "之", "以", "夕",
-            "天", "太", "不", "也", "门"
+//            "丁", "中", "公", "万", "石",
+//            "二", "三", "之", "以", "夕",
+//            "天", "太", "不", "也", "门"
+            "二", "三", "之", "以", "天", "也", "门"
     ));
 
     //提取器类名
@@ -49,9 +52,10 @@ public class InitialData {
             "U4E0A0100", "U4E0B0100", "U5DE50100", "U5C710100", "U53430100",
             "U4EBA0100", "U59270100", "U4E5D0100", "U4E4B0100", "U5FC30100",
             "U51650300", "U4E4B0300", "U59270300", "U59290300", "U65870300",
-            "U4E010300", "U4E2D0300", "U516C0300", "U4E070300", "U77F30300",
-            "U4E8C0400", "U4E090400", "U4E4B0400", "U4EE50400", "U59150400",
-            "U59290400", "U592A0400", "U4E0D0400", "U4E5F0400", "U95E80400"
+//            "U4E010300", "U4E2D0300", "U516C0300", "U4E070300", "U77F30300",
+//            "U4E8C0400", "U4E090400", "U4E4B0400", "U4EE50400", "U59150400",
+//            "U59290400", "U592A0400", "U4E0D0400", "U4E5F0400", "U95E80400"
+            "U4E8C0400", "U4E090400", "U4E4B0400", "U4EE50400", "U59290400", "U4E5F0400", "U95E80400"
     ));
 
     //书体
@@ -64,9 +68,10 @@ public class InitialData {
             "楷书", "楷书", "楷书", "楷书", "楷书",
             "楷书", "楷书", "楷书", "楷书", "楷书",
             "楷书", "楷书", "楷书", "楷书", "楷书",
-            "楷书", "楷书", "楷书", "楷书", "楷书",
-            "行书", "行书", "行书", "行书", "行书",
-            "行书", "行书", "行书", "行书", "行书"
+//            "楷书", "楷书", "楷书", "楷书", "楷书",
+//            "行书", "行书", "行书", "行书", "行书",
+//            "行书", "行书", "行书", "行书", "行书"
+            "行书", "行书", "行书", "行书", "行书", "行书", "行书"
     ));
 
     //年代
@@ -79,9 +84,10 @@ public class InitialData {
             "隋唐", "隋唐", "隋唐", "隋唐", "隋唐",
             "隋唐", "隋唐", "隋唐", "隋唐", "隋唐",
             "南北朝", "南北朝", "南北朝", "南北朝", "南北朝",
-            "南北朝", "南北朝", "南北朝", "南北朝", "南北朝",
-            "魏晋", "魏晋", "魏晋", "魏晋", "魏晋",
-            "魏晋", "魏晋", "魏晋", "魏晋", "魏晋"
+//            "南北朝", "南北朝", "南北朝", "南北朝", "南北朝",
+//            "魏晋", "魏晋", "魏晋", "魏晋", "魏晋",
+//            "魏晋", "魏晋", "魏晋", "魏晋", "魏晋"
+            "魏晋", "魏晋", "魏晋", "魏晋", "魏晋", "魏晋", "魏晋"
     ));
 
     //作者
@@ -94,9 +100,10 @@ public class InitialData {
             "欧阳询", "欧阳询", "欧阳询", "欧阳询", "欧阳询",
             "欧阳询", "欧阳询", "欧阳询", "欧阳询", "欧阳询",
             "", "", "", "", "",
-            "", "", "", "", "",
-            "王羲之", "王羲之", "王羲之", "王羲之", "王羲之",
-            "王羲之", "王羲之", "王羲之", "王羲之", "王羲之"
+//            "", "", "", "", "",
+//            "王羲之", "王羲之", "王羲之", "王羲之", "王羲之",
+//            "王羲之", "王羲之", "王羲之", "王羲之", "王羲之"
+            "王羲之", "王羲之", "王羲之", "王羲之", "王羲之", "王羲之", "王羲之"
     ));
 
     //碑帖
@@ -109,9 +116,10 @@ public class InitialData {
             "九成宫醴泉铭", "九成宫醴泉铭", "九成宫醴泉铭", "九成宫醴泉铭", "九成宫醴泉铭",
             "九成宫醴泉铭", "九成宫醴泉铭", "九成宫醴泉铭", "九成宫醴泉铭", "九成宫醴泉铭",
             "张猛龙碑", "张猛龙碑", "张猛龙碑", "张猛龙碑", "张猛龙碑",
-            "张猛龙碑", "张猛龙碑", "张猛龙碑", "张猛龙碑", "张猛龙碑",
-            "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序",
-            "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序"
+//            "张猛龙碑", "张猛龙碑", "张猛龙碑", "张猛龙碑", "张猛龙碑",
+//            "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序",
+//            "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序"
+            "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序", "集字圣教序"
     ));
 
     //图片网址字符串
@@ -156,19 +164,19 @@ public class InitialData {
             "https://telegraph-image-6lu.pages.dev/file/2482e1dd85ff858bc3881.jpg",
             "https://telegraph-image-6lu.pages.dev/file/aeaa9f18bf9f449a50e58.jpg",
             "https://telegraph-image-6lu.pages.dev/file/9284af0f36bf7ba56a52f.jpg",
-            "https://telegraph-image-6lu.pages.dev/file/2077fe142b598f41a5dcb.jpg",
-            "https://telegraph-image-6lu.pages.dev/file/4600d06a457b1f2de937e.jpg",
-            "https://telegraph-image-6lu.pages.dev/file/2a94652bd35977427c2b1.jpg",
-            "https://telegraph-image-6lu.pages.dev/file/d404ad063b8910bf221f8.jpg",
-            "https://telegraph-image-6lu.pages.dev/file/5cd998f78c54fa3c6953f.jpg",
+//            "https://telegraph-image-6lu.pages.dev/file/2077fe142b598f41a5dcb.jpg",
+//            "https://telegraph-image-6lu.pages.dev/file/4600d06a457b1f2de937e.jpg",
+//            "https://telegraph-image-6lu.pages.dev/file/2a94652bd35977427c2b1.jpg",
+//            "https://telegraph-image-6lu.pages.dev/file/d404ad063b8910bf221f8.jpg",
+//            "https://telegraph-image-6lu.pages.dev/file/5cd998f78c54fa3c6953f.jpg",
             "https://telegraph-image-6lu.pages.dev/file/a23f2bccc3178b2a171f0.jpg",
             "https://telegraph-image-6lu.pages.dev/file/6201cfbb0b271e4b74665.jpg",
             "https://telegraph-image-6lu.pages.dev/file/2c97060907e13b1fcaf62.jpg",
             "https://telegraph-image-6lu.pages.dev/file/8524722efc1bef0268d8f.jpg",
-            "https://telegraph-image-6lu.pages.dev/file/829299acf4c761f8536fa.jpg",
+//            "https://telegraph-image-6lu.pages.dev/file/829299acf4c761f8536fa.jpg",
             "https://telegraph-image-6lu.pages.dev/file/1018fa017db8789ae9612.jpg",
-            "https://telegraph-image-6lu.pages.dev/file/29c0ceb66d7b947865355.jpg",
-            "https://telegraph-image-6lu.pages.dev/file/9ad97f691b1ce70645dbd.jpg",
+//            "https://telegraph-image-6lu.pages.dev/file/29c0ceb66d7b947865355.jpg",
+//            "https://telegraph-image-6lu.pages.dev/file/9ad97f691b1ce70645dbd.jpg",
             "https://telegraph-image-6lu.pages.dev/file/4c6d8378aa4b82412caab.jpg",
             "https://telegraph-image-6lu.pages.dev/file/00506081fba3262f5fa54.jpg"
     ));

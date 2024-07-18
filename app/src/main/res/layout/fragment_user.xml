@@ -55,12 +55,19 @@
 
     </RelativeLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_practice"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/top_bar"
         android:paddingStart="@dimen/double_spacing"
-        android:paddingEnd="@dimen/double_spacing" />
+        android:paddingEnd="@dimen/double_spacing">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerview_practice"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

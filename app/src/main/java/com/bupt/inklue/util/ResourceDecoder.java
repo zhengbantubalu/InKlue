@@ -12,12 +12,17 @@ import org.opencv.core.Scalar;
 //资源解码器
 public class ResourceDecoder {
 
-    //根据颜色资源ID取得OpenCV的Scalar对象
-    public static Scalar getScalar(Context context, int resourceID) {
+    //根据颜色资源ID取得int类型color
+    public static int getColorInt(Context context, int resourceID) {
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(resourceID, typedValue, true);
         int colorResId = typedValue.resourceId;
-        int color = ContextCompat.getColor(context, colorResId);
+        return ContextCompat.getColor(context, colorResId);
+    }
+
+    //根据颜色资源ID取得OpenCV的Scalar对象
+    public static Scalar getScalar(Context context, int resourceID) {
+        int color = getColorInt(context, resourceID);
         return new Scalar(Color.red(color), Color.green(color), Color.blue(color));
     }
 
