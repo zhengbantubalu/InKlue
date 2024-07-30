@@ -39,4 +39,5 @@ dependencies {
     implementation(libs.camera.lifecycle)
     implementation(libs.camera.view)
     implementation(libs.swiperefreshlayout)
+    implementation(libs.photoview)
 }

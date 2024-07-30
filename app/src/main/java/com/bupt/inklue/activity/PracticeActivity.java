@@ -71,7 +71,7 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         if (view.getId() == R.id.button_back) {
             finish();
         } else if (view.getId() == R.id.button_start) {
-            checkCameraPermission();
+            tryToStartCamera();
         } else if (view.getId() == R.id.button_more) {
             openMenu();
         }
@@ -161,8 +161,9 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         popupMenu.show();
     }
 
-    //检查相机权限
-    private void checkCameraPermission() {
+    //尝试启动相机
+    private void tryToStartCamera() {
+        //检查相机权限
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
                 PackageManager.PERMISSION_GRANTED) {
             //拥有权限，启动拍照页面

@@ -15,6 +15,7 @@ import com.bupt.inklue.adapter.ViewPagerAdapter;
 import com.bupt.inklue.data.CharData;
 import com.bupt.inklue.fragment.ImageFragment;
 import com.bupt.inklue.util.ResourceDecoder;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager2 viewpager;//用于切换图片的类
+    private ViewPagerAdapter adapter;//页面适配器
     private ArrayList<CharData> charsData;//汉字数据列表
     private boolean needUpdate = false;//是否需要更新练习列表
 
@@ -47,9 +49,34 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         int position = getIntent().getIntExtra("position", 0);
         viewpager.setCurrentItem(position, false);
 
+        //设置ViewPager的翻页监听器
+        viewpager.registerOnPageChangeCallback(new Callback());
+
         //设置按钮的点击监听器
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.button_add).setOnClickListener(this);
+    }
+
+    //ViewPager的翻页监听器，用于还原PhotoView的缩放状态
+    class Callback extends ViewPager2.OnPageChangeCallback {
+        public void onPageSelected(int position) {
+            int size = charsData.size();
+            //还原前后两页PhotoView的缩放状态
+            if (position > 0) {
+                PhotoView photoView =
+                        ((ImageFragment) adapter.createFragment(position - 1)).photoView;
+                if (photoView != null) {
+                    photoView.setScale(1f, true);
+                }
+            }
+            if (position < size - 1) {
+                PhotoView photoView =
+                        ((ImageFragment) adapter.createFragment(position + 1)).photoView;
+                if (photoView != null) {
+                    photoView.setScale(1f, true);
+                }
+            }
+        }
     }
 
     //点击事件回调
@@ -105,7 +132,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         for (CharData charData : charsData) {
             fragments.add(new ImageFragment(charData));
         }
-        viewpager.setAdapter(new ViewPagerAdapter(
-                getSupportFragmentManager(), getLifecycle(), fragments));
+        //设置页面适配器
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
+        viewpager.setAdapter(adapter);
     }
 }

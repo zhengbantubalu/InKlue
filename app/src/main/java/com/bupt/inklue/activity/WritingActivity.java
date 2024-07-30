@@ -21,6 +21,7 @@ import com.bupt.inklue.data.PracticeData;
 import com.bupt.inklue.fragment.FinishFragment;
 import com.bupt.inklue.fragment.ImageFragment;
 import com.bupt.inklue.util.ResourceDecoder;
+import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 public class WritingActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager2 viewpager;//用于切换图片的类
+    private ViewPagerAdapter adapter;//页面适配器
     private PracticeData practiceData;//练习数据
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,18 +50,38 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         int position = getIntent().getIntExtra("position", 0);
         viewpager.setCurrentItem(position, false);
 
-        //设置ViewPager的选中位置监听器，用于判断是否滑动到最后一页
-        viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            public void onPageSelected(int position) {
-                if (position == practiceData.charsData.size()) {
-                    //滑动到最后一页，则尝试启动相机
-                    checkCameraPermission();
-                }
-            }
-        });
+        //设置ViewPager的翻页监听器
+        viewpager.registerOnPageChangeCallback(new Callback());
 
         //设置按钮的点击监听器
         findViewById(R.id.button_back).setOnClickListener(this);
+    }
+
+    //ViewPager的翻页监听器，用于还原PhotoView的缩放状态和启动相机
+    class Callback extends ViewPager2.OnPageChangeCallback {
+        public void onPageSelected(int position) {
+            //size是图片数量，由于结束页面的存在，ViewPager的实际页数为size+1
+            int size = practiceData.charsData.size();
+            //还原前后两页PhotoView的缩放状态
+            if (position > 0) {
+                PhotoView photoView =
+                        ((ImageFragment) adapter.createFragment(position - 1)).photoView;
+                if (photoView != null) {
+                    photoView.setScale(1f, true);
+                }
+            }
+            if (position < size - 1) {
+                PhotoView photoView =
+                        ((ImageFragment) adapter.createFragment(position + 1)).photoView;
+                if (photoView != null) {
+                    photoView.setScale(1f, true);
+                }
+            }
+            //滑动到最后一页，则尝试启动相机
+            if (position == size) {
+                tryToStartCamera();
+            }
+        }
     }
 
     //点击事件回调
@@ -83,8 +105,9 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    //检查相机权限
-    private void checkCameraPermission() {
+    //尝试启动相机
+    private void tryToStartCamera() {
+        //检查相机权限
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
                 PackageManager.PERMISSION_GRANTED) {
             //拥有权限，启动拍照页面
@@ -119,7 +142,8 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         }
         //添加结束页面
         fragments.add(new FinishFragment());
-        viewpager.setAdapter(new ViewPagerAdapter(
-                getSupportFragmentManager(), getLifecycle(), fragments));
+        //设置页面适配器
+        adapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
+        viewpager.setAdapter(adapter);
     }
 }
