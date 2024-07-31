@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bupt.inklue.R;
+import com.bupt.inklue.activity.LoginActivity;
 import com.bupt.inklue.activity.RecordActivity;
 import com.bupt.inklue.activity.SettingsActivity;
 import com.bupt.inklue.adapter.PracticeCardDecoration;
@@ -81,6 +82,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
             //设置按钮的点击监听器
             root.findViewById(R.id.button_settings).setOnClickListener(this);
+            root.findViewById(R.id.user_bar).setOnClickListener(this);
         }
         return root;
     }
@@ -91,6 +93,10 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             Intent intent = new Intent();
             intent.setClass(context, SettingsActivity.class);
             startActivityForResult(intent, Activity.RESULT_FIRST_USER);
+        } else if (view.getId() == R.id.user_bar) {
+            Intent intent = new Intent();
+            intent.setClass(context, LoginActivity.class);
+            startActivity(intent);
         }
     }
 

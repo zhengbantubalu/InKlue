@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <RelativeLayout
-        android:id="@+id/top_bar"
+        android:id="@+id/user_bar"
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:background="?attr/colorBar">
@@ -59,7 +59,7 @@
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/top_bar"
+        android:layout_below="@id/user_bar"
         android:paddingStart="@dimen/double_spacing"
         android:paddingEnd="@dimen/double_spacing">
 
