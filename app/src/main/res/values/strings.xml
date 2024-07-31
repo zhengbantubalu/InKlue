@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--账户相关-->
     <string name="app_name">墨痕书法</string>
     <string name="app_title">墨痕</string>
     <string name="user_name_default">无名客</string>
     <string name="user_signature_default">我家洗砚池头树\n朵朵花开淡墨痕</string>
-    <string name="register_layout">初入江湖</string>
+    <string name="welcome">初入江湖</string>
 
     <!--动词-->
     <string name="start">拍摄</string>
@@ -17,18 +16,16 @@
     <string name="delete">删除</string>
     <string name="create">创建练习</string>
     <string name="rename">重命名</string>
-    <string name="settings">设置</string>
     <string name="clear_cache">清空缓存</string>
     <string name="reset_database">重置数据</string>
     <string name="download_resource">下载资源</string>
-    <string name="login">登入</string>
+    <string name="login">登录</string>
     <string name="register">注册</string>
 
     <!--名词-->
+    <string name="settings">设置</string>
     <string name="account">账号</string>
     <string name="password">密码</string>
-    <string name="man">男</string>
-    <string name="woman">女</string>
 
     <!--状态提示-->
     <string name="downloading">资源下载中，请稍候</string>
@@ -45,14 +42,13 @@
     <string name="rename_error">重命名失败</string>
     <string name="add_success">添加成功</string>
     <string name="add_error">添加失败</string>
-    <string name="login_success">登入成功</string>
-    <string name="login_error">登入失败</string>
+    <string name="login_success">登录成功</string>
+    <string name="login_error">登录失败</string>
     <string name="register_success">注册成功</string>
     <string name="register_error">注册失败</string>
     <string name="cache_cleared">缓存已清空</string>
     <string name="database_reset">数据已重置</string>
     <string name="developing">开发中，敬请期待</string>
-
 
     <!--操作提示-->
     <string name="input_name_hint">请输入名称</string>

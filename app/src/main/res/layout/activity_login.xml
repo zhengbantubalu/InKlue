@@ -1,105 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="match_parent"
+    android:background="?attr/colorBackground">
 
-    <TextView
+    <RelativeLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:gravity="center"
-        android:text="@string/register_layout"
-        android:textSize="@dimen/title_size" />
+        android:layout_height="@dimen/top_bar"
+        android:background="?attr/colorBar">
 
-    <TextView
-        android:id="@+id/Name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/top_bar"
-        android:layout_marginTop="20dp"
-        android:text="@string/account"
-        android:textColor="@color/cardview_dark_background"
-        android:textSize="@dimen/title_size" />
+        <TextView
+            android:id="@+id/textview_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/welcome"
+            android:textSize="18sp" />
 
-    <EditText
-        android:id="@+id/user_name"
+        <ImageButton
+            android:id="@+id/button_back"
+            android:layout_width="@dimen/top_bar_button"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back" />
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/top_bar"
-        android:layout_marginTop="20dp"
-        android:layout_toEndOf="@id/Name"
-        android:hint="@string/input_account_hint"
-        android:inputType="text" />
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/shape_card_color_bar"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/Password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/user_name"
-        android:layout_marginTop="20dp"
-        android:text="@string/password"
-        android:textColor="@color/cardview_dark_background"
-        android:textSize="@dimen/text_size" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp">
 
-    <EditText
-        android:id="@+id/user_password"
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/account"
+                android:textSize="@dimen/title_size" />
+
+            <EditText
+                android:id="@+id/edittext_account"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_edittext"
+                android:hint="@string/input_account_hint"
+                android:maxLength="20"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:singleLine="true"
+                android:textSize="@dimen/text_size" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="@dimen/double_spacing"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="30dp">
+
+            <TextView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/password"
+                android:textSize="@dimen/title_size" />
+
+            <EditText
+                android:id="@+id/edittext_password"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shape_edittext"
+                android:hint="@string/input_password_hint"
+                android:inputType="textPassword"
+                android:maxLength="20"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:singleLine="true"
+                android:textSize="@dimen/text_size" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/user_name"
-        android:layout_marginTop="20dp"
-        android:layout_toEndOf="@id/Password"
-        android:hint="@string/input_password_hint"
-        android:inputType="textPassword" />
-
-    <RadioGroup
-        android:id="@+id/user_sex"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/Password"
+        android:layout_height="110dp"
+        android:layout_below="@id/layout_input"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/sex_man"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="70dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/man"
-            android:textSize="@dimen/title_size" />
+        <Button
+            android:id="@+id/button_register"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="@dimen/spacing"
+            android:layout_weight="1"
+            android:background="@drawable/shape_edittext"
+            android:text="@string/register"
+            android:textColor="?attr/colorTheme"
+            android:textSize="@dimen/title_size"
+            android:textStyle="bold" />
 
-        <RadioButton
-            android:id="@+id/sex_woman"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="80dp"
-            android:layout_marginTop="20dp"
-            android:layout_toRightOf="@id/sex_man"
-            android:text="@string/woman"
-            android:textSize="@dimen/title_size" />
+        <Button
+            android:id="@+id/button_login"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="@dimen/spacing"
+            android:layout_marginEnd="30dp"
+            android:layout_weight="1"
+            android:background="@drawable/shape_round"
+            android:text="@string/login"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/title_size"
+            android:textStyle="bold" />
 
-    </RadioGroup>
-
-    <Button
-        android:id="@+id/load"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/user_sex"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:clickable="true"
-        android:text="@string/login"
-        android:textSize="@dimen/title_size" />
-
-    <Button
-        android:id="@+id/register"
-        android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/load"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:clickable="true"
-        android:text="@string/register"
-        android:textSize="@dimen/title_size" />
+    </LinearLayout>
 
 </RelativeLayout>

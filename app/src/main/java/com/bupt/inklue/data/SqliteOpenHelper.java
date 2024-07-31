@@ -8,7 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-//用户数据库帮助类
+//账户数据库帮助类
 public class SqliteOpenHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "Sqlite.db";
 
@@ -34,7 +34,7 @@ public class SqliteOpenHelper extends SQLiteOpenHelper {
         return db.insert("user", null, cv);
     }
 
-    //登入
+    //登录
     public boolean load(String name, String password) {
         SQLiteDatabase db = getWritableDatabase();
         boolean result;

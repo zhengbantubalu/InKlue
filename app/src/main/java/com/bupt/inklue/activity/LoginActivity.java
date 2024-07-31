@@ -14,8 +14,8 @@ import com.bupt.inklue.data.UserData;
 //登录页面
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText user_account;//账号
-    private EditText user_password;//密码
+    private EditText edittext_account;//账号
+    private EditText edittext_password;//密码
     private SqliteOpenHelper sqliteOpenHelper;//数据库帮助类
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,29 +26,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         sqliteOpenHelper = new SqliteOpenHelper(this);
 
         //取得视图
-        user_account = findViewById(R.id.user_name);
-        user_password = findViewById(R.id.user_password);
+        edittext_account = findViewById(R.id.edittext_account);
+        edittext_password = findViewById(R.id.edittext_password);
 
         //设置按钮的点击监听器
-        findViewById(R.id.load).setOnClickListener(this);
-        findViewById(R.id.register).setOnClickListener(this);
+        findViewById(R.id.button_back).setOnClickListener(this);
+        findViewById(R.id.button_login).setOnClickListener(this);
+        findViewById(R.id.button_register).setOnClickListener(this);
     }
 
     //点击事件回调
     public void onClick(View view) {
-        int id = view.getId();
-        if (id == R.id.load) {
-            String n = user_account.getText().toString();
-            String p = user_password.getText().toString();
+        if (view.getId() == R.id.button_back) {
+            finish();
+        } else if (view.getId() == R.id.button_login) {
+            String n = edittext_account.getText().toString();
+            String p = edittext_password.getText().toString();
             boolean load = sqliteOpenHelper.load(n, p);
             if (load) {
                 Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, R.string.login_error, Toast.LENGTH_SHORT).show();
             }
-        } else if (id == R.id.register) {
-            String N = user_account.getText().toString();
-            String P = user_password.getText().toString();
+        } else if (view.getId() == R.id.button_register) {
+            String N = edittext_account.getText().toString();
+            String P = edittext_password.getText().toString();
             UserData u = new UserData(N, P);
             long sign = sqliteOpenHelper.register(u);
             if (sign != -1) {

@@ -120,7 +120,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             if (position == 0) {
                 drawable = ContextCompat.getDrawable(context, R.drawable.shape_filter_unselected);
             } else {
-                drawable = ContextCompat.getDrawable(context, R.drawable.shape_search_bar);
+                drawable = ContextCompat.getDrawable(context, R.drawable.shape_edittext);
             }
             spinner.setBackground(drawable);
         }
