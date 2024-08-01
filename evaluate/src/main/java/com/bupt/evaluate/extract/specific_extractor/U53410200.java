@@ -22,7 +22,7 @@ public class U53410200 implements SpecificExtractor {
             PointList tempList1 = new PointList();
             tempList1.add(points.end.get(1));
             tempList1.add(points.end.get(2));
-            tempList1.sort(0,true);
+            tempList1.sort(0, true);
             strokes.get(0).addList(contours.getMatchContour(
                     tempList1.get(0), points.inter.get(0)), false);
             strokes.get(0).addList(contours.getMatchContour(
@@ -31,7 +31,7 @@ public class U53410200 implements SpecificExtractor {
             strokes.get(1).add(points.end.get(0));
             strokes.get(1).add(points.inter.get(0));
             strokes.get(1).add(points.end.get(-1));
-            strokes.get(1).isStraight=true;
+            strokes.get(1).isStraight = true;
         } catch (NullPointerException ignored) {
         }
         return strokes;

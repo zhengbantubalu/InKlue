@@ -7,7 +7,7 @@ import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;
 import com.bupt.evaluate.extract.SpecificExtractor;
 
-//天 张猛龙碑·壹
+//天 张猛龙碑
 public class U59290300 implements SpecificExtractor {
 
     public static final int strokeNum = 4;
@@ -36,10 +36,10 @@ public class U59290300 implements SpecificExtractor {
             //撇
             strokes.get(2).add(points.inter.get(0));
             strokes.get(2).addList(contours.getMatchContour(
-                    points.inter.get(-1),tempList1.get(0)), false);
+                    points.inter.get(-1), tempList1.get(0)), false);
             //捺
             strokes.get(3).addList(contours.getMatchContour(
-                    points.inter.get(-1),tempList1.get(1)), false);
+                    points.inter.get(-1), tempList1.get(1)), false);
         } catch (NullPointerException ignored) {
         }
         return strokes;

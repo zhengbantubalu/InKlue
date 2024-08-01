@@ -2,7 +2,6 @@ package com.bupt.evaluate.extract.specific_extractor;
 
 import com.bupt.evaluate.data.Contours;
 import com.bupt.evaluate.data.PointEx;
-import com.bupt.evaluate.data.PointList;
 import com.bupt.evaluate.data.Points;
 import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;
@@ -22,18 +21,18 @@ public class U4E4B0200 implements SpecificExtractor {
         try {
             //第一点
             points.end.sort();
-            PointEx pointEx =new PointEx((int)points.end.get(-3).x+18,(int)points.end.get(-3).y+18);
+            PointEx pointEx = new PointEx((int) points.end.get(-3).x + 18, (int) points.end.get(-3).y + 18);
             strokes.get(0).add(points.end.get(-3));
             strokes.get(0).add(pointEx);
-            strokes.get(0).isStraight=true;
+            strokes.get(0).isStraight = true;
             //第二点
             PointEx pointEx1 = contours.getNearestPoint(
-                    new PointEx(0,0 ));
+                    new PointEx(0, 0));
             strokes.get(1).addList(contours.getMatchContour(
                     pointEx1, points.inter.get(0)), true);
             //第三撇
             PointEx pointEx2 = contours.getNearestPoint(
-                    new PointEx(0, Constants.IMAGE_SIZE ));
+                    new PointEx(0, Constants.IMAGE_SIZE));
             strokes.get(2).addList(contours.getMatchContour(
                     points.end.get(-2), points.inter.get(0)), false);
             strokes.get(2).addList(contours.getMatchContour(

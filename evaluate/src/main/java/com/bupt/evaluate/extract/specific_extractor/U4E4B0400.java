@@ -1,7 +1,6 @@
 package com.bupt.evaluate.extract.specific_extractor;
 
 import com.bupt.evaluate.data.Contours;
-import com.bupt.evaluate.data.PointList;
 import com.bupt.evaluate.data.Points;
 import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;

@@ -1,13 +1,12 @@
 package com.bupt.evaluate.extract.specific_extractor;
 
 import com.bupt.evaluate.data.Contours;
-import com.bupt.evaluate.data.PointEx;
 import com.bupt.evaluate.data.Points;
 import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;
 import com.bupt.evaluate.extract.SpecificExtractor;
-import com.bupt.evaluate.util.Constants;
-//入 张猛龙碑·壹
+
+//入 张猛龙碑
 public class U51650300 implements SpecificExtractor {
 
     public static final int strokeNum = 2;

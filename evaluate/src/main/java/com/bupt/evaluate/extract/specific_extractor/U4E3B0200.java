@@ -22,21 +22,21 @@ public class U4E3B0200 implements SpecificExtractor {
             PointList tempList1 = new PointList();
             tempList1.add(points.end.get(0));
             tempList1.add(points.end.get(1));
-            tempList1.sort(0,true);
+            tempList1.sort(0, true);
             strokes.get(0).addList(contours.getMatchContour(
                     tempList1.get(0), tempList1.get(1)), true);
             //第二横
             PointList tempList2 = new PointList();
             tempList2.add(points.end.get(2));
             tempList2.add(points.end.get(3));
-            tempList2.sort(0,true);
+            tempList2.sort(0, true);
             strokes.get(1).addList(contours.getMatchContour(
                     tempList2.get(0), tempList2.get(1)), true);
             //第三横
             PointList tempList3 = new PointList();
             tempList3.add(points.end.get(4));
             tempList3.add(points.end.get(5));
-            tempList3.sort(0,true);
+            tempList3.sort(0, true);
             strokes.get(2).addList(contours.getMatchContour(
                     tempList3.get(0), points.inter.get(1)), true);
             strokes.get(2).addList(contours.getMatchContour(
@@ -45,12 +45,12 @@ public class U4E3B0200 implements SpecificExtractor {
             strokes.get(3).addList(contours.getMatchContour(
                     points.inter.get(0), points.inter.get(1)), true);
             strokes.get(3).addList(contours.getMatchContour(
-                    points.inter.get(1),points.inter.get(2)));
+                    points.inter.get(1), points.inter.get(2)));
             //最后一横
             PointList tempList4 = new PointList();
             tempList4.add(points.end.get(-1));
             tempList4.add(points.end.get(-2));
-            tempList4.sort(0,true);
+            tempList4.sort(0, true);
             strokes.get(4).addList(contours.getMatchContour(
                     tempList4.get(0), tempList4.get(1)), false);
         } catch (NullPointerException ignored) {

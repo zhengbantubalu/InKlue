@@ -7,7 +7,7 @@ import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;
 import com.bupt.evaluate.extract.SpecificExtractor;
 
-//大 张猛龙碑·壹
+//大 张猛龙碑
 public class U59270300 implements SpecificExtractor {
 
     public static final int strokeNum = 3;

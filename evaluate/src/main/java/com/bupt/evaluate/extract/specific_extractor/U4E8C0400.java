@@ -1,12 +1,10 @@
 package com.bupt.evaluate.extract.specific_extractor;
 
 import com.bupt.evaluate.data.Contours;
-import com.bupt.evaluate.data.PointEx;
 import com.bupt.evaluate.data.Points;
 import com.bupt.evaluate.data.Stroke;
 import com.bupt.evaluate.data.Strokes;
 import com.bupt.evaluate.extract.SpecificExtractor;
-import com.bupt.evaluate.util.Constants;
 
 //二 圣教序
 public class U4E8C0400 implements SpecificExtractor {
