@@ -14,7 +14,11 @@ public class SimilarityEvaluator implements FeatureEvaluator {
             sum += Math.sqrt(inputStroke.curve.get(i).getDistance(stdStroke.curve.get(i)));
         }
         double difference = sum / size / Constants.SIMILARITY_CRITERION;
-        return Math.max((int) (Math.min(100 - (difference * 100), 100)), 0);
+        int originalScore = Math.max((int) (Math.min(100 - (difference * 100), 100)), 0);
+        //捞人算法，用于解决较短笔画评分低的问题
+        //作者 苏崇博
+        int k = Constants.MAX_LENGTH / Math.min(stdStroke.curve.getLength(), Constants.MAX_LENGTH);
+        return (int) (Math.pow(originalScore, 1.0 / k) * Math.pow(100, 1 - 1.0 / k));
     }
 
     public String getAdvice(Stroke inputStroke, Stroke stdStroke) {

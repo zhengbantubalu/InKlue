@@ -12,6 +12,7 @@ public class Constants {
     //笔画评价常量
     public static final int MIN_SCORE = 70;//需要提供建议的最低分数
     public static final int MIN_OFFSET = 10;//需要提供位置建议的最小偏移量
+    public static final int MAX_LENGTH = 512;//捞人算法中的最长笔画基准
 
     //笔画提取常量
     public static final int IMAGE_SIZE = 512;//汉字图片的边长

@@ -69,9 +69,9 @@ public class Stroke extends PointList {
     //曲线插值
     public void interpolateCurve(int size) {
         int stepSize = this.getLength() / size;
-        PointEx currentPoint = this.get(0);
-        this.curve = new Curve();
+        this.curve = new Curve(stepSize);
         this.curve.add(this.get(0));
+        PointEx currentPoint = this.get(0);
         int[] index = new int[]{0};
         for (int i = 1; i <= size; i++) {
             PointEx nextPoint = this.getNextPoint(currentPoint, index, stepSize);
