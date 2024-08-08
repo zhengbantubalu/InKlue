@@ -23,7 +23,7 @@ public class EvaluateCardAdapter extends CharCardAdapter {
             //设置卡片名称为评分
             holder.textView.setText(charsData.get(position).getScore());
             //设置卡片图片
-            Bitmap bitmap = BitmapFactory.decodeFile(charsData.get(position).getWrittenImgPath());
+            Bitmap bitmap = BitmapFactory.decodeFile(charsData.get(position).getFeedbackImgPath());
             holder.imageView.setImageBitmap(bitmap);
             //设置卡片的点击监听器
             holder.itemView.setOnClickListener(v -> {

@@ -26,6 +26,10 @@
     <string name="settings">设置</string>
     <string name="account">账号</string>
     <string name="password">密码</string>
+    <string name="standard_img">标准图</string>
+    <string name="written_img">书写图</string>
+    <string name="feedback_img">反馈图</string>
+    <string name="overlap_img">重影图</string>
 
     <!--状态提示-->
     <string name="downloading">资源下载中，请稍候</string>

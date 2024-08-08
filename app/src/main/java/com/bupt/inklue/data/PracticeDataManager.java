@@ -63,6 +63,7 @@ public class PracticeDataManager {
                 int nameIndex = cursor.getColumnIndex("name");
                 int stdImgPathIndex = cursor.getColumnIndex("stdImgPath");
                 int writtenImgPathIndex = cursor.getColumnIndex("writtenImgPath");
+                int feedbackImgPathIndex = cursor.getColumnIndex("feedbackImgPath");
                 int scoreIndex = cursor.getColumnIndex("score");
                 int adviceIndex = cursor.getColumnIndex("advice");
                 if (cursor.moveToFirst()) {
@@ -72,6 +73,7 @@ public class PracticeDataManager {
                         charData.setName(cursor.getString(nameIndex));
                         charData.setStdImgPath(cursor.getString(stdImgPathIndex));
                         charData.setWrittenImgPath(cursor.getString(writtenImgPathIndex));
+                        charData.setFeedbackImgPath(cursor.getString(feedbackImgPathIndex));
                         charData.setScore(cursor.getString(scoreIndex));
                         charData.setAdvice(cursor.getString(adviceIndex));
                         charsData.add(charData);
@@ -188,6 +190,7 @@ public class PracticeDataManager {
                 values.put("name", charData.getName());
                 values.put("stdImgPath", charData.getStdImgPath());
                 values.put("writtenImgPath", charData.getWrittenImgPath());
+                values.put("feedbackImgPath", charData.getFeedbackImgPath());
                 values.put("score", charData.getScore());
                 values.put("advice", charData.getAdvice());
                 long newID = db.insert("WrittenChar", null, values);

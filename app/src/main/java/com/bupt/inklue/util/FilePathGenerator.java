@@ -12,16 +12,18 @@ public class FilePathGenerator {
 
     //生成缓存目录JPG图片路径
     public static String generateCacheJPG(Context context) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault());
-        String time = sdf.format(new Date());
-        return context.getExternalCacheDir() + "/" + time + ".jpg";
+        return context.getExternalCacheDir() + "/" + generateTimeString() + ".jpg";
     }
 
     //生成练习封面JPG图片路径
     public static String generatePracticeCoverJPG(Context context) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault());
-        String time = sdf.format(new Date());
         return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
-                "/practice/cover/" + time + ".jpg";
+                "/practice/cover/" + generateTimeString() + ".jpg";
+    }
+
+    //生成当前时间字符串
+    private static String generateTimeString() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd_HHmmss_SSS", Locale.getDefault());
+        return sdf.format(new Date());
     }
 }

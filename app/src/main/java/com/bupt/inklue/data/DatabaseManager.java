@@ -22,7 +22,7 @@ public class DatabaseManager {
                 "className TEXT, stdImgPath TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS WrittenChar " +
                 "(id INTEGER PRIMARY KEY, name TEXT, className TEXT, stdImgPath TEXT, " +
-                "writtenImgPath TEXT, score TEXT, advice TEXT)");
+                "writtenImgPath TEXT, feedbackImgPath TEXT, score TEXT, advice TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS Practice " +
                 "(id INTEGER PRIMARY KEY, name TEXT, coverImgPath TEXT, charIDs TEXT)");
         db.execSQL("CREATE TABLE IF NOT EXISTS Record " +

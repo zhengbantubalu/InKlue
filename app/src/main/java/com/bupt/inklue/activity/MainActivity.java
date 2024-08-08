@@ -47,8 +47,35 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         initViewPager();
 
         //设置底部导航栏RadioGroup的选中变化监听器
-        RadioGroup bottomBar = findViewById(R.id.bottom_bar);
-        bottomBar.setOnCheckedChangeListener(this);
+        RadioGroup bottom_bar = findViewById(R.id.bottom_bar);
+        bottom_bar.setOnCheckedChangeListener(this);
+    }
+
+    //ViewPager的翻页监听器
+    //监听到页面切换后将对应的RadioButton设为选中状态
+    //用于解决滑动页面后底部导航栏的RadioButton的选中反馈问题
+    class Callback extends ViewPager2.OnPageChangeCallback {
+        public void onPageSelected(int position) {
+            if (position == 0) {
+                ((RadioButton) findViewById(R.id.button_search)).setChecked(true);
+            } else if (position == 1) {
+                ((RadioButton) findViewById(R.id.button_practice)).setChecked(true);
+            } else if (position == 2) {
+                ((RadioButton) findViewById(R.id.button_user)).setChecked(true);
+            }
+        }
+    }
+
+    //RadioGroup选项切换回调
+    //如果点击的RadioButton不对应ViewPager当前页面，就将ViewPager设为所选页面，并取消滚动动画
+    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+        if (checkedId == R.id.button_search && viewpager.getCurrentItem() != 0) {
+            viewpager.setCurrentItem(0, false);
+        } else if (checkedId == R.id.button_practice && viewpager.getCurrentItem() != 1) {
+            viewpager.setCurrentItem(1, false);
+        } else if (checkedId == R.id.button_user && viewpager.getCurrentItem() != 2) {
+            viewpager.setCurrentItem(2, false);
+        }
     }
 
     //当前页面取得新请求的回调
@@ -62,7 +89,9 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
 
     //初始化ViewPager
     private void initViewPager() {
+        //取得视图
         viewpager = findViewById(R.id.viewpager_homepage);
+        //创建页面
         practiceFragment = new PracticeFragment();
         SearchFragment searchFragment = new SearchFragment(practiceFragment);
         userFragment = new UserFragment(practiceFragment);
@@ -70,35 +99,13 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         fragments.add(searchFragment);
         fragments.add(practiceFragment);
         fragments.add(userFragment);
+        //设置页面适配器
         ViewPagerAdapter adapter = new ViewPagerAdapter(
                 getSupportFragmentManager(), getLifecycle(), fragments);
         viewpager.setAdapter(adapter);
-        //ViewPager监听到页面切换后将对应的RadioButton设为选中状态
-        //用于解决滑动页面后底部导航栏的RadioButton的选中反馈问题
-        viewpager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            public void onPageSelected(int position) {
-                if (position == 0) {
-                    ((RadioButton) findViewById(R.id.button_search)).setChecked(true);
-                } else if (position == 1) {
-                    ((RadioButton) findViewById(R.id.button_practice)).setChecked(true);
-                } else if (position == 2) {
-                    ((RadioButton) findViewById(R.id.button_user)).setChecked(true);
-                }
-            }
-        });
-        //将ViewPager的初始页面设为中间页面
+        //设置当前位置
         viewpager.setCurrentItem(1, false);
-    }
-
-    //RadioGroup选项切换后的回调方法
-    //如果点击的RadioButton不对应ViewPager当前页面，就将ViewPager设为所选页面，并取消滚动动画
-    public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-        if (checkedId == R.id.button_search && viewpager.getCurrentItem() != 0) {
-            viewpager.setCurrentItem(0, false);
-        } else if (checkedId == R.id.button_practice && viewpager.getCurrentItem() != 1) {
-            viewpager.setCurrentItem(1, false);
-        } else if (checkedId == R.id.button_user && viewpager.getCurrentItem() != 2) {
-            viewpager.setCurrentItem(2, false);
-        }
+        //设置翻页监听器
+        viewpager.registerOnPageChangeCallback(new Callback());
     }
 }

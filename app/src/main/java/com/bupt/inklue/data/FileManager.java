@@ -109,6 +109,18 @@ public class FileManager {
                 return false;
             }
         }
+        //移动反馈图像
+        for (CharData charData : practiceData.charsData) {
+            File srcFile = new File(charData.getFeedbackImgPath());
+            //重置反馈图像路径
+            charData.setFeedbackImgPath(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
+                    "/record/char/" + srcFile.getName());
+            File dstFile = new File(charData.getFeedbackImgPath());
+            //移动失败则返回
+            if (!srcFile.renameTo(dstFile)) {
+                return false;
+            }
+        }
         return true;
     }
 
@@ -131,6 +143,14 @@ public class FileManager {
             File writtenImg = new File(charData.getWrittenImgPath());
             //删除失败则返回
             if (!writtenImg.delete()) {
+                return false;
+            }
+        }
+        //删除反馈图像
+        for (CharData charData : recordData.charsData) {
+            File feedbackImg = new File(charData.getFeedbackImgPath());
+            //删除失败则返回
+            if (!feedbackImg.delete()) {
                 return false;
             }
         }

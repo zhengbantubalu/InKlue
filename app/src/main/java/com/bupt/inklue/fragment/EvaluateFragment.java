@@ -33,7 +33,7 @@ public class EvaluateFragment extends Fragment {
 
             //设置图像
             photoView = root.findViewById(R.id.photoview);
-            Bitmap bitmap = BitmapFactory.decodeFile(charData.getWrittenImgPath());
+            Bitmap bitmap = BitmapFactory.decodeFile(charData.getFeedbackImgPath());
             photoView.setImageBitmap(bitmap);
 
             //设置评分

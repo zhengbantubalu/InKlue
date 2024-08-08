@@ -37,6 +37,7 @@
             android:layout_weight="1"
             android:background="?attr/selectableItemBackground"
             android:button="@null"
+            android:checked="true"
             android:drawableBottom="@drawable/ic_practice"
             android:drawableTint="@drawable/selector_button_color"
             android:gravity="center"

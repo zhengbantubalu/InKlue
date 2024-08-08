@@ -22,9 +22,9 @@ import java.util.ArrayList;
 //搜索结果查看页面
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private ViewPager2 viewpager;//用于切换图片的类
     private ViewPagerAdapter adapter;//页面适配器
     private ArrayList<CharData> charsData;//汉字数据列表
+    private int currentPosition;//ViewPager当前位置
     private boolean needUpdate = false;//是否需要更新练习列表
 
     @SuppressWarnings("unchecked")//忽略取得汉字数据时类型转换产生的警告
@@ -45,13 +45,6 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         //初始化ViewPager
         initViewPager();
 
-        //设置ViewPager当前位置
-        int position = getIntent().getIntExtra("position", 0);
-        viewpager.setCurrentItem(position, false);
-
-        //设置ViewPager的翻页监听器
-        viewpager.registerOnPageChangeCallback(new Callback());
-
         //设置按钮的点击监听器
         findViewById(R.id.button_back).setOnClickListener(this);
         findViewById(R.id.button_add).setOnClickListener(this);
@@ -60,22 +53,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     //ViewPager的翻页监听器，用于还原PhotoView的缩放状态
     class Callback extends ViewPager2.OnPageChangeCallback {
         public void onPageSelected(int position) {
-            int size = charsData.size();
-            //还原前后两页PhotoView的缩放状态
-            if (position > 0) {
-                PhotoView photoView =
-                        ((ImageFragment) adapter.createFragment(position - 1)).photoView;
-                if (photoView != null) {
-                    photoView.setScale(1f, true);
-                }
+            PhotoView photoView = ((ImageFragment) adapter.createFragment(currentPosition)).photoView;
+            if (photoView != null) {
+                //还原缩放状态
+                photoView.setScale(1f, true);
             }
-            if (position < size - 1) {
-                PhotoView photoView =
-                        ((ImageFragment) adapter.createFragment(position + 1)).photoView;
-                if (photoView != null) {
-                    photoView.setScale(1f, true);
-                }
-            }
+            currentPosition = position;
         }
     }
 
@@ -115,7 +98,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent();
         intent.setClass(this, SelectActivity.class);
         Bundle bundle = new Bundle();
-        CharData charData = charsData.get(viewpager.getCurrentItem());
+        CharData charData = charsData.get(currentPosition);
         bundle.putLong("charID", charData.getID());
         bundle.putString("charImgPath", charData.getStdImgPath());
         intent.putExtras(bundle);
@@ -124,10 +107,12 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
     //初始化ViewPager
     private void initViewPager() {
-        viewpager = findViewById(R.id.viewpager_image);
+        //取得视图
+        ViewPager2 viewpager = findViewById(R.id.viewpager_image);
         //设置图像向上偏移状态栏高度的一半，以实现图像居中
         int statusBarHeight = ResourceDecoder.getStatusBarHeight(this);
         viewpager.setTranslationY((float) -statusBarHeight / 2);
+        //创建页面
         ArrayList<Fragment> fragments = new ArrayList<>();
         for (CharData charData : charsData) {
             fragments.add(new ImageFragment(charData));
@@ -135,5 +120,11 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         //设置页面适配器
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
         viewpager.setAdapter(adapter);
+        //设置当前位置
+        int position = getIntent().getIntExtra("position", 0);
+        viewpager.setCurrentItem(position, false);
+        currentPosition = position;
+        //设置翻页监听器
+        viewpager.registerOnPageChangeCallback(new Callback());
     }
 }

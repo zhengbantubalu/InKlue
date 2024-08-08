@@ -14,6 +14,7 @@ public class CharData implements Serializable {
     private String copybook;//碑帖
     private String stdImgPath;//标准图像路径
     private String writtenImgPath;//书写图像路径
+    private String feedbackImgPath;//反馈图像途径
     private String extractImgPath;//笔画提取结果图像路径
     private String score;//对书写的评分
     private String advice;//对书写的建议
@@ -116,6 +117,14 @@ public class CharData implements Serializable {
 
     public void setWrittenImgPath(String writtenImgPath) {
         this.writtenImgPath = writtenImgPath;
+    }
+
+    public String getFeedbackImgPath() {
+        return feedbackImgPath;
+    }
+
+    public void setFeedbackImgPath(String feedbackImgPath) {
+        this.feedbackImgPath = feedbackImgPath;
     }
 
     public String getExtractImgPath() {

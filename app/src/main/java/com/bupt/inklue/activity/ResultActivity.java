@@ -41,14 +41,6 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         //取得练习数据
         practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
 
-        //创建记录封面
-        String coverImgPath = FilePathGenerator.generateCacheJPG(this);
-        if (practiceData != null) {
-            practiceData.setCoverImgPath(coverImgPath);
-            Bitmap coverBitmap = BitmapProcessor.createCover(practiceData, false);
-            FileManager.saveBitmap(coverBitmap, practiceData.getCoverImgPath());
-        }
-
         //设置练习标题
         TextView textView = findViewById(R.id.textview_title);
         textView.setText(practiceData.getName());
@@ -72,15 +64,22 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         Handler handler = new Handler(Looper.getMainLooper());
         new Thread(() -> {
             for (int i = 0; i < practiceData.charsData.size(); i++) {
+                //取得评价所需数据
                 CharData charData = practiceData.charsData.get(i);
                 String name = charData.getName();
                 String className = charData.getClassName();
                 Bitmap inputBmp = BitmapFactory.decodeFile(charData.getWrittenImgPath());
                 Bitmap stdBmp = BitmapFactory.decodeFile(charData.getStdImgPath());
+                //调用评价模块
                 Evaluation evaluation = Evaluator.evaluate(name, className, inputBmp, stdBmp);
-                FileManager.saveBitmap(evaluation.outputBmp, charData.getWrittenImgPath());
+                //存储反馈图像
+                String feedbackImgPath = FilePathGenerator.generateCacheJPG(this);
+                FileManager.saveBitmap(evaluation.outputBmp, feedbackImgPath);
+                //更新汉字数据
+                charData.setFeedbackImgPath(feedbackImgPath);
                 charData.setScore(Integer.toString(evaluation.score));
                 charData.setAdvice(evaluation.advice);
+                //更新RecyclerView
                 int position = i;
                 handler.post(() -> adapter.update(practiceData.charsData, position));
             }
@@ -96,6 +95,11 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
             finish();
         } else if (view.getId() == R.id.button_start) {
             if (isFinished) {
+                //创建记录封面
+                String coverImgPath = FilePathGenerator.generateCacheJPG(this);
+                practiceData.setCoverImgPath(coverImgPath);
+                Bitmap coverBitmap = BitmapProcessor.createCover(practiceData, false);
+                FileManager.saveBitmap(coverBitmap, practiceData.getCoverImgPath());
                 //保存练习记录
                 PracticeDataManager.saveRecord(this, practiceData);
                 //回退到主页面
