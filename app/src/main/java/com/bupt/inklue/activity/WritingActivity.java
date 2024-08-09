@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,14 +55,18 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
     //ViewPager的翻页监听器，用于还原PhotoView的缩放状态和启动相机
     class Callback extends ViewPager2.OnPageChangeCallback {
         public void onPageSelected(int position) {
-            PhotoView photoView = ((ImageFragment) adapter.createFragment(currentPosition)).photoView;
-            if (photoView != null) {
-                //还原缩放状态
-                photoView.setScale(1f, true);
+            //size是图片数量，由于结束页面的存在，ViewPager的实际页数为size+1
+            int size = practiceData.charsData.size();
+            //如果权限申请失败，ViewPager回退，则不还原缩放状态
+            if (currentPosition != size) {
+                PhotoView photoView = ((ImageFragment) adapter.createFragment(currentPosition)).photoView;
+                if (photoView != null) {
+                    //还原缩放状态
+                    photoView.setScale(1f, true);
+                }
             }
             //滑动到最后一页，则尝试启动相机
-            //size是图片数量，由于结束页面的存在，ViewPager的实际页数为size+1
-            if (position == practiceData.charsData.size()) {
+            if (position == size) {
                 tryToStartCamera();
             }
             currentPosition = position;
@@ -84,8 +89,11 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
             //权限申请成功，继续启动拍照页面
             startCameraActivity();
         } else {
-            //权限申请失败，将ViewPager回退至前一页
+            //权限申请失败
+            //将ViewPager回退至前一页
             viewpager.setCurrentItem(practiceData.charsData.size() - 1, true);
+            //提示给予权限
+            Toast.makeText(this, R.string.give_camera_permission_hint, Toast.LENGTH_SHORT).show();
         }
     }
 

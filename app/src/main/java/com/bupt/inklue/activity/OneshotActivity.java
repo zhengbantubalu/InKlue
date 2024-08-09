@@ -1,9 +1,7 @@
 package com.bupt.inklue.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -13,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,7 +27,8 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
-import com.bupt.evaluate.core.Extractor;
+import com.bupt.evaluate.core.Evaluation;
+import com.bupt.evaluate.core.Evaluator;
 import com.bupt.inklue.R;
 import com.bupt.inklue.data.CharData;
 import com.bupt.inklue.data.FileManager;
@@ -43,16 +43,17 @@ import org.opencv.core.Scalar;
 import java.io.File;
 import java.util.concurrent.ExecutionException;
 
-//重拍页面
-public class ReshotActivity extends AppCompatActivity
+//单拍页面
+public class OneshotActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener {
 
     private Context context;//环境
     private CharData charData;//汉字数据
     private ImageButton button_shot;//拍照按钮
     private ImageButton button_torch;//手电筒按钮
-    private ImageButton button_confirm;//“确认”按钮
-    private ImageButton button_cancel;//“取消”按钮
+    private ImageButton button_again;//重拍按钮
+    private TextView textview_score;//评分文本框
+    private TextView textview_advice;//建议文本框
     private PreviewView preview_view;//相机预览视图
     private ImageView imageview_top;//预览视图上层的视图
     private ImageCapture imageCapture;//图像捕捉器，用于拍照
@@ -67,14 +68,15 @@ public class ReshotActivity extends AppCompatActivity
         getWindow().setFlags(
                 WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_reshot);
+        setContentView(R.layout.activity_oneshot);
         context = this;
 
         //取得视图
         button_shot = findViewById(R.id.button_shot);
         button_torch = findViewById(R.id.button_torch);
-        button_confirm = findViewById(R.id.button_confirm);
-        button_cancel = findViewById(R.id.button_cancel);
+        button_again = findViewById(R.id.button_again);
+        textview_score = findViewById(R.id.textview_score);
+        textview_advice = findViewById(R.id.textview_advice);
         preview_view = findViewById(R.id.preview_view);
         imageview_top = findViewById(R.id.imageview_top);
 
@@ -94,8 +96,7 @@ public class ReshotActivity extends AppCompatActivity
         findViewById(R.id.button_back).setOnClickListener(this);
         button_shot.setOnClickListener(this);
         button_torch.setOnClickListener(this);
-        button_confirm.setOnClickListener(this);
-        button_cancel.setOnClickListener(this);
+        button_again.setOnClickListener(this);
     }
 
     //点击事件回调
@@ -117,22 +118,17 @@ public class ReshotActivity extends AppCompatActivity
                 button_torch.setImageResource(R.drawable.ic_torch_off);
                 isTorchOn = true;
             }
-        } else if (view.getId() == R.id.button_confirm) {
-            Intent intent = new Intent();
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("charData", charData);
-            intent.putExtras(bundle);
-            setResult(Activity.RESULT_FIRST_USER, intent);
-            finish();
-        } else if (view.getId() == R.id.button_cancel) {
+        } else if (view.getId() == R.id.button_again) {
             canShot = true;
-            //隐藏“确认”和“取消”按钮
-            button_confirm.setVisibility(View.GONE);
-            button_cancel.setVisibility(View.GONE);
+            //隐藏重拍按钮
+            button_again.setVisibility(View.GONE);
             //显示拍照按钮
             button_shot.setVisibility(View.VISIBLE);
             //重置预览上层视图
             imageview_top.setImageBitmap(stdBitmap);
+            //清空评分和建议
+            textview_score.setText("");
+            textview_advice.setText("");
         }
     }
 
@@ -201,6 +197,7 @@ public class ReshotActivity extends AppCompatActivity
                 .build();
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(this),
                 new ImageCapture.OnImageSavedCallback() {
+                    @SuppressLint("SetTextI18n")
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
                         charData.setWrittenImgPath(writtenImgPath);
                         //预处理图像并保存
@@ -208,18 +205,21 @@ public class ReshotActivity extends AppCompatActivity
                         Bitmap bitmapStd = BitmapFactory.decodeFile(charData.getStdImgPath());
                         Bitmap bitmapProc = Preprocessor.preprocess(bitmapWritten, bitmapStd);
                         FileManager.saveBitmap(bitmapProc, writtenImgPath);
-                        //绘制笔画提取结果并保存
-                        Bitmap bitmapExtract = Extractor.drawStrokes(charData.getClassName(), bitmapProc);
-                        String extractImgPath = FilePathGenerator.generateCacheJPG(context);
-                        FileManager.saveBitmap(bitmapExtract, extractImgPath);
-                        charData.setExtractImgPath(extractImgPath);
-                        //设置预览上层视图，用于预览提取效果
-                        imageview_top.setImageBitmap(BitmapFactory.decodeFile(extractImgPath));
+                        //取得评价所需数据
+                        String name = charData.getName();
+                        String className = charData.getClassName();
+                        Bitmap inputBmp = BitmapFactory.decodeFile(charData.getWrittenImgPath());
+                        Bitmap stdBmp = BitmapFactory.decodeFile(charData.getStdImgPath());
+                        //调用评价模块
+                        Evaluation evaluation = Evaluator.evaluate(name, className, inputBmp, stdBmp);
+                        //显示评价结果
+                        imageview_top.setImageBitmap(evaluation.outputBmp);
+                        textview_score.setText(Integer.toString(evaluation.score));
+                        textview_advice.setText(evaluation.advice);
                         //隐藏拍照按钮
                         button_shot.setVisibility(View.INVISIBLE);
-                        //显示“确认”和“取消”按钮
-                        button_confirm.setVisibility(View.VISIBLE);
-                        button_cancel.setVisibility(View.VISIBLE);
+                        //显示重拍按钮
+                        button_again.setVisibility(View.VISIBLE);
                     }
 
                     public void onError(@NonNull ImageCaptureException exception) {

@@ -216,6 +216,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
             int eraIndex = cursor.getColumnIndex("era");
             int authorIndex = cursor.getColumnIndex("author");
             int copybookIndex = cursor.getColumnIndex("copybook");
+            int classNameIndex = cursor.getColumnIndex("className");
             int stdImgPathIndex = cursor.getColumnIndex("stdImgPath");
             if (cursor.moveToFirst()) {
                 do {
@@ -226,6 +227,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                     charData.setEra(cursor.getString(eraIndex));
                     charData.setAuthor(cursor.getString(authorIndex));
                     charData.setCopybook(cursor.getString(copybookIndex));
+                    charData.setClassName(cursor.getString(classNameIndex));
                     charData.setStdImgPath(cursor.getString(stdImgPathIndex));
                     if (charData.match(filterCondition)) {
                         resultCharsData.add(charData);

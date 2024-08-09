@@ -1,12 +1,20 @@
 package com.bupt.inklue.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -36,8 +44,16 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_image);
 
+        //取得视图
+        ImageButton button_add = findViewById(R.id.button_add);
+        Button button_one_shot = findViewById(R.id.button_reshot);
+
         //设置视图可见性
-        findViewById(R.id.button_add).setVisibility(View.VISIBLE);
+        button_add.setVisibility(View.VISIBLE);
+        button_one_shot.setVisibility(View.VISIBLE);
+
+        //修改单拍按钮文字
+        button_one_shot.setText(R.string.oneshot);
 
         //取得汉字数据列表
         charsData = (ArrayList<CharData>) getIntent().getSerializableExtra("charsData");
@@ -47,7 +63,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
 
         //设置按钮的点击监听器
         findViewById(R.id.button_back).setOnClickListener(this);
-        findViewById(R.id.button_add).setOnClickListener(this);
+        button_add.setOnClickListener(this);
+        button_one_shot.setOnClickListener(this);
     }
 
     //ViewPager的翻页监听器，用于还原PhotoView的缩放状态
@@ -68,6 +85,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
             finish();
         } else if (view.getId() == R.id.button_add) {
             startSelectActivity();
+        } else if (view.getId() == R.id.button_reshot) {
+            tryToStartCamera();
         }
     }
 
@@ -79,6 +98,20 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         intent.putExtras(bundle);
         setResult(Activity.RESULT_FIRST_USER, intent);
         super.finish();
+    }
+
+    //权限申请的回调，用于在获取权限后继续刚才中断的操作
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 0 && grantResults.length != 0 &&
+                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            //权限申请成功，继续启动单拍页面
+            startOneshotActivity();
+        } else {
+            //权限申请失败，提示给予权限
+            Toast.makeText(this, R.string.give_camera_permission_hint, Toast.LENGTH_SHORT).show();
+        }
     }
 
     //子页面关闭的回调
@@ -103,6 +136,30 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         bundle.putString("charImgPath", charData.getStdImgPath());
         intent.putExtras(bundle);
         startActivityForResult(intent, Activity.RESULT_FIRST_USER);
+    }
+
+    //启动单拍页面
+    private void startOneshotActivity() {
+        Intent intent = new Intent();
+        intent.setClass(this, OneshotActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("charData", charsData.get(currentPosition));
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    //尝试启动相机
+    private void tryToStartCamera() {
+        //检查相机权限
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
+                PackageManager.PERMISSION_GRANTED) {
+            //拥有权限，启动单拍页面
+            startOneshotActivity();
+        } else {
+            //无权限则申请
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA}, 0);
+        }
     }
 
     //初始化ViewPager

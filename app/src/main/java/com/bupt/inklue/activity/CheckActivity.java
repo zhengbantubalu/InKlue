@@ -73,12 +73,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         if (view.getId() == R.id.button_back) {
             finish();
         } else if (view.getId() == R.id.button_reshot) {
-            Intent intent = new Intent();
-            intent.setClass(this, ReshotActivity.class);
-            Bundle bundle = new Bundle();
-            bundle.putSerializable("charData", practiceData.charsData.get(currentPosition));
-            intent.putExtras(bundle);
-            startActivityForResult(intent, Activity.RESULT_FIRST_USER);
+            startReshotActivity();
         }
     }
 
@@ -120,6 +115,16 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
+    }
+
+    //启动重拍页面
+    private void startReshotActivity() {
+        Intent intent = new Intent();
+        intent.setClass(this, ReshotActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("charData", practiceData.charsData.get(currentPosition));
+        intent.putExtras(bundle);
+        startActivityForResult(intent, Activity.RESULT_FIRST_USER);
     }
 
     //初始化ViewPager

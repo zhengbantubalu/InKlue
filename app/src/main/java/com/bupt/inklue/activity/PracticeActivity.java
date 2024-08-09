@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -95,6 +96,9 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             //权限申请成功，继续启动拍照页面
             startCameraActivity();
+        } else {
+            //权限申请失败，提示给予权限
+            Toast.makeText(this, R.string.give_camera_permission_hint, Toast.LENGTH_SHORT).show();
         }
     }
 

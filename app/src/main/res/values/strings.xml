@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--品牌形象-->
     <string name="app_name">墨痕书法</string>
     <string name="app_title">墨痕</string>
     <string name="user_name_default">无名客</string>
@@ -21,15 +22,16 @@
     <string name="download_resource">下载资源</string>
     <string name="login">登录</string>
     <string name="register">注册</string>
+    <string name="oneshot">单拍一个</string>
 
     <!--名词-->
     <string name="settings">设置</string>
     <string name="account">账号</string>
     <string name="password">密码</string>
-    <string name="standard_img">标准图</string>
-    <string name="written_img">书写图</string>
-    <string name="feedback_img">反馈图</string>
-    <string name="overlap_img">重影图</string>
+    <string name="standard_img">标准</string>
+    <string name="written_img">书写</string>
+    <string name="feedback_img">反馈</string>
+    <string name="overlap_img">重影</string>
 
     <!--状态提示-->
     <string name="downloading">资源下载中，请稍候</string>
@@ -59,14 +61,16 @@
     <string name="select_practice_hint">请选择添加到的练习</string>
     <string name="input_account_hint">请输入您的账号</string>
     <string name="input_password_hint">请输入您的密码</string>
+    <string name="give_camera_permission_hint">请开启相机权限</string>
 
-    <!--警告-->
+    <!--操作警告-->
     <string name="delete_practice_warning">此练习将被删除</string>
     <string name="delete_record_warning">此记录将被删除</string>
     <string name="clear_cache_warning">所有未保存的图片将被清空</string>
     <string name="reset_database_warning">所有练习记录将被清空\n所有练习将恢复初始状态</string>
     <string name="download_resource_warning">所有图片将重新下载\n所有数据将被重置</string>
 
+    <!--筛选条件-->
     <string-array name="filter_style">
         <item>书体</item>
         <item>篆书</item>
