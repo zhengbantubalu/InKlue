@@ -4,29 +4,25 @@ plugins {
 
 android {
     namespace = "com.bupt.inklue"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.bupt.inklue"
         minSdk = 29
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 35
+        versionCode = 3
+        versionName = "0.1.2"
         ndk {
-            abiFilters.add("arm64-v8a") //只生成arm64-v8a架构的apk
+            abiFilters.add("arm64-v8a")
         }
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            isMinifyEnabled = true
+            proguardFiles("proguard-rules.pro",
+                    getDefaultProguardFile("proguard-android-optimize.txt"))
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
 
