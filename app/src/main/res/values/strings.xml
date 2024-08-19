@@ -7,6 +7,11 @@
     <string name="user_signature_default">我家洗砚池头树\n朵朵花开淡墨痕</string>
     <string name="welcome">初入江湖</string>
 
+    <!--服务器-->
+    <string name="server_url">http://192.168.1.4:8080</string>
+    <string name="han_zi_path">/han_zi</string>
+    <string name="practice_path">/practice</string>
+
     <!--动词-->
     <string name="start">拍摄</string>
     <string name="finish">完成</string>

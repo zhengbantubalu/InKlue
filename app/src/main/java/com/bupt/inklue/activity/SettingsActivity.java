@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Toast;
 
@@ -51,7 +53,18 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             builder.setTitle(R.string.reset_database);
             builder.setMessage(R.string.reset_database_warning);
             builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
-                DatabaseManager.resetDatabase(this);
+                Handler handler = new Handler(Looper.getMainLooper());
+                new Thread(() -> {
+                    //重置数据库
+                    DatabaseManager.resetDatabase(this);
+                    //完成后执行
+                    handler.post(() -> {
+                        //创建练习封面
+                        FileManager.createPracticesCover(this);
+                        //显示反馈信息
+                        Toast.makeText(this, R.string.database_reset, Toast.LENGTH_SHORT).show();
+                    });
+                }).start();
                 needUpdate = true;//标记需要更新练习记录
             });
             builder.setNegativeButton(R.string.cancel, (dialog, which) -> {

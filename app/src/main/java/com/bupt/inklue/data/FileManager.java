@@ -1,9 +1,13 @@
 package com.bupt.inklue.data;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.os.Environment;
 import android.widget.ProgressBar;
+
+import com.bupt.inklue.util.BitmapProcessor;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,12 +27,11 @@ public class FileManager {
     //下载资源图片
     public static void downloadImg(Context context, ProgressBar progressBar) {
         String dirPath = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) + "/practice/char";
-        ArrayList<String> classNames = InitialData.getClassNames();
-        ArrayList<String> urlStrings = InitialData.getUrlStrings();
-        for (int i = 0; i < urlStrings.size(); i++) {
+        ArrayList<CharData> charsData = getCharsData(context);
+        for (int i = 0; i < charsData.size(); i++) {
             try {
-                String filePath = dirPath + "/" + classNames.get(i) + ".jpg";
-                URL url = new URL(urlStrings.get(i));
+                String filePath = dirPath + "/" + charsData.get(i).getClassName() + ".jpg";
+                URL url = new URL(charsData.get(i).getStdImgPath());
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.connect();
@@ -43,10 +46,73 @@ public class FileManager {
                 inputStream.close();
                 connection.disconnect();
                 //更新进度条
-                progressBar.setProgress((i + 1) * 100 / urlStrings.size());
+                progressBar.setProgress((i + 1) * 100 / charsData.size());
             } catch (IOException ignored) {
             }
         }
+    }
+
+    //获取下载图片所需的汉字数据
+    private static ArrayList<CharData> getCharsData(Context context) {
+        ArrayList<CharData> charsData = new ArrayList<>();
+        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Cursor cursor = db.query("StdChar", null, null,
+                    null, null, null, null);
+            int classNameIndex = cursor.getColumnIndex("className");
+            int urlIndex = cursor.getColumnIndex("url");
+            if (cursor.moveToFirst()) {
+                do {
+                    CharData charData = new CharData();
+                    charData.setClassName(cursor.getString(classNameIndex));
+                    charData.setStdImgPath(cursor.getString(urlIndex));
+                    charsData.add(charData);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.close();
+        }
+        return charsData;
+    }
+
+    //创建练习封面
+    public static void createPracticesCover(Context context) {
+        ArrayList<PracticeData> practicesData = getPracticesData(context);
+        for (int i = 0; i < practicesData.size(); i++) {
+            PracticeData practiceData = practicesData.get(i);
+            String[] codeArray = practiceData.getCharIDs().split(",");
+            for (String code : codeArray) {
+                CharData charData = new CharData();
+                charData.setStdImgPath(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
+                        "/practice/char/" + code + ".jpg");
+                practiceData.charsData.add(charData);
+            }
+            Bitmap coverBitmap = BitmapProcessor.createCover(practiceData, true);
+            FileManager.saveBitmap(coverBitmap, practiceData.getCoverImgPath());
+        }
+    }
+
+    //获取创建封面所需的练习数据
+    private static ArrayList<PracticeData> getPracticesData(Context context) {
+        ArrayList<PracticeData> practicesData = new ArrayList<>();
+        try (DatabaseHelper dbHelper = new DatabaseHelper(context)) {
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Cursor cursor = db.query("Practice", null, null,
+                    null, null, null, null);
+            int coverImgPathIndex = cursor.getColumnIndex("coverImgPath");
+            int charCodesIndex = cursor.getColumnIndex("charCodes");
+            if (cursor.moveToFirst()) {
+                do {
+                    PracticeData practiceData = new PracticeData();
+                    practiceData.setCoverImgPath(cursor.getString(coverImgPathIndex));
+                    practiceData.setCharIDs(cursor.getString(charCodesIndex));
+                    practicesData.add(practiceData);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            db.close();
+        }
+        return practicesData;
     }
 
     //初始化目录
