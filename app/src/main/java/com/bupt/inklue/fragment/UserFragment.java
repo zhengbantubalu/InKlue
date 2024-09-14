@@ -2,6 +2,7 @@ package com.bupt.inklue.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -25,6 +27,7 @@ import com.bupt.inklue.activity.LoginActivity;
 import com.bupt.inklue.activity.RecordActivity;
 import com.bupt.inklue.activity.SettingsActivity;
 import com.bupt.inklue.adapter.RecordCardAdapter;
+import com.bupt.inklue.data.api.HanZiLogApi;
 import com.bupt.inklue.data.api.PracticeLogApi;
 import com.bupt.inklue.data.pojo.Practice;
 import com.bupt.inklue.decoration.PracticeCardDecoration;
@@ -32,6 +35,7 @@ import com.bupt.inklue.util.Constants;
 import com.bupt.inklue.util.ResourceHelper;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 //“我的”碎片
 public class UserFragment extends Fragment implements View.OnClickListener {
@@ -71,8 +75,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             //初始化RecyclerView
             initRecyclerView();
 
-            //设置RecyclerView中项目的监听器
+            //设置RecyclerView中项目的点击监听器和长按监听器
             adapter.setOnItemClickListener(this::startRecordActivity);
+            adapter.setOnItemLongClickListener(this::openMenu);
 
             //设置下拉刷新监听器
             swipe_refresh_layout.setOnRefreshListener(this::refresh);
@@ -128,6 +133,34 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         bundle.putSerializable(getString(R.string.practice_bundle), practiceLogList.get(position));
         intent.putExtras(bundle);
         startActivityForResult(intent, Activity.RESULT_FIRST_USER);
+    }
+
+    //打开菜单
+    private void openMenu(int position) {
+        RecyclerView recyclerView = root.findViewById(R.id.recyclerview_practice);
+        View view = Objects.requireNonNull(recyclerView.getLayoutManager()).findViewByPosition(position);
+        PopupMenu popupMenu = new PopupMenu(context, view);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_record, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menu_item_delete) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(R.string.delete);
+                builder.setMessage(R.string.delete_practice_warning);
+                builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+                    Practice practice = practiceLogList.get(position);
+                    practice.hanZiList = HanZiLogApi.getPracticeLogHanZiList(context, practice);
+                    PracticeLogApi.deletePracticeLog(context, practice);
+                    updateData();
+                });
+                builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return true;
+            }
+            return false;
+        });
+        popupMenu.show();
     }
 
     //刷新

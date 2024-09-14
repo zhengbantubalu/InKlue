@@ -23,15 +23,20 @@ public class RecordCardAdapter extends RecyclerView.Adapter<RecordCardAdapter.Vi
 
     private final Context context;
     protected ArrayList<Practice> practiceList;
-    protected OnItemClickListener listener;
+    protected OnItemClickListener clickListener;
+    protected OnItemLongClickListener longClickListener;
 
     public RecordCardAdapter(Context context, ArrayList<Practice> practiceList) {
         this.context = context;
         this.practiceList = practiceList;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+    public void setOnItemClickListener(OnItemClickListener clickListener) {
+        this.clickListener = clickListener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener longClickListener) {
+        this.longClickListener = longClickListener;
     }
 
     public int getItemCount() {
@@ -46,14 +51,25 @@ public class RecordCardAdapter extends RecyclerView.Adapter<RecordCardAdapter.Vi
         holder.imageView.setImageBitmap(bitmap);//设置卡片图片
         //设置卡片的点击监听器
         holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onItemClick(holder.getAdapterPosition());
+            if (clickListener != null) {
+                clickListener.onItemClick(holder.getAdapterPosition());
             }
+        });
+        //设置卡片的长按监听器
+        holder.itemView.setOnLongClickListener(v -> {
+            if (longClickListener != null) {
+                longClickListener.onItemLongClick(holder.getAdapterPosition());
+            }
+            return true;
         });
     }
 
     public interface OnItemClickListener {
         void onItemClick(int position);
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(int position);
     }
 
     @NonNull

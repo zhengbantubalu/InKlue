@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -28,6 +29,7 @@ import com.bupt.inklue.util.Constants;
 import com.bupt.inklue.util.ResourceHelper;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 //“练习”碎片
 public class PracticeFragment extends Fragment implements View.OnClickListener {
@@ -59,8 +61,9 @@ public class PracticeFragment extends Fragment implements View.OnClickListener {
             //初始化RecyclerView
             initRecyclerView();
 
-            //设置RecyclerView中项目的点击监听器
+            //设置RecyclerView中项目的点击监听器和长按监听器
             adapter.setOnItemClickListener(this::startPracticeActivity);
+            adapter.setOnItemLongClickListener(this::openMenu);
 
             //设置下拉刷新监听器
             swipe_refresh_layout.setOnRefreshListener(this::refresh);
@@ -108,6 +111,47 @@ public class PracticeFragment extends Fragment implements View.OnClickListener {
         bundle.putSerializable(getString(R.string.practice_bundle), practiceList.get(position));
         intent.putExtras(bundle);
         startActivityForResult(intent, Activity.RESULT_FIRST_USER);
+    }
+
+    //打开菜单
+    private void openMenu(int position) {
+        RecyclerView recyclerView = root.findViewById(R.id.recyclerview_practice);
+        View view = Objects.requireNonNull(recyclerView.getLayoutManager()).findViewByPosition(position);
+        PopupMenu popupMenu = new PopupMenu(context, view);
+        popupMenu.getMenuInflater().inflate(R.menu.menu_practice, popupMenu.getMenu());
+        popupMenu.setOnMenuItemClickListener(item -> {
+            if (item.getItemId() == R.id.menu_item_rename) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(R.string.rename);
+                final EditText input = new EditText(context);
+                builder.setView(input);
+                builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+                    practiceList.get(position).setName(input.getText().toString());
+                    PracticeApi.renamePractice(context, practiceList.get(position));
+                    updateData();
+                });
+                builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return true;
+            } else if (item.getItemId() == R.id.menu_item_delete) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(R.string.delete);
+                builder.setMessage(R.string.delete_practice_warning);
+                builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
+                    PracticeApi.deletePractice(context, practiceList.get(position));
+                    updateData();
+                });
+                builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
+                });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                return true;
+            }
+            return false;
+        });
+        popupMenu.show();
     }
 
     //刷新
