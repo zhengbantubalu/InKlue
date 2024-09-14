@@ -16,7 +16,7 @@ public class DatabaseManager {
                     "(id INTEGER PRIMARY KEY, code TEXT UNIQUE, name TEXT, url TEXT, path TEXT, " +
                     "work TEXT, artist TEXT, era TEXT, style TEXT)");
             db.execSQL("CREATE TABLE IF NOT EXISTS han_zi_log " +
-                    "(id INTEGER PRIMARY KEY, code TEXT UNIQUE, name TEXT, path TEXT, " +
+                    "(id INTEGER PRIMARY KEY, code TEXT, name TEXT, path TEXT, " +
                     "written_path TEXT, feedback_path TEXT, score TEXT, advice TEXT)");
             db.execSQL("CREATE TABLE IF NOT EXISTS practice " +
                     "(id INTEGER PRIMARY KEY, name TEXT, cover_path TEXT, han_zi_codes TEXT)");

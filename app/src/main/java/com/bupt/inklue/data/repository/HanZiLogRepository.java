@@ -68,7 +68,10 @@ public class HanZiLogRepository {
                     hanZiLogIds.append(newID).append(",");
                 }
             }
-            hanZiLogIds.deleteCharAt(hanZiLogIds.length() - 1);//移除最后一个逗号
+            //移除最后一个逗号
+            if (hanZiLogIds.length() != 0) {
+                hanZiLogIds.deleteCharAt(hanZiLogIds.length() - 1);
+            }
             db.close();
         }
         if (successNum == practiceLog.hanZiList.size()) {
