@@ -4,21 +4,21 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.bupt.inklue.data.CharData;
+import com.bupt.inklue.data.pojo.HanZi;
 
 import java.util.ArrayList;
 
 //结果卡片适配器
-public class ResultCardAdapter extends CharCardAdapter {
+public class ResultCardAdapter extends HanZiCardAdapter {
 
-    public ResultCardAdapter(Context context, ArrayList<CharData> charsData) {
-        super(context, charsData);
+    public ResultCardAdapter(Context context, ArrayList<HanZi> hanZiList) {
+        super(context, hanZiList);
     }
 
     public void onBindViewHolder(ViewHolder holder, int position) {
         //设置卡片资源
-        holder.textView.setText(charsData.get(position).getScore());//设置卡片名称为评分
-        Bitmap bitmap = BitmapFactory.decodeFile(charsData.get(position).getWrittenImgPath());
+        holder.textView.setText(hanZiList.get(position).getScore());//设置卡片名称为评分
+        Bitmap bitmap = BitmapFactory.decodeFile(hanZiList.get(position).getWrittenPath());
         holder.imageView.setImageBitmap(bitmap);//设置卡片图片
         //设置卡片的点击监听器
         holder.itemView.setOnClickListener(v -> {

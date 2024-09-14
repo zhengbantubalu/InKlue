@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
-import com.bupt.inklue.data.PracticeData;
+import com.bupt.inklue.data.pojo.Practice;
 
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
@@ -14,11 +14,23 @@ import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-//Bitmap图像处理器
-public class BitmapProcessor {
+//Bitmap帮助类
+public class BitmapHelper {
+
+    //保存Bitmap
+    public static void saveBitmap(Bitmap bitmap, String filePath) {
+        try {
+            FileOutputStream fos = new FileOutputStream(filePath);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+            fos.close();
+        } catch (IOException ignored) {
+        }
+    }
 
     //将黑白图像变为指定颜色的半透明图像
     public static Bitmap toTransparent(String filePath, Scalar color) {
@@ -38,16 +50,16 @@ public class BitmapProcessor {
 
     //创建练习封面
     //isStd为真则以标准图像创建，否则以书写图像创建
-    public static Bitmap createCover(PracticeData practiceData, boolean isStd) {
+    public static Bitmap createCover(Practice practice, boolean isStd) {
         Bitmap resultBitmap;
-        if (practiceData.charsData.size() >= 9) {
+        if (practice.hanZiList.size() >= 9) {
             ArrayList<Bitmap> bitmaps = new ArrayList<>();
             for (int i = 0; i < 9; i++) {
                 Bitmap bitmap;
                 if (isStd) {
-                    bitmap = BitmapFactory.decodeFile(practiceData.charsData.get(i).getStdImgPath());
+                    bitmap = BitmapFactory.decodeFile(practice.hanZiList.get(i).getPath());
                 } else {
-                    bitmap = BitmapFactory.decodeFile(practiceData.charsData.get(i).getWrittenImgPath());
+                    bitmap = BitmapFactory.decodeFile(practice.hanZiList.get(i).getWrittenPath());
                 }
                 bitmaps.add(bitmap);
             }
@@ -65,14 +77,14 @@ public class BitmapProcessor {
             canvas.drawBitmap(bitmaps.get(7), squareSize, squareSize * 2, null);
             canvas.drawBitmap(bitmaps.get(8), squareSize * 2, squareSize * 2, null);
             resultBitmap = Bitmap.createScaledBitmap(drawnBitmap, squareSize, squareSize, true);
-        } else if (practiceData.charsData.size() >= 4) {
+        } else if (practice.hanZiList.size() >= 4) {
             ArrayList<Bitmap> bitmaps = new ArrayList<>();
             for (int i = 0; i < 4; i++) {
                 Bitmap bitmap;
                 if (isStd) {
-                    bitmap = BitmapFactory.decodeFile(practiceData.charsData.get(i).getStdImgPath());
+                    bitmap = BitmapFactory.decodeFile(practice.hanZiList.get(i).getPath());
                 } else {
-                    bitmap = BitmapFactory.decodeFile(practiceData.charsData.get(i).getWrittenImgPath());
+                    bitmap = BitmapFactory.decodeFile(practice.hanZiList.get(i).getWrittenPath());
                 }
                 bitmaps.add(bitmap);
             }
@@ -85,11 +97,11 @@ public class BitmapProcessor {
             canvas.drawBitmap(bitmaps.get(2), 0, squareSize, null);
             canvas.drawBitmap(bitmaps.get(3), squareSize, squareSize, null);
             resultBitmap = Bitmap.createScaledBitmap(drawnBitmap, squareSize, squareSize, true);
-        } else if (!practiceData.charsData.isEmpty()) {
+        } else if (!practice.hanZiList.isEmpty()) {
             if (isStd) {
-                resultBitmap = BitmapFactory.decodeFile(practiceData.charsData.get(0).getStdImgPath());
+                resultBitmap = BitmapFactory.decodeFile(practice.hanZiList.get(0).getPath());
             } else {
-                resultBitmap = BitmapFactory.decodeFile(practiceData.charsData.get(0).getWrittenImgPath());
+                resultBitmap = BitmapFactory.decodeFile(practice.hanZiList.get(0).getWrittenPath());
             }
         } else {
             resultBitmap = Bitmap.createBitmap(

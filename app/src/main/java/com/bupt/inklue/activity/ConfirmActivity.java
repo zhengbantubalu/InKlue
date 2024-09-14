@@ -12,16 +12,16 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.adapter.CharCardDecoration;
 import com.bupt.inklue.adapter.CheckCardAdapter;
-import com.bupt.inklue.data.PracticeData;
+import com.bupt.inklue.data.pojo.Practice;
+import com.bupt.inklue.decoration.HanZiCardDecoration;
 
 //确认页面
 public class ConfirmActivity extends AppCompatActivity implements View.OnClickListener {
 
     public static ConfirmActivity confirmActivity;//用于在图像检查页面中结束此页面
     private CheckCardAdapter adapter;//卡片适配器
-    private PracticeData practiceData;//练习数据
+    private Practice practice;//练习数据
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,11 +30,11 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         confirmActivity = this;
 
         //取得练习数据
-        practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
+        practice = (Practice) getIntent().getSerializableExtra(getString(R.string.practice_bundle));
 
         //设置练习标题
         TextView textView = findViewById(R.id.textview_title);
-        textView.setText(practiceData.getName());
+        textView.setText(practice.getName());
 
         //修改开始按钮文字
         Button button_start = findViewById(R.id.button_start);
@@ -64,9 +64,9 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         //更新练习数据
-        practiceData = (PracticeData) intent.getSerializableExtra("practiceData");
-        if (practiceData != null) {
-            adapter.update(practiceData.charsData);
+        practice = (Practice) intent.getSerializableExtra(getString(R.string.practice_bundle));
+        if (practice != null) {
+            adapter.update(practice.hanZiList);
         }
     }
 
@@ -75,8 +75,8 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = new Intent();
         intent.setClass(this, CheckActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("practiceData", practiceData);
-        bundle.putInt("position", position);
+        bundle.putSerializable(getString(R.string.practice_bundle), practice);
+        bundle.putInt(getString(R.string.position_bundle), position);
         intent.putExtras(bundle);
         startActivityForResult(intent, Activity.RESULT_FIRST_USER);
     }
@@ -86,7 +86,7 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = new Intent();
         intent.setClass(this, ResultActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("practiceData", practiceData);
+        bundle.putSerializable(getString(R.string.practice_bundle), practice);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
@@ -98,9 +98,9 @@ public class ConfirmActivity extends AppCompatActivity implements View.OnClickLi
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);//设置布局管理器
         int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
-        CharCardDecoration decoration = new CharCardDecoration(spacing);
+        HanZiCardDecoration decoration = new HanZiCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
-        adapter = new CheckCardAdapter(this, practiceData.charsData);
+        adapter = new CheckCardAdapter(this, practice.hanZiList);
         recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 }

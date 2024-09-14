@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.CharData;
+import com.bupt.inklue.data.pojo.HanZi;
 
 import java.util.ArrayList;
 
@@ -22,12 +22,12 @@ import java.util.ArrayList;
 public class SearchCardAdapter extends RecyclerView.Adapter<SearchCardAdapter.ViewHolder> {
 
     private final Context context;
-    protected ArrayList<CharData> charsData;
+    protected ArrayList<HanZi> hanZiList;
     protected OnItemClickListener listener;
 
-    public SearchCardAdapter(Context context, ArrayList<CharData> charsData) {
+    public SearchCardAdapter(Context context, ArrayList<HanZi> hanZiList) {
         this.context = context;
-        this.charsData = charsData;
+        this.hanZiList = hanZiList;
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -35,17 +35,17 @@ public class SearchCardAdapter extends RecyclerView.Adapter<SearchCardAdapter.Vi
     }
 
     public int getItemCount() {
-        return charsData.size();
+        return hanZiList.size();
     }
 
     public void onBindViewHolder(SearchCardAdapter.ViewHolder holder, int position) {
         //设置卡片资源
-        holder.textViewCenter.setText(charsData.get(position).getCopybook());
-        holder.textViewLeftTop.setText(charsData.get(position).getName());
-        holder.textViewLeftBottom.setText(charsData.get(position).getStyle());
-        holder.textViewRightTop.setText(charsData.get(position).getEra());
-        holder.textViewRightBottom.setText(charsData.get(position).getAuthor());
-        Bitmap bitmap = BitmapFactory.decodeFile(charsData.get(position).getStdImgPath());
+        holder.textViewCenter.setText(hanZiList.get(position).getWork());
+        holder.textViewLeftTop.setText(hanZiList.get(position).getName());
+        holder.textViewLeftBottom.setText(hanZiList.get(position).getStyle());
+        holder.textViewRightTop.setText(hanZiList.get(position).getEra());
+        holder.textViewRightBottom.setText(hanZiList.get(position).getArtist());
+        Bitmap bitmap = BitmapFactory.decodeFile(hanZiList.get(position).getPath());
         holder.imageView.setImageBitmap(bitmap);//设置卡片图片
         //设置卡片的点击监听器
         holder.itemView.setOnClickListener(v -> {
@@ -87,14 +87,14 @@ public class SearchCardAdapter extends RecyclerView.Adapter<SearchCardAdapter.Vi
 
     //更新全部数据
     @SuppressLint("NotifyDataSetChanged")//忽略更新具体数据的要求
-    public void update(ArrayList<CharData> charsData) {
-        this.charsData = charsData;
+    public void update(ArrayList<HanZi> hanZiList) {
+        this.hanZiList = hanZiList;
         notifyDataSetChanged();
     }
 
     //更新指定数据
-    public void update(ArrayList<CharData> charsData, int position) {
-        this.charsData = charsData;
+    public void update(ArrayList<HanZi> hanZiList, int position) {
+        this.hanZiList = hanZiList;
         notifyItemChanged(position);
     }
 }

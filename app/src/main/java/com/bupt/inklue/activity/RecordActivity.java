@@ -13,16 +13,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.adapter.CharCardDecoration;
 import com.bupt.inklue.adapter.ResultCardAdapter;
-import com.bupt.inklue.data.PracticeData;
-import com.bupt.inklue.data.PracticeDataManager;
+import com.bupt.inklue.data.api.HanZiLogApi;
+import com.bupt.inklue.data.api.PracticeLogApi;
+import com.bupt.inklue.data.pojo.Practice;
+import com.bupt.inklue.decoration.HanZiCardDecoration;
 
 //练习记录页面
 public class RecordActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ResultCardAdapter adapter;//卡片适配器
-    private PracticeData recordData;//记录数据
+    private Practice practiceLog;//记录数据
     private boolean needUpdate = false;//是否需要更新记录列表
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,14 +35,14 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         findViewById(R.id.button_more).setVisibility(View.VISIBLE);
 
         //取得记录数据
-        recordData = (PracticeData) getIntent().getSerializableExtra("recordData");
-        if (recordData != null) {
-            recordData.charsData = PracticeDataManager.getWrittenCharsData(this, recordData);
+        practiceLog = (Practice) getIntent().getSerializableExtra(getString(R.string.practice_bundle));
+        if (practiceLog != null) {
+            practiceLog.hanZiList = HanZiLogApi.getPracticeLogHanZiList(this, practiceLog);
         }
 
         //设置记录标题
         TextView textView = findViewById(R.id.textview_title);
-        textView.setText(recordData.getName());
+        textView.setText(practiceLog.getName());
 
         //初始化RecyclerView
         initRecyclerView();
@@ -67,7 +68,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
     public void finish() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putBoolean("needUpdate", needUpdate);
+        bundle.putBoolean(getString(R.string.update_bundle), needUpdate);
         intent.putExtras(bundle);
         setResult(Activity.RESULT_FIRST_USER, intent);
         super.finish();
@@ -78,8 +79,8 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent();
         intent.setClass(this, EvaluateActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("practiceData", recordData);
-        bundle.putInt("position", position);
+        bundle.putSerializable(getString(R.string.practice_bundle), practiceLog);
+        bundle.putInt(getString(R.string.position_bundle), position);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -94,7 +95,7 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                 builder.setTitle(R.string.delete);
                 builder.setMessage(R.string.delete_record_warning);
                 builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
-                    PracticeDataManager.deleteRecord(this, recordData);
+                    PracticeLogApi.deletePracticeLog(this, practiceLog);
                     needUpdate = true;
                     finish();
                 });
@@ -115,9 +116,9 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);//设置布局管理器
         int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
-        CharCardDecoration decoration = new CharCardDecoration(spacing);
+        HanZiCardDecoration decoration = new HanZiCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
-        adapter = new ResultCardAdapter(this, recordData.charsData);
+        adapter = new ResultCardAdapter(this, practiceLog.hanZiList);
         recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 }

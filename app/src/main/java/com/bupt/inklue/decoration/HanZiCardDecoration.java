@@ -1,4 +1,4 @@
-package com.bupt.inklue.adapter;
+package com.bupt.inklue.decoration;
 
 import android.graphics.Rect;
 import android.view.View;
@@ -7,11 +7,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 //用于设置汉字卡片间距的装饰类
-public class CharCardDecoration extends RecyclerView.ItemDecoration {
+public class HanZiCardDecoration extends RecyclerView.ItemDecoration {
 
     private final int spacing;
 
-    public CharCardDecoration(int spacing) {
+    public HanZiCardDecoration(int spacing) {
         this.spacing = spacing;
     }
 

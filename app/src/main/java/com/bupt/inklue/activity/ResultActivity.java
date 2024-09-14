@@ -18,20 +18,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bupt.evaluate.core.Evaluation;
 import com.bupt.evaluate.core.Evaluator;
 import com.bupt.inklue.R;
-import com.bupt.inklue.adapter.CharCardDecoration;
 import com.bupt.inklue.adapter.EvaluateCardAdapter;
-import com.bupt.inklue.data.CharData;
-import com.bupt.inklue.data.FileManager;
-import com.bupt.inklue.data.PracticeData;
-import com.bupt.inklue.data.PracticeDataManager;
-import com.bupt.inklue.util.BitmapProcessor;
-import com.bupt.inklue.util.FilePathGenerator;
+import com.bupt.inklue.data.api.PracticeLogApi;
+import com.bupt.inklue.data.pojo.HanZi;
+import com.bupt.inklue.data.pojo.Practice;
+import com.bupt.inklue.decoration.HanZiCardDecoration;
+import com.bupt.inklue.util.BitmapHelper;
+import com.bupt.inklue.util.DirectoryHelper;
 
 //评价结果页面
 public class ResultActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EvaluateCardAdapter adapter;//卡片适配器
-    private PracticeData practiceData;//练习数据
+    private Practice practice;//练习数据
     private boolean isFinished = false;//评价是否完成
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +38,11 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_practice);
 
         //取得练习数据
-        practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
+        practice = (Practice) getIntent().getSerializableExtra(getString(R.string.practice_bundle));
 
         //设置练习标题
         TextView textView = findViewById(R.id.textview_title);
-        textView.setText(practiceData.getName());
+        textView.setText(practice.getName());
 
         //修改开始按钮文字
         Button button_start = findViewById(R.id.button_start);
@@ -63,25 +62,25 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         //异步调用评价模块
         Handler handler = new Handler(Looper.getMainLooper());
         new Thread(() -> {
-            for (int i = 0; i < practiceData.charsData.size(); i++) {
+            for (int i = 0; i < practice.hanZiList.size(); i++) {
                 //取得评价所需数据
-                CharData charData = practiceData.charsData.get(i);
-                String name = charData.getName();
-                String className = charData.getClassName();
-                Bitmap inputBmp = BitmapFactory.decodeFile(charData.getWrittenImgPath());
-                Bitmap stdBmp = BitmapFactory.decodeFile(charData.getStdImgPath());
+                HanZi hanZi = practice.hanZiList.get(i);
+                String name = hanZi.getName();
+                String className = hanZi.getCode();
+                Bitmap inputBmp = BitmapFactory.decodeFile(hanZi.getWrittenPath());
+                Bitmap stdBmp = BitmapFactory.decodeFile(hanZi.getPath());
                 //调用评价模块
                 Evaluation evaluation = Evaluator.evaluate(name, className, inputBmp, stdBmp);
                 //存储反馈图像
-                String feedbackImgPath = FilePathGenerator.generateCacheJPG(this);
-                FileManager.saveBitmap(evaluation.outputBmp, feedbackImgPath);
+                String feedbackPath = DirectoryHelper.generateCacheJPG(this);
+                BitmapHelper.saveBitmap(evaluation.outputBmp, feedbackPath);
                 //更新汉字数据
-                charData.setFeedbackImgPath(feedbackImgPath);
-                charData.setScore(Integer.toString(evaluation.score));
-                charData.setAdvice(evaluation.advice);
+                hanZi.setFeedbackPath(feedbackPath);
+                hanZi.setScore(Integer.toString(evaluation.score));
+                hanZi.setAdvice(evaluation.advice);
                 //更新RecyclerView
                 int position = i;
-                handler.post(() -> adapter.update(practiceData.charsData, position));
+                handler.post(() -> adapter.update(practice.hanZiList, position));
             }
             isFinished = true;
             //设置RecyclerView中项目的点击监听器为启动评价查看页面
@@ -96,12 +95,12 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         } else if (view.getId() == R.id.button_start) {
             if (isFinished) {
                 //创建记录封面
-                String coverImgPath = FilePathGenerator.generateCacheJPG(this);
-                practiceData.setCoverImgPath(coverImgPath);
-                Bitmap coverBitmap = BitmapProcessor.createCover(practiceData, false);
-                FileManager.saveBitmap(coverBitmap, practiceData.getCoverImgPath());
+                String coverPath = DirectoryHelper.generateCacheJPG(this);
+                practice.setCoverPath(coverPath);
+                Bitmap coverBitmap = BitmapHelper.createCover(practice, false);
+                BitmapHelper.saveBitmap(coverBitmap, practice.getCoverPath());
                 //保存练习记录
-                PracticeDataManager.saveRecord(this, practiceData);
+                PracticeLogApi.savePracticeLog(this, practice);
                 //回退到主页面
                 backToMainActivity();
             } else {
@@ -115,17 +114,18 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent();
         intent.setClass(this, EvaluateActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("practiceData", practiceData);
-        bundle.putInt("position", position);
+        bundle.putSerializable(getString(R.string.practice_bundle), practice);
+        bundle.putInt(getString(R.string.position_bundle), position);
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
     //回退到主页面
     private void backToMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent();
+        intent.setClass(this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        intent.putExtra("pageNum", 2);//指定ViewPager的页面为“我的”
+        intent.putExtra(getString(R.string.page_num_bundle), 2);//指定ViewPager的页面为“我的”
         startActivity(intent);
     }
 
@@ -135,9 +135,9 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);//设置布局管理器
         int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
-        CharCardDecoration decoration = new CharCardDecoration(spacing);
+        HanZiCardDecoration decoration = new HanZiCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
-        adapter = new EvaluateCardAdapter(this, practiceData.charsData);
+        adapter = new EvaluateCardAdapter(this, practice.hanZiList);
         recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 }

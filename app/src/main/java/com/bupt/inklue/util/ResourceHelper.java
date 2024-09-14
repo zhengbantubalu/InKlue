@@ -9,8 +9,8 @@ import androidx.core.content.ContextCompat;
 
 import org.opencv.core.Scalar;
 
-//资源解码器
-public class ResourceDecoder {
+//资源帮助类
+public class ResourceHelper {
 
     //根据颜色资源ID取得int类型color
     public static int getColorInt(Context context, int resourceID) {

@@ -30,11 +30,13 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
         setContentView(R.layout.activity_main);
 
         //加载OpenCV
-        System.loadLibrary("opencv_java3");
+        System.loadLibrary(getString(R.string.opencv_lib_name));
 
         //判断App是否为首次启动
-        SharedPreferences preferences = getSharedPreferences("app", MODE_PRIVATE);
-        boolean isFirstLaunch = preferences.getBoolean("isFirstLaunch", true);
+        SharedPreferences preferences = getSharedPreferences(
+                getString(R.string.preference_name), MODE_PRIVATE);
+        boolean isFirstLaunch = preferences.getBoolean(
+                getString(R.string.is_first_launch), true);
         if (isFirstLaunch) {
             //启动初始化页面，并关闭当前页面
             Intent intent = new Intent();
@@ -81,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements RadioGroup.OnChec
     //当前页面取得新请求的回调
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        int pageNum = intent.getIntExtra("pageNum", 1);
+        int pageNum = intent.getIntExtra(getString(R.string.page_num_bundle), 1);
         practiceFragment.updateData();
         userFragment.updateData();
         viewpager.setCurrentItem(pageNum, true);

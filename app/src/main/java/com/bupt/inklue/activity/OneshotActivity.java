@@ -30,11 +30,10 @@ import androidx.core.content.ContextCompat;
 import com.bupt.evaluate.core.Evaluation;
 import com.bupt.evaluate.core.Evaluator;
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.CharData;
-import com.bupt.inklue.data.FileManager;
-import com.bupt.inklue.util.BitmapProcessor;
-import com.bupt.inklue.util.FilePathGenerator;
-import com.bupt.inklue.util.ResourceDecoder;
+import com.bupt.inklue.data.pojo.HanZi;
+import com.bupt.inklue.util.BitmapHelper;
+import com.bupt.inklue.util.DirectoryHelper;
+import com.bupt.inklue.util.ResourceHelper;
 import com.bupt.preprocess.Preprocessor;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -48,7 +47,7 @@ public class OneshotActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener {
 
     private Context context;//环境
-    private CharData charData;//汉字数据
+    private HanZi hanZi;//汉字数据
     private ImageButton button_shot;//拍照按钮
     private ImageButton button_torch;//手电筒按钮
     private ImageButton button_again;//重拍按钮
@@ -81,7 +80,7 @@ public class OneshotActivity extends AppCompatActivity
         imageview_top = findViewById(R.id.imageview_top);
 
         //取得汉字数据
-        charData = (CharData) getIntent().getSerializableExtra("charData");
+        hanZi = (HanZi) getIntent().getSerializableExtra(getString(R.string.han_zi_bundle));
 
         //初始化相机
         initCamera();
@@ -162,9 +161,9 @@ public class OneshotActivity extends AppCompatActivity
         //关闭硬件加速
         imageview_top.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         //获取绘制标准汉字的颜色
-        Scalar color = ResourceDecoder.getScalar(this, R.attr.colorTheme);
+        Scalar color = ResourceHelper.getScalar(this, R.attr.colorTheme);
         //取得标准汉字半透明图像
-        stdBitmap = BitmapProcessor.toTransparent(charData.getStdImgPath(), color);
+        stdBitmap = BitmapHelper.toTransparent(hanZi.getPath(), color);
         imageview_top.setImageBitmap(stdBitmap);
     }
 
@@ -190,8 +189,8 @@ public class OneshotActivity extends AppCompatActivity
 
     //拍照
     private void takePhoto() {
-        String writtenImgPath = FilePathGenerator.generateCacheJPG(this);
-        File photoFile = new File(writtenImgPath);
+        String writtenPath = DirectoryHelper.generateCacheJPG(this);
+        File photoFile = new File(writtenPath);
         ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions
                 .Builder(photoFile)
                 .build();
@@ -199,17 +198,17 @@ public class OneshotActivity extends AppCompatActivity
                 new ImageCapture.OnImageSavedCallback() {
                     @SuppressLint("SetTextI18n")
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        charData.setWrittenImgPath(writtenImgPath);
+                        hanZi.setWrittenPath(writtenPath);
                         //预处理图像并保存
-                        Bitmap bitmapWritten = BitmapFactory.decodeFile(writtenImgPath);
-                        Bitmap bitmapStd = BitmapFactory.decodeFile(charData.getStdImgPath());
+                        Bitmap bitmapWritten = BitmapFactory.decodeFile(writtenPath);
+                        Bitmap bitmapStd = BitmapFactory.decodeFile(hanZi.getPath());
                         Bitmap bitmapProc = Preprocessor.preprocess(bitmapWritten, bitmapStd);
-                        FileManager.saveBitmap(bitmapProc, writtenImgPath);
+                        BitmapHelper.saveBitmap(bitmapProc, writtenPath);
                         //取得评价所需数据
-                        String name = charData.getName();
-                        String className = charData.getClassName();
-                        Bitmap inputBmp = BitmapFactory.decodeFile(charData.getWrittenImgPath());
-                        Bitmap stdBmp = BitmapFactory.decodeFile(charData.getStdImgPath());
+                        String name = hanZi.getName();
+                        String className = hanZi.getCode();
+                        Bitmap inputBmp = BitmapFactory.decodeFile(hanZi.getWrittenPath());
+                        Bitmap stdBmp = BitmapFactory.decodeFile(hanZi.getPath());
                         //调用评价模块
                         Evaluation evaluation = Evaluator.evaluate(name, className, inputBmp, stdBmp);
                         //显示评价结果

@@ -12,11 +12,11 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.ViewPagerAdapter;
-import com.bupt.inklue.data.CharData;
-import com.bupt.inklue.data.PracticeData;
+import com.bupt.inklue.data.pojo.HanZi;
+import com.bupt.inklue.data.pojo.Practice;
 import com.bupt.inklue.fragment.CheckFragment;
 import com.bupt.inklue.fragment.FinishFragment;
-import com.bupt.inklue.util.ResourceDecoder;
+import com.bupt.inklue.util.ResourceHelper;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class CheckActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPagerAdapter adapter;//页面适配器
-    private PracticeData practiceData;//练习数据
+    private Practice practice;//练习数据
     private int currentPosition;//ViewPager当前位置
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         findViewById(R.id.button_reshot).setVisibility(View.VISIBLE);
 
         //取得练习数据
-        practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
+        practice = (Practice) getIntent().getSerializableExtra(getString(R.string.practice_bundle));
 
         //初始化ViewPager
         initViewPager();
@@ -60,7 +60,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
             }
             //滑动到最后一页，则隐藏重拍按钮，并启动评价结果页面
             //size是图片数量，由于结束页面的存在，ViewPager的实际页数为size+1
-            if (position == practiceData.charsData.size()) {
+            if (position == practice.hanZiList.size()) {
                 findViewById(R.id.button_reshot).setVisibility(View.GONE);
                 startResultActivity();
             }
@@ -81,7 +81,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
     public void finish() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("practiceData", practiceData);
+        bundle.putSerializable(getString(R.string.practice_bundle), practice);
         intent.putExtras(bundle);
         setResult(Activity.RESULT_FIRST_USER, intent);
         super.finish();
@@ -91,13 +91,13 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         if (resultCode == Activity.RESULT_FIRST_USER) {
-            CharData charData = (CharData) intent.getSerializableExtra("charData");
-            if (charData != null) {
+            HanZi hanZi = (HanZi) intent.getSerializableExtra(getString(R.string.han_zi_bundle));
+            if (hanZi != null) {
                 //更新图像
                 CheckFragment fragment = (CheckFragment) adapter.createFragment(currentPosition);
-                fragment.update(charData);
+                fragment.update(hanZi);
                 adapter.notifyItemChanged(currentPosition);
-                practiceData.charsData.set(currentPosition, charData);
+                practice.hanZiList.set(currentPosition, hanZi);
                 //关闭页面，提高操作流畅度
                 finish();
             }
@@ -111,7 +111,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = new Intent();
         intent.setClass(this, ResultActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("practiceData", practiceData);
+        bundle.putSerializable(getString(R.string.practice_bundle), practice);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
@@ -122,7 +122,8 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = new Intent();
         intent.setClass(this, ReshotActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("charData", practiceData.charsData.get(currentPosition));
+        bundle.putSerializable(getString(R.string.han_zi_bundle),
+                practice.hanZiList.get(currentPosition));
         intent.putExtras(bundle);
         startActivityForResult(intent, Activity.RESULT_FIRST_USER);
     }
@@ -132,12 +133,12 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         //取得视图
         ViewPager2 viewpager = findViewById(R.id.viewpager_image);
         //设置图像向上偏移状态栏高度的一半，以实现图像居中
-        int statusBarHeight = ResourceDecoder.getStatusBarHeight(this);
+        int statusBarHeight = ResourceHelper.getStatusBarHeight(this);
         viewpager.setTranslationY((float) -statusBarHeight / 2);
         //创建页面
         ArrayList<Fragment> fragments = new ArrayList<>();
-        for (CharData charData : practiceData.charsData) {
-            fragments.add(new CheckFragment(charData));
+        for (HanZi hanZi : practice.hanZiList) {
+            fragments.add(new CheckFragment(hanZi));
         }
         //添加结束页面
         FinishFragment finishFragment = new FinishFragment();
@@ -148,7 +149,7 @@ public class CheckActivity extends AppCompatActivity implements View.OnClickList
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
         viewpager.setAdapter(adapter);
         //设置当前位置
-        int position = getIntent().getIntExtra("position", 0);
+        int position = getIntent().getIntExtra(getString(R.string.position_bundle), 0);
         viewpager.setCurrentItem(position, false);
         currentPosition = position;
         //设置翻页监听器

@@ -17,11 +17,11 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.ViewPagerAdapter;
-import com.bupt.inklue.data.CharData;
-import com.bupt.inklue.data.PracticeData;
+import com.bupt.inklue.data.pojo.HanZi;
+import com.bupt.inklue.data.pojo.Practice;
 import com.bupt.inklue.fragment.FinishFragment;
 import com.bupt.inklue.fragment.ImageFragment;
-import com.bupt.inklue.util.ResourceDecoder;
+import com.bupt.inklue.util.ResourceHelper;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
 
     private ViewPager2 viewpager;//用于切换图片的类
     private ViewPagerAdapter adapter;//页面适配器
-    private PracticeData practiceData;//练习数据
+    private Practice practice;//练习数据
     private int currentPosition;//ViewPager当前位置
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_image);
 
         //取得练习数据
-        practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
+        practice = (Practice) getIntent().getSerializableExtra(getString(R.string.practice_bundle));
 
         //初始化ViewPager
         initViewPager();
@@ -56,7 +56,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
     class Callback extends ViewPager2.OnPageChangeCallback {
         public void onPageSelected(int position) {
             //size是图片数量，由于结束页面的存在，ViewPager的实际页数为size+1
-            int size = practiceData.charsData.size();
+            int size = practice.hanZiList.size();
             //如果权限申请失败，ViewPager回退，则不还原缩放状态
             if (currentPosition != size) {
                 PhotoView photoView = ((ImageFragment) adapter.createFragment(currentPosition)).photoView;
@@ -91,7 +91,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             //权限申请失败
             //将ViewPager回退至前一页
-            viewpager.setCurrentItem(practiceData.charsData.size() - 1, true);
+            viewpager.setCurrentItem(practice.hanZiList.size() - 1, true);
             //提示给予权限
             Toast.makeText(this, R.string.give_camera_permission_hint, Toast.LENGTH_SHORT).show();
         }
@@ -116,7 +116,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         Intent intent = new Intent();
         intent.setClass(this, CameraActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("practiceData", practiceData);
+        bundle.putSerializable(getString(R.string.practice_bundle), practice);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
@@ -127,12 +127,12 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         //取得视图
         viewpager = findViewById(R.id.viewpager_image);
         //设置图像向上偏移状态栏高度的一半，以实现图像居中
-        int statusBarHeight = ResourceDecoder.getStatusBarHeight(this);
+        int statusBarHeight = ResourceHelper.getStatusBarHeight(this);
         viewpager.setTranslationY((float) -statusBarHeight / 2);
         //创建页面
         ArrayList<Fragment> fragments = new ArrayList<>();
-        for (CharData charData : practiceData.charsData) {
-            fragments.add(new ImageFragment(charData));
+        for (HanZi hanZi : practice.hanZiList) {
+            fragments.add(new ImageFragment(hanZi));
         }
         //添加结束页面
         fragments.add(new FinishFragment());
@@ -140,7 +140,7 @@ public class WritingActivity extends AppCompatActivity implements View.OnClickLi
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
         viewpager.setAdapter(adapter);
         //设置当前位置
-        int position = getIntent().getIntExtra("position", 0);
+        int position = getIntent().getIntExtra(getString(R.string.position_bundle), 0);
         viewpager.setCurrentItem(position, false);
         currentPosition = position;
         //设置翻页监听器

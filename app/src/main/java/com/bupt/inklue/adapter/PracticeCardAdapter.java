@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.PracticeData;
+import com.bupt.inklue.data.pojo.Practice;
 
 import java.util.ArrayList;
 
@@ -22,12 +22,12 @@ import java.util.ArrayList;
 public class PracticeCardAdapter extends RecyclerView.Adapter<PracticeCardAdapter.ViewHolder> {
 
     private final Context context;
-    protected ArrayList<PracticeData> practicesData;
+    protected ArrayList<Practice> practiceList;
     protected OnItemClickListener listener;
 
-    public PracticeCardAdapter(Context context, ArrayList<PracticeData> practicesData) {
+    public PracticeCardAdapter(Context context, ArrayList<Practice> practiceList) {
         this.context = context;
-        this.practicesData = practicesData;
+        this.practiceList = practiceList;
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -35,13 +35,13 @@ public class PracticeCardAdapter extends RecyclerView.Adapter<PracticeCardAdapte
     }
 
     public int getItemCount() {
-        return practicesData.size();
+        return practiceList.size();
     }
 
     public void onBindViewHolder(ViewHolder holder, int position) {
         //设置卡片资源
-        holder.textView.setText(practicesData.get(position).getName());//设置卡片名称
-        Bitmap bitmap = BitmapFactory.decodeFile(practicesData.get(position).getCoverImgPath());
+        holder.textView.setText(practiceList.get(position).getName());//设置卡片名称
+        Bitmap bitmap = BitmapFactory.decodeFile(practiceList.get(position).getCoverPath());
         holder.imageView.setImageBitmap(bitmap);//设置卡片图片
         //设置卡片的点击监听器
         holder.itemView.setOnClickListener(v -> {
@@ -75,8 +75,8 @@ public class PracticeCardAdapter extends RecyclerView.Adapter<PracticeCardAdapte
 
     //更新全部数据
     @SuppressLint("NotifyDataSetChanged")//忽略更新具体数据的要求
-    public void update(ArrayList<PracticeData> practicesData) {
-        this.practicesData = practicesData;
+    public void update(ArrayList<Practice> practicesData) {
+        this.practiceList = practicesData;
         notifyDataSetChanged();
     }
 }

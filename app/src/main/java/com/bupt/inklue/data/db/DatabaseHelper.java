@@ -1,16 +1,17 @@
-package com.bupt.inklue.data;
+package com.bupt.inklue.data.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-//SQLite数据库帮助类
+import com.bupt.inklue.R;
+
+//数据库帮助类
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "database.db";
     private static final int DATABASE_VERSION = 1;
 
     public DatabaseHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, context.getString(R.string.database_name), null, DATABASE_VERSION);
     }
 
     public void onCreate(SQLiteDatabase db) {

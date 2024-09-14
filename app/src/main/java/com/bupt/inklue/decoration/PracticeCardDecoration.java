@@ -1,4 +1,4 @@
-package com.bupt.inklue.adapter;
+package com.bupt.inklue.decoration;
 
 import android.graphics.Rect;
 import android.view.View;

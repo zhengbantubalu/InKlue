@@ -30,11 +30,10 @@ import androidx.core.content.ContextCompat;
 
 import com.bupt.evaluate.core.Extractor;
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.CharData;
-import com.bupt.inklue.data.FileManager;
-import com.bupt.inklue.util.BitmapProcessor;
-import com.bupt.inklue.util.FilePathGenerator;
-import com.bupt.inklue.util.ResourceDecoder;
+import com.bupt.inklue.data.pojo.HanZi;
+import com.bupt.inklue.util.BitmapHelper;
+import com.bupt.inklue.util.DirectoryHelper;
+import com.bupt.inklue.util.ResourceHelper;
 import com.bupt.preprocess.Preprocessor;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -48,7 +47,7 @@ public class ReshotActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener {
 
     private Context context;//环境
-    private CharData charData;//汉字数据
+    private HanZi hanZi;//汉字数据
     private ImageButton button_shot;//拍照按钮
     private ImageButton button_torch;//手电筒按钮
     private ImageButton button_confirm;//“确认”按钮
@@ -79,7 +78,7 @@ public class ReshotActivity extends AppCompatActivity
         imageview_top = findViewById(R.id.imageview_top);
 
         //取得汉字数据
-        charData = (CharData) getIntent().getSerializableExtra("charData");
+        hanZi = (HanZi) getIntent().getSerializableExtra(getString(R.string.han_zi_bundle));
 
         //初始化相机
         initCamera();
@@ -120,7 +119,7 @@ public class ReshotActivity extends AppCompatActivity
         } else if (view.getId() == R.id.button_confirm) {
             Intent intent = new Intent();
             Bundle bundle = new Bundle();
-            bundle.putSerializable("charData", charData);
+            bundle.putSerializable(getString(R.string.han_zi_bundle), hanZi);
             intent.putExtras(bundle);
             setResult(Activity.RESULT_FIRST_USER, intent);
             finish();
@@ -166,9 +165,9 @@ public class ReshotActivity extends AppCompatActivity
         //关闭硬件加速
         imageview_top.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         //获取绘制标准汉字的颜色
-        Scalar color = ResourceDecoder.getScalar(this, R.attr.colorTheme);
+        Scalar color = ResourceHelper.getScalar(this, R.attr.colorTheme);
         //取得标准汉字半透明图像
-        stdBitmap = BitmapProcessor.toTransparent(charData.getStdImgPath(), color);
+        stdBitmap = BitmapHelper.toTransparent(hanZi.getPath(), color);
         imageview_top.setImageBitmap(stdBitmap);
     }
 
@@ -194,27 +193,27 @@ public class ReshotActivity extends AppCompatActivity
 
     //拍照
     private void takePhoto() {
-        String writtenImgPath = FilePathGenerator.generateCacheJPG(this);
-        File photoFile = new File(writtenImgPath);
+        String writtenPath = DirectoryHelper.generateCacheJPG(this);
+        File photoFile = new File(writtenPath);
         ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions
                 .Builder(photoFile)
                 .build();
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(this),
                 new ImageCapture.OnImageSavedCallback() {
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        charData.setWrittenImgPath(writtenImgPath);
+                        hanZi.setWrittenPath(writtenPath);
                         //预处理图像并保存
-                        Bitmap bitmapWritten = BitmapFactory.decodeFile(writtenImgPath);
-                        Bitmap bitmapStd = BitmapFactory.decodeFile(charData.getStdImgPath());
+                        Bitmap bitmapWritten = BitmapFactory.decodeFile(writtenPath);
+                        Bitmap bitmapStd = BitmapFactory.decodeFile(hanZi.getPath());
                         Bitmap bitmapProc = Preprocessor.preprocess(bitmapWritten, bitmapStd);
-                        FileManager.saveBitmap(bitmapProc, writtenImgPath);
+                        BitmapHelper.saveBitmap(bitmapProc, writtenPath);
                         //绘制笔画提取结果并保存
-                        Bitmap bitmapExtract = Extractor.drawStrokes(charData.getClassName(), bitmapProc);
-                        String extractImgPath = FilePathGenerator.generateCacheJPG(context);
-                        FileManager.saveBitmap(bitmapExtract, extractImgPath);
-                        charData.setExtractImgPath(extractImgPath);
+                        Bitmap bitmapExtract = Extractor.drawStrokes(hanZi.getCode(), bitmapProc);
+                        String extractPath = DirectoryHelper.generateCacheJPG(context);
+                        BitmapHelper.saveBitmap(bitmapExtract, extractPath);
+                        hanZi.setExtractPath(extractPath);
                         //设置预览上层视图，用于预览提取效果
-                        imageview_top.setImageBitmap(BitmapFactory.decodeFile(extractImgPath));
+                        imageview_top.setImageBitmap(BitmapFactory.decodeFile(extractPath));
                         //隐藏拍照按钮
                         button_shot.setVisibility(View.INVISIBLE);
                         //显示“确认”和“取消”按钮

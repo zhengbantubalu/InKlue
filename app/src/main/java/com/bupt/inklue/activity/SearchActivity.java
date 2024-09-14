@@ -20,9 +20,9 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.ViewPagerAdapter;
-import com.bupt.inklue.data.CharData;
+import com.bupt.inklue.data.pojo.HanZi;
 import com.bupt.inklue.fragment.ImageFragment;
-import com.bupt.inklue.util.ResourceDecoder;
+import com.bupt.inklue.util.ResourceHelper;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import java.util.ArrayList;
 public class SearchActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPagerAdapter adapter;//页面适配器
-    private ArrayList<CharData> charsData;//汉字数据列表
+    private ArrayList<HanZi> hanZiList;//汉字数据列表
     private int currentPosition;//ViewPager当前位置
     private boolean needUpdate = false;//是否需要更新练习列表
 
@@ -56,7 +56,8 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         button_one_shot.setText(R.string.oneshot);
 
         //取得汉字数据列表
-        charsData = (ArrayList<CharData>) getIntent().getSerializableExtra("charsData");
+        hanZiList = (ArrayList<HanZi>) getIntent().getSerializableExtra(
+                getString(R.string.han_zi_list_bundle));
 
         //初始化ViewPager
         initViewPager();
@@ -94,7 +95,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     public void finish() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putBoolean("needUpdate", needUpdate);
+        bundle.putBoolean(getString(R.string.update_bundle), needUpdate);
         intent.putExtras(bundle);
         setResult(Activity.RESULT_FIRST_USER, intent);
         super.finish();
@@ -118,7 +119,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
         if (resultCode == Activity.RESULT_FIRST_USER) {
-            needUpdate = intent.getBooleanExtra("needUpdate", false);
+            needUpdate = intent.getBooleanExtra(getString(R.string.update_bundle), false);
             if (needUpdate) {
                 //关闭页面，提高操作流畅度
                 finish();
@@ -131,9 +132,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent();
         intent.setClass(this, SelectActivity.class);
         Bundle bundle = new Bundle();
-        CharData charData = charsData.get(currentPosition);
-        bundle.putLong("charID", charData.getID());
-        bundle.putString("charImgPath", charData.getStdImgPath());
+        bundle.putSerializable(getString(R.string.han_zi_bundle), hanZiList.get(currentPosition));
         intent.putExtras(bundle);
         startActivityForResult(intent, Activity.RESULT_FIRST_USER);
     }
@@ -143,7 +142,7 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         Intent intent = new Intent();
         intent.setClass(this, OneshotActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("charData", charsData.get(currentPosition));
+        bundle.putSerializable(getString(R.string.han_zi_bundle), hanZiList.get(currentPosition));
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -167,18 +166,18 @@ public class SearchActivity extends AppCompatActivity implements View.OnClickLis
         //取得视图
         ViewPager2 viewpager = findViewById(R.id.viewpager_image);
         //设置图像向上偏移状态栏高度的一半，以实现图像居中
-        int statusBarHeight = ResourceDecoder.getStatusBarHeight(this);
+        int statusBarHeight = ResourceHelper.getStatusBarHeight(this);
         viewpager.setTranslationY((float) -statusBarHeight / 2);
         //创建页面
         ArrayList<Fragment> fragments = new ArrayList<>();
-        for (CharData charData : charsData) {
-            fragments.add(new ImageFragment(charData));
+        for (HanZi hanZi : hanZiList) {
+            fragments.add(new ImageFragment(hanZi));
         }
         //设置页面适配器
         adapter = new ViewPagerAdapter(getSupportFragmentManager(), getLifecycle(), fragments);
         viewpager.setAdapter(adapter);
         //设置当前位置
-        int position = getIntent().getIntExtra("position", 0);
+        int position = getIntent().getIntExtra(getString(R.string.position_bundle), 0);
         viewpager.setCurrentItem(position, false);
         currentPosition = position;
         //设置翻页监听器

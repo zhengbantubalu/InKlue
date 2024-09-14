@@ -53,23 +53,23 @@
                 android:textAlignment="center" />
 
             <Spinner
-                android:id="@+id/spinner_author"
+                android:id="@+id/spinner_artist"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/spacing"
                 android:layout_weight="1"
                 android:background="@drawable/shape_filter_unselected"
-                android:entries="@array/filter_author"
+                android:entries="@array/filter_artist"
                 android:textAlignment="center" />
 
             <Spinner
-                android:id="@+id/spinner_copybook"
+                android:id="@+id/spinner_work"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/spacing"
                 android:layout_weight="1"
                 android:background="@drawable/shape_filter_unselected"
-                android:entries="@array/filter_copybook"
+                android:entries="@array/filter_work"
                 android:textAlignment="center" />
 
         </LinearLayout>

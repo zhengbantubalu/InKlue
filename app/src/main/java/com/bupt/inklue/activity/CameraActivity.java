@@ -29,12 +29,11 @@ import androidx.core.content.ContextCompat;
 
 import com.bupt.evaluate.core.Extractor;
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.CharData;
-import com.bupt.inklue.data.FileManager;
-import com.bupt.inklue.data.PracticeData;
-import com.bupt.inklue.util.BitmapProcessor;
-import com.bupt.inklue.util.FilePathGenerator;
-import com.bupt.inklue.util.ResourceDecoder;
+import com.bupt.inklue.data.pojo.HanZi;
+import com.bupt.inklue.data.pojo.Practice;
+import com.bupt.inklue.util.BitmapHelper;
+import com.bupt.inklue.util.DirectoryHelper;
+import com.bupt.inklue.util.ResourceHelper;
 import com.bupt.preprocess.Preprocessor;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -48,7 +47,7 @@ public class CameraActivity extends AppCompatActivity
         implements View.OnClickListener, View.OnTouchListener {
 
     private Context context;//环境
-    private PracticeData practiceData;//练习数据
+    private Practice practice;//练习数据
     private int position = 0;//当前拍摄的汉字在列表中的位置
     private int savedNum = 0;//已经保存的图像数
     private ImageButton button_shot;//拍照按钮
@@ -81,7 +80,7 @@ public class CameraActivity extends AppCompatActivity
         imageview_previous = findViewById(R.id.imageview_previous);
 
         //取得练习数据
-        practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
+        practice = (Practice) getIntent().getSerializableExtra(getString(R.string.practice_bundle));
 
         //初始化相机
         initCamera();
@@ -105,7 +104,7 @@ public class CameraActivity extends AppCompatActivity
         if (view.getId() == R.id.button_back) {
             finish();
         } else if (view.getId() == R.id.button_shot) {
-            if (position < practiceData.charsData.size()) {
+            if (position < practice.hanZiList.size()) {
                 canBack = false;//保存照片期间，不可返回
                 takePhoto();//拍照
                 position++;
@@ -154,7 +153,7 @@ public class CameraActivity extends AppCompatActivity
         Intent intent = new Intent();
         intent.setClass(this, ConfirmActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("practiceData", practiceData);
+        bundle.putSerializable(getString(R.string.practice_bundle), practice);
         intent.putExtras(bundle);
         startActivity(intent);
         finish();
@@ -174,17 +173,17 @@ public class CameraActivity extends AppCompatActivity
         //关闭硬件加速
         imageview_top.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         //获取绘制标准汉字的颜色
-        color = ResourceDecoder.getScalar(this, R.attr.colorTheme);
+        color = ResourceHelper.getScalar(this, R.attr.colorTheme);
         //更新预览上层视图
         updateTop();
     }
 
     //更新预览上层视图
     private void updateTop() {
-        if (position < practiceData.charsData.size()) {
+        if (position < practice.hanZiList.size()) {
             //取得标准汉字半透明图像
-            Bitmap bitmap = BitmapProcessor.toTransparent(
-                    practiceData.charsData.get(position).getStdImgPath(), color);
+            Bitmap bitmap = BitmapHelper.toTransparent(
+                    practice.hanZiList.get(position).getPath(), color);
             imageview_top.setImageBitmap(bitmap);
         } else {
             imageview_top.setImageBitmap(null);//拍摄完最后一张，不再显示上层图片
@@ -194,20 +193,20 @@ public class CameraActivity extends AppCompatActivity
     //更新上一张图片预览
     private void updatePrevious() {
         //绘制笔画提取结果，用于预览提取效果
-        CharData charData = practiceData.charsData.get(savedNum);
-        Bitmap bitmapWritten = BitmapFactory.decodeFile(charData.getWrittenImgPath());
-        Bitmap bitmapExtract = Extractor.drawStrokes(charData.getClassName(), bitmapWritten);
+        HanZi hanZi = practice.hanZiList.get(savedNum);
+        Bitmap bitmapWritten = BitmapFactory.decodeFile(hanZi.getWrittenPath());
+        Bitmap bitmapExtract = Extractor.drawStrokes(hanZi.getCode(), bitmapWritten);
         imageview_previous.setImageBitmap(bitmapExtract);
         //保存提取结果图片，以备后续使用
-        String extractImgPath = FilePathGenerator.generateCacheJPG(context);
-        FileManager.saveBitmap(bitmapExtract, extractImgPath);
-        charData.setExtractImgPath(extractImgPath);
+        String extractPath = DirectoryHelper.generateCacheJPG(context);
+        BitmapHelper.saveBitmap(bitmapExtract, extractPath);
+        hanZi.setExtractPath(extractPath);
     }
 
     //回到上一张图片的拍摄
     private void backToPrevious() {
         //如果已经保存完最后一张，隐藏确认按钮，显示拍照按钮
-        if (savedNum == practiceData.charsData.size()) {
+        if (savedNum == practice.hanZiList.size()) {
             button_shot.setVisibility(View.VISIBLE);
             button_confirm.setVisibility(View.GONE);
         }
@@ -218,14 +217,14 @@ public class CameraActivity extends AppCompatActivity
             canBack = false;
         }
         //更新预览上层视图
-        Bitmap bitmapTop = BitmapProcessor.toTransparent(
-                practiceData.charsData.get(position).getStdImgPath(), color);
+        Bitmap bitmapTop = BitmapHelper.toTransparent(
+                practice.hanZiList.get(position).getPath(), color);
         imageview_top.setImageBitmap(bitmapTop);
         //更新上一张图片预览
         Bitmap bitmapPrevious = null;
         if (savedNum > 0) {
             bitmapPrevious = BitmapFactory.decodeFile(
-                    practiceData.charsData.get(savedNum - 1).getExtractImgPath());
+                    practice.hanZiList.get(savedNum - 1).getExtractPath());
         }
         imageview_previous.setImageBitmap(bitmapPrevious);
     }
@@ -253,29 +252,29 @@ public class CameraActivity extends AppCompatActivity
 
     //拍照
     private void takePhoto() {
-        String writtenImgPath = FilePathGenerator.generateCacheJPG(this);
-        File photoFile = new File(writtenImgPath);
+        String writtenPath = DirectoryHelper.generateCacheJPG(this);
+        File photoFile = new File(writtenPath);
         ImageCapture.OutputFileOptions outputFileOptions = new ImageCapture.OutputFileOptions
                 .Builder(photoFile)
                 .build();
         imageCapture.takePicture(outputFileOptions, ContextCompat.getMainExecutor(this),
                 new ImageCapture.OnImageSavedCallback() {
                     public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        if (savedNum < practiceData.charsData.size()) {
-                            CharData charData = practiceData.charsData.get(savedNum);
+                        if (savedNum < practice.hanZiList.size()) {
+                            HanZi hanZi = practice.hanZiList.get(savedNum);
                             //设置书写图片路径
-                            charData.setWrittenImgPath(writtenImgPath);
+                            hanZi.setWrittenPath(writtenPath);
                             //预处理书写图片
-                            Bitmap bitmapWritten = BitmapFactory.decodeFile(writtenImgPath);
-                            Bitmap bitmapStd = BitmapFactory.decodeFile(charData.getStdImgPath());
+                            Bitmap bitmapWritten = BitmapFactory.decodeFile(writtenPath);
+                            Bitmap bitmapStd = BitmapFactory.decodeFile(hanZi.getPath());
                             Bitmap bitmapProc = Preprocessor.preprocess(bitmapWritten, bitmapStd);
-                            FileManager.saveBitmap(bitmapProc, writtenImgPath);
+                            BitmapHelper.saveBitmap(bitmapProc, writtenPath);
                             //更新上一张图片预览
                             updatePrevious();
                             savedNum++;
                             canBack = true;
                             //如果保存完最后一张，隐藏拍照按钮，显示确认按钮
-                            if (savedNum == practiceData.charsData.size()) {
+                            if (savedNum == practice.hanZiList.size()) {
                                 button_shot.setVisibility(View.INVISIBLE);
                                 button_confirm.setVisibility(View.VISIBLE);
                             }

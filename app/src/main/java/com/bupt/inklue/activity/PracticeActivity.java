@@ -20,16 +20,17 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.adapter.CharCardAdapter;
-import com.bupt.inklue.adapter.CharCardDecoration;
-import com.bupt.inklue.data.PracticeData;
-import com.bupt.inklue.data.PracticeDataManager;
+import com.bupt.inklue.adapter.HanZiCardAdapter;
+import com.bupt.inklue.data.api.HanZiApi;
+import com.bupt.inklue.data.api.PracticeApi;
+import com.bupt.inklue.data.pojo.Practice;
+import com.bupt.inklue.decoration.HanZiCardDecoration;
 
 //练习详情页面
 public class PracticeActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private CharCardAdapter adapter;//卡片适配器
-    private PracticeData practiceData;//练习数据
+    private HanZiCardAdapter adapter;//卡片适配器
+    private Practice practice;//练习数据
     private TextView textview_title;//练习标题
     private boolean needUpdate = false;//是否需要更新练习列表
 
@@ -41,17 +42,17 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         findViewById(R.id.button_more).setVisibility(View.VISIBLE);
 
         //取得练习数据
-        practiceData = (PracticeData) getIntent().getSerializableExtra("practiceData");
-        if (practiceData != null) {
-            practiceData.charsData = PracticeDataManager.getStdCharsData(this, practiceData);
+        practice = (Practice) getIntent().getSerializableExtra(getString(R.string.practice_bundle));
+        if (practice != null) {
+            practice.hanZiList = HanZiApi.getPracticeHanZiList(this, practice);
         }
 
         //设置练习标题
         textview_title = findViewById(R.id.textview_title);
-        textview_title.setText(practiceData.getName());
+        textview_title.setText(practice.getName());
 
         //如果练习为空，隐藏底部栏
-        if (practiceData.charsData.isEmpty()) {
+        if (practice.hanZiList.isEmpty()) {
             findViewById(R.id.bottom_bar).setVisibility(View.GONE);
         }
 
@@ -82,7 +83,7 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
     public void finish() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putBoolean("needUpdate", needUpdate);
+        bundle.putBoolean(getString(R.string.update_bundle), needUpdate);
         intent.putExtras(bundle);
         setResult(Activity.RESULT_FIRST_USER, intent);
         super.finish();
@@ -107,8 +108,8 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = new Intent();
         intent.setClass(this, WritingActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("practiceData", practiceData);
-        bundle.putInt("position", position);
+        bundle.putSerializable(getString(R.string.practice_bundle), practice);
+        bundle.putInt(getString(R.string.position_bundle), position);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -118,7 +119,7 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = new Intent();
         intent.setClass(this, CameraActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable("practiceData", practiceData);
+        bundle.putSerializable(getString(R.string.practice_bundle), practice);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -134,10 +135,9 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
                 final EditText input = new EditText(this);
                 builder.setView(input);
                 builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
-                    practiceData.setName(input.getText().toString());
-                    PracticeDataManager.renamePractice(
-                            this, practiceData, practiceData.getName());
-                    textview_title.setText(practiceData.getName());//设置练习标题
+                    practice.setName(input.getText().toString());
+                    PracticeApi.renamePractice(this, practice);
+                    textview_title.setText(practice.getName());//设置练习标题
                     needUpdate = true;
                 });
                 builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
@@ -150,7 +150,7 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
                 builder.setTitle(R.string.delete);
                 builder.setMessage(R.string.delete_practice_warning);
                 builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
-                    PracticeDataManager.deletePractice(this, practiceData);
+                    PracticeApi.deletePractice(this, practice);
                     needUpdate = true;
                     finish();
                 });
@@ -185,9 +185,9 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
         GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
         recyclerView.setLayoutManager(layoutManager);//设置布局管理器
         int spacing = getResources().getDimensionPixelSize(R.dimen.spacing);
-        CharCardDecoration decoration = new CharCardDecoration(spacing);
+        HanZiCardDecoration decoration = new HanZiCardDecoration(spacing);
         recyclerView.addItemDecoration(decoration);//设置间距装饰类
-        adapter = new CharCardAdapter(this, practiceData.charsData);
+        adapter = new HanZiCardAdapter(this, practice.hanZiList);
         recyclerView.setAdapter(adapter);//设置卡片适配器
     }
 }

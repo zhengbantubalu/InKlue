@@ -14,20 +14,20 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.CharData;
+import com.bupt.inklue.data.pojo.HanZi;
 
 import java.util.ArrayList;
 
 //汉字卡片适配器
-public class CharCardAdapter extends RecyclerView.Adapter<CharCardAdapter.ViewHolder> {
+public class HanZiCardAdapter extends RecyclerView.Adapter<HanZiCardAdapter.ViewHolder> {
 
     private final Context context;
-    protected ArrayList<CharData> charsData;
+    protected ArrayList<HanZi> hanZiList;
     protected OnItemClickListener listener;
 
-    public CharCardAdapter(Context context, ArrayList<CharData> charsData) {
+    public HanZiCardAdapter(Context context, ArrayList<HanZi> hanZiList) {
         this.context = context;
-        this.charsData = charsData;
+        this.hanZiList = hanZiList;
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -35,13 +35,13 @@ public class CharCardAdapter extends RecyclerView.Adapter<CharCardAdapter.ViewHo
     }
 
     public int getItemCount() {
-        return charsData.size();
+        return hanZiList.size();
     }
 
     public void onBindViewHolder(ViewHolder holder, int position) {
         //设置卡片资源
-        holder.textView.setText(charsData.get(position).getName());//设置卡片名称
-        Bitmap bitmap = BitmapFactory.decodeFile(charsData.get(position).getStdImgPath());
+        holder.textView.setText(hanZiList.get(position).getName());//设置卡片名称
+        Bitmap bitmap = BitmapFactory.decodeFile(hanZiList.get(position).getPath());
         holder.imageView.setImageBitmap(bitmap);//设置卡片图片
         //设置卡片的点击监听器
         holder.itemView.setOnClickListener(v -> {
@@ -58,7 +58,7 @@ public class CharCardAdapter extends RecyclerView.Adapter<CharCardAdapter.ViewHo
     @NonNull
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(
-                R.layout.item_char_card, parent, false);
+                R.layout.item_han_zi_card, parent, false);
         return new ViewHolder(view);
     }
 
@@ -75,14 +75,14 @@ public class CharCardAdapter extends RecyclerView.Adapter<CharCardAdapter.ViewHo
 
     //更新全部数据
     @SuppressLint("NotifyDataSetChanged")//忽略更新具体数据的要求
-    public void update(ArrayList<CharData> charsData) {
-        this.charsData = charsData;
+    public void update(ArrayList<HanZi> hanZiList) {
+        this.hanZiList = hanZiList;
         notifyDataSetChanged();
     }
 
     //更新指定数据
-    public void update(ArrayList<CharData> charsData, int position) {
-        this.charsData = charsData;
+    public void update(ArrayList<HanZi> hanZiList, int position) {
+        this.hanZiList = hanZiList;
         notifyItemChanged(position);
     }
 }

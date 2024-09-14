@@ -8,9 +8,39 @@
     <string name="welcome">初入江湖</string>
 
     <!--服务器-->
-    <string name="server_url">http://192.168.1.4:8080</string>
-    <string name="han_zi_path">/han_zi</string>
-    <string name="practice_path">/practice</string>
+    <string name="server_url">http://47.93.189.31:8080</string>
+    <string name="han_zi_url">/han_zi</string>
+    <string name="han_zi_log_url">/han_zi_log</string>
+    <string name="practice_url">/practice</string>
+    <string name="practice_log_url">/practice_log</string>
+
+    <!--数据库-->
+    <string name="database_name">database.db</string>
+    <string name="han_zi_table">han_zi</string>
+    <string name="practice_table">practice</string>
+    <string name="han_zi_log_table">han_zi_log</string>
+    <string name="practice_log_table">practice_log</string>
+
+    <!--数据包-->
+    <string name="han_zi_bundle">han_zi</string>
+    <string name="han_zi_list_bundle">han_zi_list</string>
+    <string name="practice_bundle">practice</string>
+    <string name="update_bundle">update</string>
+    <string name="page_num_bundle">page_num</string>
+    <string name="position_bundle">position</string>
+
+    <!--目录-->
+    <string name="han_zi_dir">/han_zi</string>
+    <string name="practice_cover_dir">/practice_cover</string>
+    <string name="han_zi_log_dir">/han_zi_log</string>
+    <string name="practice_log_cover_dir">/practice_log_cover</string>
+
+    <!--偏好-->
+    <string name="preference_name">preference</string>
+    <string name="is_first_launch">is_first_launch</string>
+
+    <!--库-->
+    <string name="opencv_lib_name">opencv_java3</string>
 
     <!--动词-->
     <string name="start">拍摄</string>
@@ -40,6 +70,7 @@
 
     <!--状态提示-->
     <string name="downloading">资源下载中，请稍候</string>
+    <string name="download_finished">下载已完成</string>
     <string name="camera_saving">保存中，请稍候</string>
     <string name="camera_error">拍摄失败，请重试</string>
     <string name="processing">处理中，请稍候</string>
@@ -58,7 +89,7 @@
     <string name="register_success">注册成功</string>
     <string name="register_error">注册失败</string>
     <string name="cache_cleared">缓存已清空</string>
-    <string name="database_reset">数据已重置</string>
+    <string name="data_reset">数据已重置</string>
     <string name="developing">开发中，敬请期待</string>
 
     <!--操作提示-->
@@ -78,29 +109,26 @@
     <!--筛选条件-->
     <string-array name="filter_style">
         <item>书体</item>
-        <item>篆书</item>
-        <item>隶书</item>
-        <item>楷书</item>
-        <item>行书</item>
+        <item>篆</item>
+        <item>隶</item>
+        <item>楷</item>
+        <item>行</item>
     </string-array>
     <string-array name="filter_era">
         <item>年代</item>
-        <item>先秦</item>
-        <item>秦汉</item>
-        <item>魏晋</item>
-        <item>南北朝</item>
-        <item>隋唐</item>
-        <item>宋元</item>
-        <item>明清</item>
-        <item>现代</item>
+        <item>秦</item>
+        <item>东汉</item>
+        <item>东晋</item>
+        <item>北魏</item>
+        <item>唐</item>
     </string-array>
-    <string-array name="filter_author">
+    <string-array name="filter_artist">
         <item>书法家</item>
         <item>李斯</item>
         <item>王羲之</item>
         <item>欧阳询</item>
     </string-array>
-    <string-array name="filter_copybook">
+    <string-array name="filter_work">
         <item>碑帖</item>
         <item>峄山碑</item>
         <item>曹全碑</item>
