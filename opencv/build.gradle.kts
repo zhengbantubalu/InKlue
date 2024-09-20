@@ -18,3 +18,8 @@ android {
         }
     }
 }
+
+repositories {
+    google()
+    mavenCentral()
+}

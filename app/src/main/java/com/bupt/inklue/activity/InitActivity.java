@@ -9,10 +9,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bupt.data.api.HanZiApi;
+import com.bupt.data.api.PracticeApi;
+import com.bupt.data.db.DatabaseManager;
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.api.HanZiApi;
-import com.bupt.inklue.data.api.PracticeApi;
-import com.bupt.inklue.data.db.DatabaseManager;
 import com.bupt.inklue.util.DirectoryHelper;
 
 //初始化页面

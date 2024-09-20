@@ -7,20 +7,6 @@
     <string name="user_signature_default">我家洗砚池头树\n朵朵花开淡墨痕</string>
     <string name="welcome">初入江湖</string>
 
-    <!--服务器-->
-    <string name="server_url">http://47.93.189.31:8080</string>
-    <string name="han_zi_url">/han_zi</string>
-    <string name="han_zi_log_url">/han_zi_log</string>
-    <string name="practice_url">/practice</string>
-    <string name="practice_log_url">/practice_log</string>
-
-    <!--数据库-->
-    <string name="database_name">database.db</string>
-    <string name="han_zi_table">han_zi</string>
-    <string name="practice_table">practice</string>
-    <string name="han_zi_log_table">han_zi_log</string>
-    <string name="practice_log_table">practice_log</string>
-
     <!--数据包-->
     <string name="han_zi_bundle">han_zi</string>
     <string name="han_zi_list_bundle">han_zi_list</string>

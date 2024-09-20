@@ -4,16 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bupt.data.api.PracticeApi;
+import com.bupt.data.pojo.HanZi;
+import com.bupt.data.pojo.Practice;
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.PracticeCardAdapter;
-import com.bupt.inklue.data.api.PracticeApi;
-import com.bupt.inklue.data.pojo.HanZi;
-import com.bupt.inklue.data.pojo.Practice;
 import com.bupt.inklue.decoration.PracticeCardDecoration;
 
 import java.util.ArrayList;
@@ -42,7 +43,11 @@ public class SelectActivity extends AppCompatActivity implements View.OnClickLis
         //设置RecyclerView中项目的点击监听器
         adapter.setOnItemClickListener(position -> {
             //向练习中添加汉字
-            PracticeApi.addHanZiIntoPractice(this, practiceList.get(position), hanZi);
+            if (PracticeApi.addHanZiIntoPractice(this, practiceList.get(position), hanZi)) {
+                Toast.makeText(this, R.string.add_success, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, R.string.add_error, Toast.LENGTH_SHORT).show();
+            }
             needUpdate = true;
             finish();
         });

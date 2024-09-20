@@ -8,6 +8,11 @@ android {
     defaultConfig.minSdk = 29
 }
 
+repositories {
+    google()
+    mavenCentral()
+}
+
 dependencies {
     implementation(project(":opencv"))
 }

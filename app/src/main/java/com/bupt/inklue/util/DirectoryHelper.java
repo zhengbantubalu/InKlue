@@ -55,16 +55,16 @@ public class DirectoryHelper {
                 context.getString(R.string.han_zi_dir);
     }
 
-    //获取练习封面图片路径
-    public static String getPracticeCoverDir(Context context) {
-        return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
-                context.getString(R.string.practice_cover_dir);
-    }
-
     //获取记录汉字图片路径
     public static String getPracticeLogHanZiDir(Context context) {
         return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
                 context.getString(R.string.han_zi_log_dir);
+    }
+
+    //获取练习封面图片路径
+    public static String getPracticeCoverDir(Context context) {
+        return context.getExternalFilesDir(Environment.DIRECTORY_PICTURES) +
+                context.getString(R.string.practice_cover_dir);
     }
 
     //获取记录封面图片路径
@@ -76,11 +76,6 @@ public class DirectoryHelper {
     //生成缓存目录JPG图片路径
     public static String generateCacheJPG(Context context) {
         return context.getExternalCacheDir() + "/" + generateTimeString() + ".jpg";
-    }
-
-    //生成练习封面JPG图片路径
-    public static String generatePracticeCoverJPG(Context context) {
-        return getPracticeCoverDir(context) + "/" + generateTimeString() + ".jpg";
     }
 
     //生成当前时间字符串

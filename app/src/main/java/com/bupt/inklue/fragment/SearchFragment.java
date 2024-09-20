@@ -22,11 +22,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bupt.data.api.HanZiApi;
+import com.bupt.data.pojo.HanZi;
 import com.bupt.inklue.R;
 import com.bupt.inklue.activity.SearchActivity;
 import com.bupt.inklue.adapter.SearchCardAdapter;
-import com.bupt.inklue.data.api.HanZiApi;
-import com.bupt.inklue.data.pojo.HanZi;
 import com.bupt.inklue.decoration.HanZiCardDecoration;
 import com.bupt.inklue.util.Constants;
 import com.bupt.inklue.util.ResourceHelper;

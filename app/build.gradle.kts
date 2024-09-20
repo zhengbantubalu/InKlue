@@ -26,9 +26,16 @@ android {
     }
 }
 
+repositories {
+    google()
+    mavenCentral()
+    maven(url = "https://jitpack.io")
+}
+
 dependencies {
-    implementation(project(":opencv"))
+    implementation(project(":data"))
     implementation(project(":evaluate"))
+    implementation(project(":opencv"))
     implementation(project(":preprocess"))
     implementation(libs.material)
     implementation(libs.camera.camera2)

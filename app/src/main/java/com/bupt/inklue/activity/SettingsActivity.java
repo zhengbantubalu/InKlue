@@ -11,10 +11,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bupt.data.api.HanZiApi;
+import com.bupt.data.api.PracticeApi;
+import com.bupt.data.db.DatabaseManager;
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.api.HanZiApi;
-import com.bupt.inklue.data.api.PracticeApi;
-import com.bupt.inklue.data.db.DatabaseManager;
 import com.bupt.inklue.util.DirectoryHelper;
 
 //设置页面
@@ -83,7 +83,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
             DirectoryHelper.clearDir(DirectoryHelper.getPracticeLogCoverDir(this));
             DirectoryHelper.clearDir(DirectoryHelper.getPracticeCoverDir(this));
             //删除数据库
-            deleteDatabase(getString(R.string.database_name));
+            DatabaseManager.deleteDatabase(this);
             //初始化数据库
             DatabaseManager.initDatabase(this);
             //异步进行网络操作

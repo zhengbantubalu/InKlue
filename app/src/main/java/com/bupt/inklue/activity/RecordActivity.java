@@ -7,16 +7,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bupt.data.api.HanZiLogApi;
+import com.bupt.data.api.PracticeLogApi;
+import com.bupt.data.pojo.Practice;
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.ResultCardAdapter;
-import com.bupt.inklue.data.api.HanZiLogApi;
-import com.bupt.inklue.data.api.PracticeLogApi;
-import com.bupt.inklue.data.pojo.Practice;
 import com.bupt.inklue.decoration.HanZiCardDecoration;
 
 //练习记录页面
@@ -95,7 +96,11 @@ public class RecordActivity extends AppCompatActivity implements View.OnClickLis
                 builder.setTitle(R.string.delete);
                 builder.setMessage(R.string.delete_record_warning);
                 builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
-                    PracticeLogApi.deletePracticeLog(this, practiceLog);
+                    if (PracticeLogApi.deletePracticeLog(this, practiceLog)) {
+                        Toast.makeText(this, R.string.delete_success, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, R.string.delete_error, Toast.LENGTH_SHORT).show();
+                    }
                     needUpdate = true;
                     finish();
                 });

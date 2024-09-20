@@ -18,9 +18,9 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bupt.data.pojo.HanZi;
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.ViewPagerAdapter;
-import com.bupt.inklue.data.pojo.HanZi;
 import com.bupt.inklue.fragment.ImageFragment;
 import com.bupt.inklue.util.ResourceHelper;
 import com.github.chrisbanes.photoview.PhotoView;

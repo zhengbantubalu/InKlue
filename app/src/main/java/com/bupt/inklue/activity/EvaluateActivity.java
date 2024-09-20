@@ -14,10 +14,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bupt.data.pojo.HanZi;
+import com.bupt.data.pojo.Practice;
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.ViewPagerAdapter;
-import com.bupt.inklue.data.pojo.HanZi;
-import com.bupt.inklue.data.pojo.Practice;
 import com.bupt.inklue.fragment.EvaluateFragment;
 import com.bupt.inklue.util.BitmapHelper;
 import com.bupt.inklue.util.Constants;

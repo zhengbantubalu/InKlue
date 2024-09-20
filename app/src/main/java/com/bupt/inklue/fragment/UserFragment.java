@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -22,14 +23,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bupt.data.api.HanZiLogApi;
+import com.bupt.data.api.PracticeLogApi;
+import com.bupt.data.pojo.Practice;
 import com.bupt.inklue.R;
 import com.bupt.inklue.activity.LoginActivity;
 import com.bupt.inklue.activity.RecordActivity;
 import com.bupt.inklue.activity.SettingsActivity;
 import com.bupt.inklue.adapter.RecordCardAdapter;
-import com.bupt.inklue.data.api.HanZiLogApi;
-import com.bupt.inklue.data.api.PracticeLogApi;
-import com.bupt.inklue.data.pojo.Practice;
 import com.bupt.inklue.decoration.PracticeCardDecoration;
 import com.bupt.inklue.util.Constants;
 import com.bupt.inklue.util.ResourceHelper;
@@ -149,7 +150,11 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
                     Practice practice = practiceLogList.get(position);
                     practice.hanZiList = HanZiLogApi.getPracticeLogHanZiList(context, practice);
-                    PracticeLogApi.deletePracticeLog(context, practice);
+                    if (PracticeLogApi.deletePracticeLog(context, practice)) {
+                        Toast.makeText(context, R.string.delete_success, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, R.string.delete_error, Toast.LENGTH_SHORT).show();
+                    }
                     updateData();
                 });
                 builder.setNegativeButton(R.string.cancel, (dialog, which) -> {

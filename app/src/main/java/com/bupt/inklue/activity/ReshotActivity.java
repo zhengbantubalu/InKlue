@@ -28,9 +28,9 @@ import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
+import com.bupt.data.pojo.HanZi;
 import com.bupt.evaluate.core.Extractor;
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.pojo.HanZi;
 import com.bupt.inklue.util.BitmapHelper;
 import com.bupt.inklue.util.DirectoryHelper;
 import com.bupt.inklue.util.ResourceHelper;

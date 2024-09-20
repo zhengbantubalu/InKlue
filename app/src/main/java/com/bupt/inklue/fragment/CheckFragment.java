@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.bupt.data.pojo.HanZi;
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.pojo.HanZi;
 import com.github.chrisbanes.photoview.PhotoView;
 
 //图像检查碎片

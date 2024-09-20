@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -19,11 +20,11 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bupt.data.api.PracticeApi;
+import com.bupt.data.pojo.Practice;
 import com.bupt.inklue.R;
 import com.bupt.inklue.activity.PracticeActivity;
 import com.bupt.inklue.adapter.PracticeCardAdapter;
-import com.bupt.inklue.data.api.PracticeApi;
-import com.bupt.inklue.data.pojo.Practice;
 import com.bupt.inklue.decoration.PracticeCardDecoration;
 import com.bupt.inklue.util.Constants;
 import com.bupt.inklue.util.ResourceHelper;
@@ -127,7 +128,11 @@ public class PracticeFragment extends Fragment implements View.OnClickListener {
                 builder.setView(input);
                 builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
                     practiceList.get(position).setName(input.getText().toString());
-                    PracticeApi.renamePractice(context, practiceList.get(position));
+                    if (PracticeApi.renamePractice(context, practiceList.get(position))) {
+                        Toast.makeText(context, R.string.rename_success, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, R.string.rename_error, Toast.LENGTH_SHORT).show();
+                    }
                     updateData();
                 });
                 builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
@@ -140,7 +145,11 @@ public class PracticeFragment extends Fragment implements View.OnClickListener {
                 builder.setTitle(R.string.delete);
                 builder.setMessage(R.string.delete_practice_warning);
                 builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
-                    PracticeApi.deletePractice(context, practiceList.get(position));
+                    if (PracticeApi.deletePractice(context, practiceList.get(position))) {
+                        Toast.makeText(context, R.string.delete_success, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(context, R.string.delete_error, Toast.LENGTH_SHORT).show();
+                    }
                     updateData();
                 });
                 builder.setNegativeButton(R.string.cancel, (dialog, which) -> {
@@ -173,7 +182,12 @@ public class PracticeFragment extends Fragment implements View.OnClickListener {
             Practice practice = new Practice();
             practice.setName(input.getText().toString());
             practice.hanZiList = new ArrayList<>();
-            PracticeApi.createPractice(context, practice);//在数据库中创建练习
+            //在数据库中创建练习
+            if (PracticeApi.createPractice(context, practice)) {
+                Toast.makeText(context, R.string.create_success, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(context, R.string.create_error, Toast.LENGTH_SHORT).show();
+            }
             updateData();//更新数据
         });
         builder.setNegativeButton(R.string.cancel, (dialog, which) -> {

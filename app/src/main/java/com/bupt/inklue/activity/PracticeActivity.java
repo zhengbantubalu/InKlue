@@ -19,11 +19,11 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bupt.data.api.HanZiApi;
+import com.bupt.data.api.PracticeApi;
+import com.bupt.data.pojo.Practice;
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.HanZiCardAdapter;
-import com.bupt.inklue.data.api.HanZiApi;
-import com.bupt.inklue.data.api.PracticeApi;
-import com.bupt.inklue.data.pojo.Practice;
 import com.bupt.inklue.decoration.HanZiCardDecoration;
 
 //练习详情页面
@@ -136,7 +136,11 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
                 builder.setView(input);
                 builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
                     practice.setName(input.getText().toString());
-                    PracticeApi.renamePractice(this, practice);
+                    if (PracticeApi.renamePractice(this, practice)) {
+                        Toast.makeText(this, R.string.rename_success, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, R.string.rename_error, Toast.LENGTH_SHORT).show();
+                    }
                     textview_title.setText(practice.getName());//设置练习标题
                     needUpdate = true;
                 });
@@ -150,7 +154,11 @@ public class PracticeActivity extends AppCompatActivity implements View.OnClickL
                 builder.setTitle(R.string.delete);
                 builder.setMessage(R.string.delete_practice_warning);
                 builder.setPositiveButton(R.string.confirm, (dialog, which) -> {
-                    PracticeApi.deletePractice(this, practice);
+                    if (PracticeApi.deletePractice(this, practice)) {
+                        Toast.makeText(this, R.string.delete_success, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, R.string.delete_error, Toast.LENGTH_SHORT).show();
+                    }
                     needUpdate = true;
                     finish();
                 });

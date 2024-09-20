@@ -15,13 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bupt.data.api.PracticeLogApi;
+import com.bupt.data.pojo.HanZi;
+import com.bupt.data.pojo.Practice;
 import com.bupt.evaluate.core.Evaluation;
 import com.bupt.evaluate.core.Evaluator;
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.EvaluateCardAdapter;
-import com.bupt.inklue.data.api.PracticeLogApi;
-import com.bupt.inklue.data.pojo.HanZi;
-import com.bupt.inklue.data.pojo.Practice;
 import com.bupt.inklue.decoration.HanZiCardDecoration;
 import com.bupt.inklue.util.BitmapHelper;
 import com.bupt.inklue.util.DirectoryHelper;
@@ -94,13 +94,12 @@ public class ResultActivity extends AppCompatActivity implements View.OnClickLis
             finish();
         } else if (view.getId() == R.id.button_start) {
             if (isFinished) {
-                //创建记录封面
-                String coverPath = DirectoryHelper.generateCacheJPG(this);
-                practice.setCoverPath(coverPath);
-                Bitmap coverBitmap = BitmapHelper.createCover(practice, false);
-                BitmapHelper.saveBitmap(coverBitmap, practice.getCoverPath());
                 //保存练习记录
-                PracticeLogApi.savePracticeLog(this, practice);
+                if (PracticeLogApi.savePracticeLog(this, practice)) {
+                    Toast.makeText(this, R.string.save_success, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, R.string.save_error, Toast.LENGTH_SHORT).show();
+                }
                 //回退到主页面
                 backToMainActivity();
             } else {

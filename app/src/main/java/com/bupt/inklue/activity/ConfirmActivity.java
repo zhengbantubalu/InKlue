@@ -11,9 +11,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bupt.data.pojo.Practice;
 import com.bupt.inklue.R;
 import com.bupt.inklue.adapter.CheckCardAdapter;
-import com.bupt.inklue.data.pojo.Practice;
 import com.bupt.inklue.decoration.HanZiCardDecoration;
 
 //确认页面

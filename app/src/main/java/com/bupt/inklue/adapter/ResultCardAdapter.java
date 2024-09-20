@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.bupt.inklue.data.pojo.HanZi;
+import com.bupt.data.pojo.HanZi;
 
 import java.util.ArrayList;
 

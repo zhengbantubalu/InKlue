@@ -13,8 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bupt.data.pojo.HanZi;
 import com.bupt.inklue.R;
-import com.bupt.inklue.data.pojo.HanZi;
 
 import java.util.ArrayList;
 
